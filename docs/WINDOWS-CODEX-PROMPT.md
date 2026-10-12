@@ -35,3 +35,5 @@ Windows 最新交付為 0.1.6。Mac 已完成移植；W21／W22／W23 尚未在 
 ```
 
 R02：使用者要求Windows完成原生編譯／實機測試後，再補齊oaClient2的Releases下載。以ZIP交付，不含個人Config.ini、快取／profile／紀錄／截圖；如需設定範例，只使用不含個人資料且符合Windows新預設的範例。保留既有Mac資產，記錄Windows實際build commit／版本及SHA256，不以未驗證舊版補齊。prg仍只採使用者維護的精簡交付，不從根prg補回。
+
+R01已發布[v0.1.6 Mac arm64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)，Tag指向0fe6f35，後續文件提交不移Tag。Windows目前沒有發布資產；依R02在Windows環境完成編譯／實測後補齊，保留既有Mac ZIP及其SHA256。

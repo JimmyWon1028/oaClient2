@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | D01 | 閱讀舊 oaClient／Reptool | 已完成第一輪來源盤點；本輪核對 PAS／DFM 工具列並操作舊版 Console 開關。 | 逐一核對其他命令契約。 |
 | D02 | 列印預覽技術查證 | 已確認 Electron 不符內建預覽要求；Windows 採 CEF Chrome。 | Mac 核對 #3410 正式配套及實測。 |
-| D03 | Git／GitHub | main已有ddf1bf9／655a6a1；使用者授權公開JimmyWon1028/oaClient2及最新文件提交／推送，origin已建立。 | 核對公開遠端main與本機HEAD一致；產物及個人資料不納入Git。 |
+| D03 | Git／GitHub | 公開JimmyWon1028/oaClient2已建立；ddf1bf9／655a6a1及最新文件提交0fe6f35已推送，origin/main核對一致。 | 發布結果文件本輪追加提交／推送；產物與個人資料不納入Git。 |
 | D04 | 計畫／紀錄／跨平台交接 | 已整理 Mac 接續入口，Windows W21／W22 提示詞已存 [WINDOWS-CODEX-PROMPT.md](docs/WINDOWS-CODEX-PROMPT.md)，包含平台開發分工、共用來源與組態路徑差異。 | 回 Windows 先核對同步與來源，再實作／編譯／回歸；Windows 本輪未改。 |
 | D05 | 時間與平台範圍 | 排除環境準備及測試；Mac 固定 arm64。 | 記錄測試後修正。 |
 | D06 | 網站／資料／INI 決策 | Windows 現行預設 OA；Mac 初始 URL 空白、設定後保存。Windows EXE 旁 INI，Mac Application Support；網站全清、設定保留。 | Windows 相同歡迎頁 W21 待 Windows 環境實作。 |
@@ -55,7 +55,7 @@
 | W25 | Windows 網頁資訊標題回歸 | 使用者明確確認 Windows 與 Mac 標題相同、名稱從 URL 頁面取得。M12 共用來源已調整；Windows 專屬碼／交付未改，未編譯／實測。 | 回 Windows 編譯，驗證未載入與網站動態名稱／版本，沿用共用流程。 |
 | W26 | Windows 工具列間距／完整文字 | 使用者明確要求Windows也與舊版相同間距、完整字樣，先記錄再回Windows編譯測試。M13共用來源已備妥；Windows專屬碼／交付未改、未編譯／實測。 | 回Windows核對完整文字、圖示及舊版間距，不把Mac截圖當成Windows通過。 |
 
-| R01 | Mac ZIP Releases | 使用者授權公開下載；ZIP只有完整.app，本機壓縮／解壓一致、10份arm64 Mach-O、簽章及無INI／快取已核對。 | GitHub發布與公開下載校驗。 |
+| R01 | Mac ZIP Releases | v0.1.6初版測試Release已公開；ZIP只有.app，GitHub大小／digest、無登入公開下載ZIP與校驗檔逐位元一致。 | 列印／一般注音等仍待使用者驗收；Windows補齊見R02。 |
 | R02 | Windows Release補齊 | 使用者要求在Windows環境完成編譯／測試後再補齊，本輪不提供舊Windows產物。 | 完成W21～W26與平台回歸後，準備不含個人INI／快取的Windows ZIP。 |
 
 ## 已完成的驗證
@@ -268,3 +268,12 @@ DLL SHA256：05D2CA471D465D2D4D69CEAE510E1F7336CACF1922D42D8C1FF5E283886727A5。
 Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture／logs／Finder metadata；解壓逐檔及連結一致、10份arm64 Mach-O、codesign deep strict通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；程式內容與M13一致，沒有重新實作或重新編譯。公開發布／下載校驗結果後續追加，Windows回歸及U01尚未因此完成。本機SDK／壓縮檔／build保留，沒有安裝。
 
 發布說明及可重現流程見[Release文件](docs/RELEASES.md)。歷史無遠端／未推送紀錄保留為本次授權前狀態。
+
+
+## D03／R01 公開推送與下載核對結果（2026-10-13）
+
+公開repository為[JimmyWon1028/oaClient2](https://github.com/JimmyWon1028/oaClient2)，main已推送到0fe6f35並與遠端一致，包含本機兩筆功能提交與最新Windows需求確認文件。GitHub[v0.1.6初版測試Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)已發布，Tag固定來源0fe6f357173fb7802cca8504c2ea007dd5e7834d，不因後續文件提交移動。
+
+僅提供Mac arm64 ZIP與同名.sha256；GitHub大小／digest與本機相同，不帶登入憑證的公開重新下載兩檔逐位元一致，ZIP CRC通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；解壓bundle逐檔／連結一致、10份arm64 Mach-O／簽章核對，無Config.ini、cache、profile、picture、logs或Finder metadata。未把SDK、建置或個人資料推入Git，未安裝或清除本機SDK。
+
+此輪只是發布與下載驗證，沒有重新編譯或擴大功能驗收。Windows R02等在Windows環境完成W21～W26後再補齊，U01仍未實作。發布證據存artifacts/verification/releases-v0.1.6；本段結果文件另行提交推送，最新main SHA以Git log／ls-remote核對。

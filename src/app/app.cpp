@@ -317,10 +317,11 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
     if (view->GetID() >= kConsole && view->GetID() <= kZoomIn) {
       switch (view->GetID()) {
         case kConsole: return CefSize(30, 28);
-        case kMac: return CefSize(44, 28);
-        case kDirectory: case kResetZoom: return CefSize(74, 28);
-        case kSnapshot: return CefSize(42, 28);
-        default: return CefSize(28, 28);
+        case kMac: return CefSize(40, 28);
+        case kDirectory: return CefSize(67, 28);
+        case kResetZoom: return CefSize(61, 28);
+        case kSnapshot: return CefSize(38, 28);
+        default: return CefSize(23, 28);
       }
     }
     return CefSize(context_->settings.width, context_->settings.height);
@@ -426,6 +427,8 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
       button->SetTooltipText(hint);
       button->SetAccessibleName(hint);
       button->SetFontList(ToolbarFontList());
+      //2026.10.13 modify by codex, reduce inner padding so legacy widths keep complete button labels.
+      if (id != kConsole) button->SetInsets(CefInsets(0, 2, 0, 2));
       button->SetMinimumSize(CefSize(width, 28));
       button->SetMaximumSize(CefSize(width, 28));
       button->SetBackgroundColor(0xFFF0F0F0);
@@ -450,14 +453,15 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
     auto space = CefPanel::CreatePanel(nullptr);
     toolbar_->AddChildView(space);
     layout->SetFlexForView(space, 1);
-    add(kHome, "⌂", "回到首頁", 28);
-    add(kServer, "▤", "設定伺服器網址", 28);
-    add(kMac, "MAC", "顯示 IP / MAC", 44);
-    add(kDirectory, "瀏覽目錄", "瀏覽 Config.ini 所在目錄", 74);
-    add(kSnapshot, "截圖", "擷取 oaClient2 視窗", 42);
-    add(kResetZoom, "還原比例", "還原比例 100%", 74);
-    add(kZoomOut, "−", "縮小", 28);
-    add(kZoomIn, "+", "放大", 28);
+    //2026.10.13 modify by codex, match the legacy DFM widths without changing toolbar actions or images.
+    add(kHome, "⌂", "回到首頁", 23);
+    add(kServer, "▤", "設定伺服器網址", 23);
+    add(kMac, "MAC", "顯示 IP / MAC", 40);
+    add(kDirectory, "瀏覽目錄", "瀏覽 Config.ini 所在目錄", 67);
+    add(kSnapshot, "截圖", "擷取 oaClient2 視窗", 38);
+    add(kResetZoom, "還原比例", "還原比例 100%", 61);
+    add(kZoomOut, "−", "縮小", 23);
+    add(kZoomIn, "+", "放大", 23);
     window->AddChildView(toolbar_);
   }
 

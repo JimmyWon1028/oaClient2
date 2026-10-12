@@ -46,12 +46,14 @@
 | M10 | Mac 隱藏背景登出／三秒退出 | 已實作／Release／CTest1/1、75項；最後合成實機 ACK 951ms／無回應3029ms，主窗與 Console 隱藏、beforeunload 允許、正常退出。 | 正式 OA 登出待使用者驗收；Windows 另列 W23，共用修改回歸待執行。 |
 | M11 | 瀏覽 Config.ini 所在目錄 | 共用 app.cpp 已調整；Mac Release／CTest1/1、75項通過，Finder 實際開啟 Support 內的設定目錄。交付已更新。 | 未安裝；Windows 編譯／實機回歸另列 W24。 |
 | M12 | 網頁軟體資訊與客戶端版本標題 | 共用 app.cpp 已調整；Mac Release／CTest1/1、75項，歡迎頁及兩個網站動態名稱實測通過，交付已更新。 | 未安裝；Windows 編譯／實機回歸另列 W25。 |
+| M13 | 右側工具列舊版間距／完整文字 | 共用按鈕寬度採舊 DFM，右側346→298 DIP；減少內部留白，Mac完整文字實測及Release／75項通過，交付已更新。 | 保留測試視窗供使用者驗收；Windows另列W26，未安裝；使用者已授權本機提交。 |
 | W21 | Windows 相同歡迎頁 | 使用者已確認需求；頁面共用來源已準備，Windows 空白 URL 預設／入口接線尚未實作。 | 在 Windows 環境實作、MSVC 編譯及實機驗證，保留既有個人網址。 |
 | W22 | Windows 隱藏縮放彈窗 | 使用者明確要求先記錄，回 Windows 再做；目前未啟用、未編譯／實測，交付 EXE 未更新。 | Windows 入口啟用共用旗標並驗證縮放、保存與重啟。 |
 | W23 | Windows 隱藏背景登出／三秒退出 | 新需求及共用模式已備妥，Windows 入口尚未啟用，Windows 專屬碼／交付未改。 | 回 Windows 啟用 background_logout_close，驗證主窗／Console、ACK 提早退出、三秒上限及 beforeunload。 |
 
 | W24 | Windows 設定目錄瀏覽回歸 | M11 共用來源已調整，Windows 專屬碼與交付未改；未編譯／實測。 | 回 Windows 編譯，核對按鈕與提示開啟實際 Config.ini 父目錄，更新交付。 |
 | W25 | Windows 網頁資訊標題回歸 | 使用者明確確認 Windows 與 Mac 標題相同、名稱從 URL 頁面取得。M12 共用來源已調整；Windows 專屬碼／交付未改，未編譯／實測。 | 回 Windows 編譯，驗證未載入與網站動態名稱／版本，沿用共用流程。 |
+| W26 | Windows 工具列間距回歸 | M13共用寬度／內部留白已調整，Windows專屬碼及交付未改、未編譯／實測。 | 回Windows核對完整文字、圖示及舊版間距，不把Mac截圖當成Windows通過。 |
 
 ## 已完成的驗證
 
@@ -230,3 +232,20 @@ DLL SHA256：05D2CA471D465D2D4D69CEAE510E1F7336CACF1922D42D8C1FF5E283886727A5。
 使用者明確指示 commit，授權建立 main 的首次本機來源提交。提交共用及 Windows／macOS arm64來源、原圖資源、共用設定範例、腳本、測試與工作文件；不納入 artifacts、prg、個人Config.ini、CEF SDK／壓縮檔、建置、profile或快取。Git身分使用既有本機設定，實際SHA以git log取得，未建立遠端／標籤或推送。
 
 本輪僅提交與同步Git交接狀態，沒有修改功能、重新編譯／安裝／操作App；既有Mac75項測試結果與Windows W21～W25待回歸狀態保留。歷史無提交記錄不全面改寫。
+
+
+## M13／W26：工具列間距與完整文字（2026-10-13）
+
+- 使用者要求新版右下角間距同舊版，並追加不能隱藏字樣。唯讀核對舊DFM各SpeedButton尺寸，採原23／23／40／67／38／61／23／23 DIP，共用app.cpp固定尺寸與偏好尺寸一致，不改字型／圖示／順序／工具功能、INI格式或平台來源。
+- 首輪Release及75項通過，但實機MAC與還原比例顯示省略號，該UI結果失敗。核對固定CEF154的CefView.SetInsets後，將右側按鈕左右留白各減為2 DIP；保留左Console原配置，不用縮字或取消文字。
+- 最終增量Release／CTest1/1、75 checks／0 failures，Mac真實畫面確認完整MAC／瀏覽目錄／截圖／還原比例，八個右側工具仍可見，合計298 DIP。視覺結果已核對，使用者最終間距驗收仍待確認；首輪測試程序正常exit0，最後build視窗保留開啟。測試--url=只在當次記憶體顯示歡迎頁。
+- 交付artifacts/macos-arm64/oaClient2.app與build逐檔及連結一致，arm64及codesign deep strict通過，SHA256：9bc544d13be3e6b0474d3921ced2a7f510728731b778f8f739ec7f2f2c812258；未安裝，SDK／壓縮檔／build保留。驗證紀錄在artifacts/verification/macos-m13/results.json／build.log／package.log／core-tests.log／application.log。
+- Windows專屬來源／整份交付、Applications既有主程式與Mac picture雜湊不變；現用Config.ini在實機期間雜湊變更，原關閉／視窗保存流程未改，保留現值，不回寫測前資料、不宣稱設定檔逐位元不變。本輪沒有修改設定保存來源或由Codex輸入新網址。
+- 更新協作、計畫、進度、交接、Mac操作、共用規則及Windows提示詞；W26為共用修改的Windows編譯／實機回歸待辦。W21～W25、正式OA登入登出／列印／一般注音與U01狀態保留；Git HEAD ddf1bf9，本輪未提交／推送。
+
+
+## M13：工具列修正本機提交（2026-10-13）
+
+使用者明確授權提交本次舊版間距與完整按鈕字樣修正；包含app.cpp及相關規則、計畫、進度、交接與Windows W26待回歸文件。基準為ddf1bf9，實際新SHA以git log核對；不包含交付App、個人組態、SDK或建置產物，未推送／建立遠端或標籤。先前「未提交」為此次授權前狀態。
+
+本輪只核對差異並建立提交，未修改功能、重新編譯／安裝／操作App；沿用M13的Release／75項及完整文字實機結果，Windows回歸仍待執行。

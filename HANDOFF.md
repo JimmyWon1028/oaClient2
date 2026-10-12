@@ -8,7 +8,7 @@ Windows x64 簡易版0.1.6已實作及建置，交付入口為 `artifacts/oaClie
 
 **macOS arm64 0.1.6 已實作、建置與初輪實機測試。** 交付入口為 `artifacts/macos-arm64/oaClient2.app`，M04 起 `.app` 安裝在 `/Applications`，`Config.ini`／`picture`／logs／profile／lock 在 `~/Library/Application Support/oaClient2/`；正式首頁、Console、設定、截圖及兩輪合成儲存／登出已測，列印預覽與注音待使用者驗收。CMake 現有 WIN32／APPLE 分支，Mac 僅 native arm64；Windows 共用來源回歸待執行。詳見 [Mac 操作](docs/MACOS-USAGE.md)、[驗證](PROGRESS.md)及[環境](docs/ENVIRONMENT.md)。
 
-Git：main，使用者於2026-10-13明確授權首次本機提交；目前來源納入此初始提交，實際 SHA 以 git log 核對，不硬編碼自身提交 SHA。沒有遠端或標籤，後續提交仍依使用者授權。Windows CEF SDK／建置產物在本機 LocalAppData，不在 Git；交付資料夾是使用者核准的 Dropbox 同步例外。歷史段落的「無提交」是首次提交前狀態。
+Git：main，已有ddf1bf9／655a6a1本機提交；使用者已授權建立公開repository https://github.com/JimmyWon1028/oaClient2、提交最新文件並推送，origin已建立。亦已授權Mac ZIP Releases與v0.1.6 Tag，Windows後續於Windows環境編譯測試再補齊。實際SHA與發布結果依Git／GitHub核對，後續操作仍依使用者授權。Windows CEF SDK／建置產物在本機 LocalAppData，不在 Git；交付資料夾是使用者核准的 Dropbox 同步例外。歷史段落的「無提交」是首次提交前狀態。
 
 2026-10-12 使用者補充：注音額外浮動組字窗是 Windows 專屬問題，Mac 不需測試該項，也不列為待驗收。本文 Mac 的「注音驗證」只指一般輸入與焦點，不包含 Windows 浮窗問題；未因此宣稱 Mac 一般注音已驗收。
 
@@ -217,3 +217,19 @@ Git基準為首次提交ddf1bf9；使用者已授權建立M13工具列修正的�
 使用者明確授權提交本次舊版間距與完整按鈕字樣修正；包含app.cpp及相關規則、計畫、進度、交接與Windows W26待回歸文件。基準為ddf1bf9，實際新SHA以git log核對；不包含交付App、個人組態、SDK或建置產物，未推送／建立遠端或標籤。先前「未提交」為此次授權前狀態。
 
 本輪只核對差異並建立提交，未修改功能、重新編譯／安裝／操作App；沿用M13的Release／75項及完整文字實機結果，Windows回歸仍待執行。
+
+
+## W26：Windows 工具列要求確認（2026-10-13）
+
+使用者明確要求Windows版工具列間距同舊版，MAC、瀏覽目錄、截圖及還原比例等按鈕字樣完整顯示，不使用省略號／隱藏文字。沿用已提交的M13共用來源（655a6a1），不複製工具列；Windows編譯、實機測試及交付更新留到Windows環境，Mac結果不能代替Windows驗證。
+
+本輪只補記需求與交接，未改程式或交付、未編譯／測試／安裝／提交／推送；Windows專屬碼、個人設定及精簡prg保持。
+
+
+## D03／R01／R02：公開GitHub與ZIP下載（2026-10-13）
+
+使用者已核准建立公開repository https://github.com/JimmyWon1028/oaClient2、提交最新Windows確認文件並推送；origin已建立。另要求編譯檔從oaClient2的Releases下載，以ZIP發布且不得包含Config.ini或其他快取。先提供Mac arm64，Windows在Windows環境完成編譯與實機測試後再補齊（R02），本輪不發布舊Windows產物。
+
+Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture／logs／Finder metadata；解壓逐檔及連結一致、10份arm64 Mach-O、codesign deep strict通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；程式內容與M13一致，沒有重新實作或重新編譯。公開發布／下載校驗結果後續追加，Windows回歸及U01尚未因此完成。本機SDK／壓縮檔／build保留，沒有安裝。
+
+發布說明及可重現流程見[Release文件](docs/RELEASES.md)。歷史無遠端／未推送紀錄保留為本次授權前狀態。

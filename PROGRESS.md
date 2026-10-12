@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | D01 | 閱讀舊 oaClient／Reptool | 已完成第一輪來源盤點；本輪核對 PAS／DFM 工具列並操作舊版 Console 開關。 | 逐一核對其他命令契約。 |
 | D02 | 列印預覽技術查證 | 已確認 Electron 不符內建預覽要求；Windows 採 CEF Chrome。 | Mac 核對 #3410 正式配套及實測。 |
-| D03 | Git 初始化／首次提交 | main；2026-10-13使用者授權建立首次本機來源提交，包含共用／兩平台來源、資源、腳本、測試及文件；不含SDK／交付／個人設定。 | 實際SHA以git log核對；無遠端／標籤，未推送。 |
+| D03 | Git／GitHub | main已有ddf1bf9／655a6a1；使用者授權公開JimmyWon1028/oaClient2及最新文件提交／推送，origin已建立。 | 核對公開遠端main與本機HEAD一致；產物及個人資料不納入Git。 |
 | D04 | 計畫／紀錄／跨平台交接 | 已整理 Mac 接續入口，Windows W21／W22 提示詞已存 [WINDOWS-CODEX-PROMPT.md](docs/WINDOWS-CODEX-PROMPT.md)，包含平台開發分工、共用來源與組態路徑差異。 | 回 Windows 先核對同步與來源，再實作／編譯／回歸；Windows 本輪未改。 |
 | D05 | 時間與平台範圍 | 排除環境準備及測試；Mac 固定 arm64。 | 記錄測試後修正。 |
 | D06 | 網站／資料／INI 決策 | Windows 現行預設 OA；Mac 初始 URL 空白、設定後保存。Windows EXE 旁 INI，Mac Application Support；網站全清、設定保留。 | Windows 相同歡迎頁 W21 待 Windows 環境實作。 |
@@ -53,7 +53,10 @@
 
 | W24 | Windows 設定目錄瀏覽回歸 | M11 共用來源已調整，Windows 專屬碼與交付未改；未編譯／實測。 | 回 Windows 編譯，核對按鈕與提示開啟實際 Config.ini 父目錄，更新交付。 |
 | W25 | Windows 網頁資訊標題回歸 | 使用者明確確認 Windows 與 Mac 標題相同、名稱從 URL 頁面取得。M12 共用來源已調整；Windows 專屬碼／交付未改，未編譯／實測。 | 回 Windows 編譯，驗證未載入與網站動態名稱／版本，沿用共用流程。 |
-| W26 | Windows 工具列間距回歸 | M13共用寬度／內部留白已調整，Windows專屬碼及交付未改、未編譯／實測。 | 回Windows核對完整文字、圖示及舊版間距，不把Mac截圖當成Windows通過。 |
+| W26 | Windows 工具列間距／完整文字 | 使用者明確要求Windows也與舊版相同間距、完整字樣，先記錄再回Windows編譯測試。M13共用來源已備妥；Windows專屬碼／交付未改、未編譯／實測。 | 回Windows核對完整文字、圖示及舊版間距，不把Mac截圖當成Windows通過。 |
+
+| R01 | Mac ZIP Releases | 使用者授權公開下載；ZIP只有完整.app，本機壓縮／解壓一致、10份arm64 Mach-O、簽章及無INI／快取已核對。 | GitHub發布與公開下載校驗。 |
+| R02 | Windows Release補齊 | 使用者要求在Windows環境完成編譯／測試後再補齊，本輪不提供舊Windows產物。 | 完成W21～W26與平台回歸後，準備不含個人INI／快取的Windows ZIP。 |
 
 ## 已完成的驗證
 
@@ -249,3 +252,19 @@ DLL SHA256：05D2CA471D465D2D4D69CEAE510E1F7336CACF1922D42D8C1FF5E283886727A5。
 使用者明確授權提交本次舊版間距與完整按鈕字樣修正；包含app.cpp及相關規則、計畫、進度、交接與Windows W26待回歸文件。基準為ddf1bf9，實際新SHA以git log核對；不包含交付App、個人組態、SDK或建置產物，未推送／建立遠端或標籤。先前「未提交」為此次授權前狀態。
 
 本輪只核對差異並建立提交，未修改功能、重新編譯／安裝／操作App；沿用M13的Release／75項及完整文字實機結果，Windows回歸仍待執行。
+
+
+## W26：Windows 工具列要求確認（2026-10-13）
+
+使用者明確要求Windows版工具列間距同舊版，MAC、瀏覽目錄、截圖及還原比例等按鈕字樣完整顯示，不使用省略號／隱藏文字。沿用已提交的M13共用來源（655a6a1），不複製工具列；Windows編譯、實機測試及交付更新留到Windows環境，Mac結果不能代替Windows驗證。
+
+本輪只補記需求與交接，未改程式或交付、未編譯／測試／安裝／提交／推送；Windows專屬碼、個人設定及精簡prg保持。
+
+
+## D03／R01／R02：公開GitHub與ZIP下載（2026-10-13）
+
+使用者已核准建立公開repository https://github.com/JimmyWon1028/oaClient2、提交最新Windows確認文件並推送；origin已建立。另要求編譯檔從oaClient2的Releases下載，以ZIP發布且不得包含Config.ini或其他快取。先提供Mac arm64，Windows在Windows環境完成編譯與實機測試後再補齊（R02），本輪不發布舊Windows產物。
+
+Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture／logs／Finder metadata；解壓逐檔及連結一致、10份arm64 Mach-O、codesign deep strict通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；程式內容與M13一致，沒有重新實作或重新編譯。公開發布／下載校驗結果後續追加，Windows回歸及U01尚未因此完成。本機SDK／壓縮檔／build保留，沒有安裝。
+
+發布說明及可重現流程見[Release文件](docs/RELEASES.md)。歷史無遠端／未推送紀錄保留為本次授權前狀態。

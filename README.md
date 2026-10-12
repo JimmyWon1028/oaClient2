@@ -43,8 +43,13 @@ Windows 與 Mac 的組態位置不同，接續開發先讀[平台路徑對照](d
 
 技術為 C++20、CEF 154 Chrome runtime、CEF Views 與 CMake。主網站使用 Views Chrome BrowserView；Console 使用獨立 Chrome CefWindow，由 Windows／Cocoa 平台函式定位在下方。來源共用，CEF SDK 與建置輸出放在各系統本機；使用者核准的交付例外為 `artifacts/oaClient2/`，Git 忽略但 Dropbox 仍同步。
 
-Git 為 main 分支，2026-10-13使用者授權首次本機來源提交；沒有遠端或標籤，未推送。未修改舊 oaClient／Reptool。
+Git 為 main 分支，使用者已授權建立公開 repository [JimmyWon1028/oaClient2](https://github.com/JimmyWon1028/oaClient2)，origin 指向該處。未修改舊 oaClient／Reptool。
 
 網址對話框使用單行預選網址及置中確定按鈕；縮放立即保存於 Config.ini 的 UserSet.ZoomPercent，下次啟動與主框架載入完成後套用。
 
 0.1.4新增userid／公司別等UserSet保存與回填、關閉登出等待、hcopen協定回呼，以及隨附prg/Reptool.exe呼叫。53項核心檢查與本機CEF合成設定／重啟／登出測試通過；正式登入／登出、報表及hcopen實測仍由使用者確認。詳細契約見[舊版相容說明](docs/LEGACY-COMPATIBILITY.md)與[prg副本清單](docs/PRG-INVENTORY.md)。
+
+
+## 下載編譯版本
+
+從 [GitHub Releases](https://github.com/JimmyWon1028/oaClient2/releases) 下載編譯好的ZIP；Mac壓縮包只包含完整oaClient2.app，不含Config.ini、快取、profile、截圖或紀錄。先提供macOS arm64初版測試版本，Windows在Windows環境完成編譯／測試後再補齊。下載與校驗方式見[RELEASES](docs/RELEASES.md)。這不是程式內線上更新功能，U01尚未實作。

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>oaClient2 合成相容測試</title>
+<script>
+  const earlyCookies = Object.fromEntries(document.cookie.split('; ').filter(Boolean).map(pair => {
+    const equal = pair.indexOf('=');
+    return [pair.slice(0, equal), decodeURIComponent(pair.slice(equal + 1))];
+  }));
+  var $g = { isLogin: true };
+  function getLoginState() {
+    const state = $g.isLogin ? 1 : 0;
+    fetch('/event/state-' + state);
+    console.log('loginState=' + state);
+    return state;
+  }
+  function logout() {
+    fetch('/event/logout-start');
+    setTimeout(() => {
+      $g.isLogin = false;
+      fetch('/event/logout-complete');
+    }, 600);
+  }
+  function verifyRoundTrip() {
+    const values = $tmp.userSet;
+    const passed = values.includes('userid=SYNTHETIC-PERSISTED') &&
+      values.includes('last_select_database=測試公司') && values.includes("Custom_Case=a=b'\\中文") &&
+      window.$usr && $usr.last_select_database === '測試公司';
+    document.querySelector('#result').textContent = passed ? 'PASS：INI 保存、回呼及 $usr 回填' : 'FAIL：設定契約';
+    fetch('/event/' + (passed ? 'preferences-pass' : 'preferences-fail'));
+  }
+  //2026.10.12 modify by codex, verify real Chromium storage removal across application restarts.
+  async function verifySiteData() {
+    const databases = await indexedDB.databases();
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    const clean = localStorage.getItem('synthetic-site-data') === null &&
+      !document.cookie.includes('synthetic_session=') && databases.length === 0 &&
+      (await caches.keys()).length === 0 && registrations.length === 0;
+    document.querySelector('#storage').textContent = clean ? 'PASS：網站資料已清除' : 'FAIL：舊網站資料殘留';
+    await fetch('/event/' + (clean ? 'site-data-clean' : 'site-data-fail'));
+    localStorage.setItem('synthetic-site-data', 'previous-session');
+    document.cookie = 'synthetic_session=previous-session; path=/';
+    const database = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('synthetic-site-data', 1);
+      request.onupgradeneeded = () => request.result.createObjectStore('values');
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    database.close();
+    await (await caches.open('synthetic-site-data')).put('/synthetic', new Response('previous-session'));
+    await navigator.serviceWorker.register('/site-data-worker.js');
+    await navigator.serviceWorker.ready;
+    await fetch('/event/site-data-created');
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    verifySiteData().catch(() => fetch('/event/site-data-error'));
+    const earlyPassed = ['SYNTHETIC-INITIAL', 'SYNTHETIC-PERSISTED'].includes(earlyCookies.userid) &&
+      earlyCookies.last_select_database === '測試公司';
+    document.querySelector('#early').textContent = earlyPassed ? 'PASS：網頁腳本前已回填偏好 Cookie' : 'FAIL：初始 Cookie';
+    fetch('/event/' + (earlyPassed ? 'boot-' + earlyCookies.userid : 'cookies-fail'));
+    const timer = setInterval(() => {
+      if (!$g.win_client || !$g.client_version.startsWith('oaClient2-')) return;
+      clearInterval(timer);
+      console.log('cmd=ini|key=userid|val=SYNTHETIC-PERSISTED');
+      console.log('cmd=ini|key=last_select_database|val=測試公司');
+      console.log("cmd=ini|key=Custom_Case|val=a=b'\\中文");
+      console.log('cmd=load-userset|func=verifyRoundTrip();');
+    }, 100);
+  });
+</script>
+<body style="font-family:Microsoft JhengHei,sans-serif;padding:32px">
+  <h1>oaClient2 合成相容測試</h1>
+  <p>僅使用合成資料及本機函式；沒有帳密欄位、驗證碼或真正登入。</p>
+  <p id="early">等待初始 Cookie</p>
+  <p id="result">等待 INI 契約</p>
+  <p id="storage">等待網站資料檢查</p>
+  <p>關閉視窗將測試等待合成 logout() 完成；重啟再檢查保存的 userid。</p>
+</body>
+</html>

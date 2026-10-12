@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>oaClient2 本機驗收</title>
+<style>
+  body { font-family: "Microsoft JhengHei", sans-serif; margin: 32px; color: #172a3a; }
+  input, textarea, button { font: inherit; padding: 8px; }
+  textarea { display: block; width: 80%; height: 100px; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #777; padding: 8px; }
+  .page { break-after: page; }
+  @media print { .controls { display: none; } body { margin: 0; } }
+  @page { size: A4; margin: 15mm; }
+</style>
+<h1>oaClient2 本機驗收</h1>
+<section class="controls">
+  <label>注音測試：<input id="ime" placeholder="以注音輸入中文" autofocus></label>
+  <textarea id="multiline" placeholder="多行注音與組字測試"></textarea>
+  <p><button onclick="window.print()">開啟瀏覽器列印預覽</button>
+  <button onclick="seed()">寫入合成網站資料</button></p>
+  <pre id="state"></pre>
+</section>
+<section class="page"><h2>第 1 頁：中文與表格</h2>
+  <table><tr><th>品項</th><th>數量</th></tr><tr><td>繁體中文列印測試</td><td>123</td></tr></table>
+</section>
+<section><h2>第 2 頁：分頁驗證</h2><p>第二頁應顯示這段繁體中文。</p></section>
+<script>
+  function show() {
+    document.querySelector('#state').textContent = JSON.stringify({
+      cookie: document.cookie,
+      localStorage: localStorage.getItem('oaClient2-test'),
+      events: window.inputEvents || []
+    }, null, 2);
+  }
+  function seed() {
+    document.cookie = 'oaClient2_test=synthetic; path=/; max-age=3600';
+    localStorage.setItem('oaClient2-test', 'synthetic');
+    indexedDB.open('oaClient2-test-db', 1);
+    show();
+  }
+  window.inputEvents = [];
+  for (const type of ['compositionstart', 'compositionupdate', 'compositionend', 'input']) {
+    document.querySelector('#ime').addEventListener(type, event => {
+      inputEvents.push({ type, data: event.data });
+      show();
+    });
+  }
+  show();
+</script>
+</html>

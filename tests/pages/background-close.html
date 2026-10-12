@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>oaClient2 背景關閉測試</title>
+<h1>背景登出與關閉合成測試</h1>
+<p id="mode"></p>
+<button id="activate" type="button">啟用關閉攔截測試</button>
+<script>
+  //2026.10.12 modify by codex, exercise acknowledgement and missing-response shutdown without real login data.
+  const mode = new URLSearchParams(location.search).get('mode') || 'ack';
+  var $g = { isLogin: true };
+  let logoutCount = 0;
+  document.getElementById('mode').textContent = mode === 'ack' ? '600ms 回報登出完成' : '不回報登出完成，等待 3 秒';
+  document.getElementById('activate').addEventListener('click', function () {
+    fetch('/event/' + mode + '-user-activation');
+  });
+  function getLoginState() { return $g.isLogin ? 1 : 0; }
+  function logout() {
+    logoutCount++;
+    fetch('/event/' + mode + '-logout-start-' + logoutCount);
+    if (mode === 'ack') {
+      setTimeout(function () {
+        $g.isLogin = false;
+        fetch('/event/ack-logout-complete');
+        console.log('loginState=0');
+      }, 600);
+    }
+  }
+  window.addEventListener('beforeunload', function (event) {
+    event.preventDefault();
+    event.returnValue = '';
+  });
+  fetch('/event/' + mode + '-ready');
+  console.log('cmd=clientReady');
+</script>
+</html>

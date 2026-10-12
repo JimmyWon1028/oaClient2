@@ -1,0 +1,12 @@
+#include <windows.h>
+#include "resources.h"
+1 RT_MANIFEST "oaClient2.exe.manifest"
+101 ICON "../../../assets/oaClient.ico"
+IDR_PNG_OACLIENT_16 RCDATA "../../../assets/oaClient-16.png"
+IDR_PNG_OACLIENT_32 RCDATA "../../../assets/oaClient-32.png"
+IDR_PNG_OACLIENT_256 RCDATA "../../../assets/oaClient-256.png"
+IDR_PNG_CONSOLE RCDATA "../../../assets/toolbar-console.png"
+IDR_PNG_HOME RCDATA "../../../assets/toolbar-home.png"
+IDR_PNG_SERVER RCDATA "../../../assets/toolbar-server.png"
+IDR_PNG_ZOOM_IN RCDATA "../../../assets/toolbar-zoom-in.png"
+IDR_PNG_ZOOM_OUT RCDATA "../../../assets/toolbar-zoom-out.png"

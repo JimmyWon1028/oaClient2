@@ -1,0 +1,38 @@
+# Build output
+/build*/
+/out/
+/dist/
+/bin/
+/obj/
+/artifacts/
+/prg/
+/CMakeUserPresets.json
+/CMakeCache.txt
+/CMakeFiles/
+
+# Downloaded CEF packages and archives
+/third_party/cef/
+/vendor/cef/
+/cef_binary_*/
+/cef_binary_*.zip
+/cef_binary_*.tar.bz2
+
+# Runtime settings and browser data
+/Config.ini
+/config.local.*
+/cache/
+/tmp/
+/user-data/
+/profiles/
+/.env
+/.env.*
+!.env.example
+*.log
+*.dmp
+
+# Machine-specific IDE and OS files
+/.vs/
+/.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -8,6 +8,28 @@
 void RunPlatformTests(const std::filesystem::path& root, const std::filesystem::path& config,
     oa::IniFile& ini, std::string& error, void (*Check)(bool, const char*)) {
   std::error_code ec;
+  //2026.10.13 modify by codex, verify the Windows entry policy preserves blank and existing server settings.
+  oa::Settings startup;
+  startup.home_url.clear();
+  startup.allow_empty_home_url = true;
+  const auto startup_config = root / "WindowsStartup.ini";
+  oa::IniFile startup_ini;
+  Check(oa::LoadSettings(startup_config, startup, error) && startup.home_url.empty(),
+    "first Windows INI keeps an unconfigured HomeUrl empty");
+  Check(startup_ini.Load(startup_config, error) && startup_ini.Get("SysSet", "HomeUrl", "missing").empty(),
+    "Windows welcome navigation does not persist a local data URL");
+  startup_ini.Set("SysSet", "HomePage", "unused-page");
+  Check(startup_ini.Save(startup_config, error) && oa::LoadSettings(startup_config, startup, error) &&
+    startup.home_url.empty(), "Windows HomePage preserves an unconfigured server URL");
+  startup_ini.Set("SysSet", "HomePage", "");
+  startup_ini.Set("SysSet", "HomeUrl", "example.test");
+  Check(startup_ini.Save(startup_config, error) && oa::LoadSettings(startup_config, startup, error) &&
+    startup.home_url == "https://example.test", "Windows existing hostname uses shared URL normalization");
+  oa::Settings restarted;
+  restarted.home_url.clear();
+  restarted.allow_empty_home_url = true;
+  Check(oa::LoadSettings(startup_config, restarted, error) && restarted.home_url == "https://example.test",
+    "Windows existing personal URL survives a fresh settings instance");
   wchar_t executable_path[32768]{};
   GetModuleFileNameW(nullptr, executable_path, 32768);
   const auto receiver = std::filesystem::path(executable_path).parent_path() / "oaClient2_report_receiver.exe";

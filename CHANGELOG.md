@@ -334,3 +334,26 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 僅提供Mac arm64 ZIP與同名.sha256；GitHub大小／digest與本機相同，不帶登入憑證的公開重新下載兩檔逐位元一致，ZIP CRC通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；解壓bundle逐檔／連結一致、10份arm64 Mach-O／簽章核對，無Config.ini、cache、profile、picture、logs或Finder metadata。未把SDK、建置或個人資料推入Git，未安裝或清除本機SDK。
 
 此輪只是發布與下載驗證，沒有重新編譯或擴大功能驗收。Windows R02等在Windows環境完成W21～W26後再補齊，U01仍未實作。發布證據存artifacts/verification/releases-v0.1.6；本段結果文件另行提交推送，最新main SHA以Git log／ls-remote核對。
+
+
+## 2026-10-13：W21～W26 Windows 接線與交付回歸
+
+- Mac停止操作及Dropbox完成由使用者確認；main／遠端59a323a與固定v0.1.6來源核對，無lock／來源衝突。本輪沒有提交／推送／Tag或Release操作。
+- Windows main.cpp五行啟用共用空白歡迎、隱藏縮放彈窗及BackgroundGrace，安全INI範例改空白；W24～W26沿用Mac已完成的app.cpp。common／app與Mac來源、產物未改。增加五項Windows啟動政策核心案例及合成頁動態title按鈕。
+- MSVC Release／CTest1/1、74項通過，包含Windows保存拒寫／metadata與合成Reptool參數。W21空白UI／兩個入口／ESC／無效URL拒絕／保存重啟、W22網站110%重啟／無彈窗／還原、W23 ACK649及1117ms／無回應3007ms／logout一次／主窗與Console隱藏／beforeunload放行／全部程序退出已測。
+- W24按鈕與實際Explorer Shell目錄一致；W25歡迎、OA及document.title動態名稱；W26原298 DIP／2 DIP留白、完整MAC／瀏覽目錄／截圖／還原比例及原圖示在Windows畫面核對。兩輪原legacy-contract真實CEF通過UserSet／Cookie前置回填／func／$usr與重啟全部網站儲存清理。
+- Codex映射環境兩次PROFILE_PATH_REJECTED與Explorer UI授權逾時分開記錄，不放寬profile界線；經既有Explorer程序啟動後成功。未核對成功的Console輸入不列為通過，實作／測試／工具等待工時分開。
+- 只更新交付EXE／安全範例，EXE SHA256 9b60d756ee39ca6dc3725e4e608f3d63ac18f1602b69c9bf43c53d32fc7daed2；CEF234份一致、不補回prg。Mac／報表工具／picture／tpl等275份不變，正式INI最後正常關閉更新Window後保留現况，不聲稱逐位元不變。測試INI還原、伺服器及App停止；SDK／壓縮檔／build保留。
+- 同步計畫／進度／交接與操作／環境；證據在artifacts/verification/windows-w21-w26。列印／Microsoft注音、正式OA／Reptool／hcopen／工具列間距仍待使用者驗收；未測情境明列，U01未實作，R02後續依授權處理。
+
+
+## 2026-10-13：W27 隱藏左下角JavaScript連結提示
+
+- 依使用者圖片，核對CEF154的chrome_status_bubble正式欄位；共用CreateMainWindow新增STATE_DISABLED與英文日期註解，共兩行，不改OA選單／JavaScript。
+- Windows MSVC增量Release／CTest1/1通過；真實CEF合成選單與子選單停留時無javascript:void(0)狀態提示，兩個JavaScript動作及事件均通過。
+- 正常關閉原交付後僅換EXE，SHA256 e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，版本0.1.6；合成頁退出／伺服器停止、原OA已重開供驗收。設定／CEF配置保持，prg／picture／tpl與Mac共275份雜湊不變，SDK／build保留。
+- Mac專屬碼與產物未改，但共用設定須在Mac重編／實測才生效；沒有Git提交／推送／Tag／Release操作，不擴大列印／注音或正式OA驗收。證據在artifacts/verification/windows-w27，工作計畫／進度／交接同步。
+
+## 2026-10-13：D03／R02 提交推送及Windows發布授權
+
+使用者要求打包發布，隨後明確指定先commit、push；提交W21～W27來源與文件，W27已實測合成頁以相同內容保留tests/pages/status-hint.html供跨平台重現。提交前main／遠端同59a323a，沒有新lock或來源衝突；產物／個人INI／prg／SDK不納入Git，v0.1.6 Tag不移動，Mac資產保持。實際提交／推送／打包／發布結果後續追加。

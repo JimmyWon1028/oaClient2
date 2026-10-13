@@ -64,3 +64,12 @@ hcopen 回呼沿用同一 OS 處理器規則；Mac LaunchServices 查詢本機�
 舊 fmMainOaClientu.pas 的 crmTitleChange（1720～1732行）使用 CEF title 加上用戶端版本；OA my.main.js 的 doSetTitle（956行）寫 document.title，getDBCaption 回應及 sys_title 都透過它更新。新 app.cpp 沿用 OnTitleChange，網站提供名稱、本程式提供客戶端版本；沒有新增軟體資訊命令、修改 OA JS 或持久保存公司名稱。主視窗標題為「網頁提供的軟體名稱 [用戶端版本 0.1.6]」。名稱從 URL 頁面的 document.title 經 CEF OnTitleChange 取得，沿用舊版 crmTitleChange，不寫死良穎或其他公司名稱；網頁更新名稱時跟著更新。尚未設定網址／尚未取得標題時使用「oaClient2 [用戶端版本 0.1.6]」，本機歡迎頁不覆蓋這個預設。0.1.6為目前實際客戶端版本，不使用參考圖中舊 oaClient 的2026.10.11.1。
 
 只改主視窗標題；原彈出視窗及 Console 流程維持。Mac 已實測兩個網站名稱，Windows 共用來源回歸待 W25，未宣稱 Windows 交付已更新。
+
+
+## 2026-10-13：Windows W21～W26 接續結果
+
+Windows入口已啟用空白HomeUrl／allow_empty_home_url、hide_zoom_bubble及background_logout_close；W24設定父目錄、W25網站動態title與0.1.6版本、W26右側298 DIP／完整字樣直接編譯原共用app.cpp。共用來源沒有複製或重寫，Mac專屬碼與交付未改。
+
+Windows MSVC Release／CTest1/1、74項與本輪歡迎頁、網址／縮放重啟、ACK／三秒期限／Console／beforeunload／全部退出、UserSet／網站儲存、目錄／動態標題／完整字樣實測已完成；詳見[最新Windows結果](../PROGRESS.md)。正式列印／Microsoft注音／OA登出／Reptool及間距待使用者驗收，未測情境以進度為準，U01未實作。
+
+交付artifacts/oaClient2/oaClient2.exe與安全範例已更新；Windows INI／picture仍在EXE旁，CEF仍在cef/，prg不補回／覆蓋。正式INI最後正常關閉更新Window後保留現況；不宣稱逐位元不變。SDK／壓縮檔／build保留。本輪未提交／推送／發布，固定v0.1.6 Tag不動，後續Git／R02仍依使用者授權。前段Windows「尚未啟用／待回歸」是此次接續前狀態。

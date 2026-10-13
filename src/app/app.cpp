@@ -842,6 +842,8 @@ void App::CreateMainWindow() {
   CEF_REQUIRE_UI_THREAD();
   auto dock = std::make_shared<ConsoleDock>();
   CefBrowserSettings settings;
+  //2026.10.13 modify by codex, hide link status hints without changing website menu actions.
+  settings.chrome_status_bubble = STATE_DISABLED;
   //2026.10.12 modify by codex, hide the Chrome zoom bubble while retaining native zoom steps and INI persistence.
   if (context_->hide_zoom_bubble) settings.chrome_zoom_bubble = STATE_DISABLED;
   auto view = CefBrowserView::CreateBrowserView(client_, StartupNavigationUrl(*context_), settings,

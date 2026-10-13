@@ -1,6 +1,6 @@
 # Windows 操作與設定
 
-2026-10-12，Windows x64 簡易版 0.1.6。
+2026-10-13，Windows x64 簡易版 0.1.6，W21～W26交付已更新。
 
 Windows 的 Config.ini／picture 在 EXE 旁，這是 Windows 配置。Mac 改用 Application Support，不能套用到 Windows；共用程式讀寫組態前，先核對[兩平台路徑對照](PLATFORM-PATHS.md)。INI 欄位與共用流程仍相同。
 
@@ -27,7 +27,7 @@ Windows 的 Config.ini／picture 在 EXE 旁，這是 Windows 配置。Mac 改�
 | 首頁圖示 | 重新讀取 INI 的 HomeUrl／HomePage 並載入首頁。 |
 | 伺服器圖示 | 單行網址對話框，開啟時全選目前網址；藍色提示、置中確定，X／ESC 取消。確認後驗證 HTTP／HTTPS、寫入 HomeUrl 並立即載入。取消不改設定。 |
 | MAC | 顯示目前啟用的 IPv4 網路介面及各自 MAC；只在本機對話框顯示。 |
-| 瀏覽目錄 | 開啟實際 Config.ini 所在目錄，目前為 EXE 同目錄。M11 共用來源已調整，Windows 重新編譯／回歸待 W24。 |
+| 瀏覽目錄 | 開啟實際 Config.ini 所在目錄，目前為 EXE 同目錄。W24已在Windows編譯與實測。 |
 | 截圖 | 擷取前景 oaClient2 視窗的可見範圍，含視窗標題與工具列；存成 JPG，詢問是否開啟檔案所在資料夾。不是整個桌面，也不是整份網頁的長截圖。 |
 | 還原比例 | 還原至 100%，保存縮放設定。 |
 | 縮小／放大 | 使用 Chromium 縮放階段，保存百分比至 INI。 |
@@ -40,7 +40,7 @@ Console 區域目前固定 220 DIP 高，尚未提供舊版分隔線拖曳。原
 
 | 欄位 | 意義／預設值 |
 | --- | --- |
-| SysSet.HomeUrl | https://oa.lysm.com.tw/；純主機名稱補 https://。 |
+| SysSet.HomeUrl | 新安裝預設空白，顯示共用歡迎頁；確認有效HTTP／HTTPS後保存。既有網址直接載入，純主機名稱補https://。 |
 | SysSet.HomePage | 可選首頁路徑；與 HomeUrl 組合載入。 |
 | SysSet.ClearCache | Y；啟動前刪除全部網站 profile。N 明確保留資料，會改變預設全清行為。 |
 | SysSet.Locale | zh-TW；CEF 語系。 |
@@ -81,7 +81,7 @@ PNG 名稱只是程式內嵌資源的識別；不用將原 PNG 複製到程式�
 
 UserSet支援userid、last_select_database（公司別）、def_lang、user_font、report_font、easyui_theme、easyui_bgcolor、easyui_bgimage等網頁傳入的通用偏好，並非固定欄位白名單。登入userid通常由OA完成登入流程時發送，公司別由選取時發送；沒有匯入舊帳號或保存密碼。
 
-啟動先清舊網站資料，再從INI偏好建立新的當次Cookie，供OA原本的getCookie讀取；load-userset及$usr也可讀回。INI回填不是自動登入，登入參數／token仍不保留。關閉時已登入才呼叫網頁logout並等待狀態0，最多約10秒；逾時仍關閉並記錄，不能把逾時視為伺服器已登出。
+啟動先清舊網站資料，再從INI偏好建立新的當次Cookie，供OA原本的getCookie讀取；load-userset及$usr也可讀回。INI回填不是自動登入，登入參數／token仍不保留。W23關閉時立即派送網頁logout一次並隱藏主窗／Console；背景收到loginState=0即退出，未收到最多等待三秒，透過CEF任務維持UI可回應。重複關閉不重送／不延長期限，beforeunload在背景關閉期間自動允許。期限到期只表示客戶端退出，不能視為伺服器已登出。
 
 Reptool使用隨附prg/Reptool.exe及主程式根目錄作為工作目錄；若報表需要其他範本／外部安裝，以實際工具的需求為準，本輪未複製prg以外的舊資料夾。詳細來源與偏好清單見[相容說明](LEGACY-COMPATIBILITY.md)。
 
@@ -124,3 +124,17 @@ Windows 放大／縮小也須隱藏 Chromium 縮放彈窗，但依使用者最�
 使用者明確要求Windows版工具列間距同舊版，MAC、瀏覽目錄、截圖及還原比例等按鈕字樣完整顯示，不使用省略號／隱藏文字。沿用已提交的M13共用來源（655a6a1），不複製工具列；Windows編譯、實機測試及交付更新留到Windows環境，Mac結果不能代替Windows驗證。
 
 本輪只補記需求與交接，未改程式或交付、未編譯／測試／安裝／提交／推送；Windows專屬碼、個人設定及精簡prg保持。
+
+
+## 2026-10-13 W21～W26 現行Windows行為
+
+新安裝／HomeUrl空白時顯示與Mac相同的內嵌歡迎頁。歡迎按鈕與工具列網址圖示使用原單行對話框；ESC／X取消不改設定，有效HTTP／HTTPS確認後才保存並載入。data URL不存INI；原本個人網址不覆蓋。放大／縮小不顯示Chromium彈窗，原縮放階段、100%還原及UserSet.ZoomPercent保存／重啟仍保留。
+
+主視窗未取得網站名稱時顯示「oaClient2 [用戶端版本 0.1.6]」，取得document.title後顯示網站名稱與版本，後續名稱變更立即更新，不寫死公司名。右側八個工具寬度23／23／40／67／38／61／23／23 DIP，完整保留字樣／原圖示；左Console仍30 DIP。
+
+本輪Windows MSVC／74項及實機驗證詳見[PROGRESS](../PROGRESS.md)；列印預覽／Microsoft注音、正式OA登出／Reptool與最終間距仍由使用者驗收。U01線上更新未實作。前段「待回Windows」屬歷史交接，以本節及最新進度為準。
+
+
+## W27：滑鼠連結提示隱藏（2026-10-13）
+
+移到選單／連結時不再顯示左下角Chrome網址狀態泡泡（例如javascript:void(0)）；原選單JavaScript與工具列命令保持。Windows交付0.1.6已更新並重開，建置／合成實測見[進度](../PROGRESS.md) W27，正式OA選單由使用者確認。

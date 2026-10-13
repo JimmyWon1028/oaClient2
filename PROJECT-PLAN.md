@@ -309,3 +309,19 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 僅提供Mac arm64 ZIP與同名.sha256；GitHub大小／digest與本機相同，不帶登入憑證的公開重新下載兩檔逐位元一致，ZIP CRC通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；解壓bundle逐檔／連結一致、10份arm64 Mach-O／簽章核對，無Config.ini、cache、profile、picture、logs或Finder metadata。未把SDK、建置或個人資料推入Git，未安裝或清除本機SDK。
 
 此輪只是發布與下載驗證，沒有重新編譯或擴大功能驗收。Windows R02等在Windows環境完成W21～W26後再補齊，U01仍未實作。發布證據存artifacts/verification/releases-v0.1.6；本段結果文件另行提交推送，最新main SHA以Git log／ls-remote核對。
+
+
+## 2026-10-13：W21～W26 Windows 已接續
+
+使用者確認Mac停止操作及同步完成後，在Windows入口啟用與Mac相同的空白首頁政策、hide_zoom_bubble及background_logout_close。Settings預設物件仍保留既有相容fallback，兩平台入口都明確選擇空白政策；已有INI網址不覆蓋，歡迎data URL不保存。共用welcome／LogoutFlow／app保持原單一來源，W24設定父目錄、W25網站title＋實際0.1.6版本、W26右側298 DIP與完整字樣直接沿用，不重寫。
+
+Windows MSVC Release、CTest1/1與74項，以及本輪UI／兩輪UserSet儲存回歸已通過，交付EXE更新；每項實測、環境失敗與未驗收項目見[進度](PROGRESS.md)最新W21～W26段。背景無回應三秒到期不代表伺服器登出成功。Windows INI／picture仍在EXE旁，個人設定、報表工具與Mac產物保留；SDK／壓縮檔／build不清除。
+
+列印預覽／Microsoft注音、正式OA登入登出／Reptool、hcopen及工具列間距使用者驗收尚未完成；其他DPI、晚建立Console／一般popup特定競態尚未獨立實測，歡迎頁縮放及網址X取消已另行補測通過。U01保留且仍未實作。R02後續ZIP須不含個人INI／快取，Git提交／推送／公開發布仍依授權；不移動既有v0.1.6 Tag、不改Mac資產。
+
+
+## W27：不顯示Chrome連結狀態提示
+
+使用者要求滑鼠移到OA選單時，左下角不顯示javascript:void(0)。使用CEF正式chrome_status_bubble=STATE_DISABLED停用瀏覽器連結狀態提示；網站選單命令／JavaScript不改，共用app.cpp保持唯一來源。Windows本輪建置／合成選單與子選單實機通過、交付EXE更新，正式OA由使用者驗收。Mac不在Windows重編或改平台實作，需在macOS接續共用設定回歸；U01與其他未驗收範圍保持。
+
+2026-10-13使用者新增授權：先commit／push本輪W21～W27，再接續Windows ZIP打包與公開發布。只納入安全來源／文件／共用測試；ZIP排除個人INI及網站資料，保留既有Mac資產與固定Tag，記錄Windows實際來源提交及下載雜湊。

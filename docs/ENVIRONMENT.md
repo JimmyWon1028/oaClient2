@@ -112,3 +112,12 @@ M04 起 package-macos.sh 只複製 .app；舊交付旁的 INI／picture 不覆�
 M11 開始時本機 SDK 已不存在，初次 CMake 配置失敗；重新下載相同154.0.34 macosarm64套件，大小／SHA1／SHA256均與上列固定值一致，解壓後完成 Release／CTest1/1、75項及 bundle簽章核對。沒有更換 CEF 版本。
 
 使用者明確要求編譯後保留本機 CEF SDK。解壓 SDK、原始 tar.bz2及 build/macos-arm64 都保留在本機 Library/Caches/oaClient2；不因交付完成自動刪除，也不移至同步專案。後續直接沿用此 SDK／建置目錄。Mac交付只更新 artifacts/macos-arm64/oaClient2.app，不安裝到 Applications；M11實機結果見 PROGRESS。
+
+
+## 2026-10-13：Windows W21～W26 接續結果
+
+Windows入口已啟用空白HomeUrl／allow_empty_home_url、hide_zoom_bubble及background_logout_close；W24設定父目錄、W25網站動態title與0.1.6版本、W26右側298 DIP／完整字樣直接編譯原共用app.cpp。共用來源沒有複製或重寫，Mac專屬碼與交付未改。
+
+Windows MSVC Release／CTest1/1、74項與本輪歡迎頁、網址／縮放重啟、ACK／三秒期限／Console／beforeunload／全部退出、UserSet／網站儲存、目錄／動態標題／完整字樣實測已完成；詳見[最新Windows結果](../PROGRESS.md)。正式列印／Microsoft注音／OA登出／Reptool及間距待使用者驗收，未測情境以進度為準，U01未實作。
+
+交付artifacts/oaClient2/oaClient2.exe與安全範例已更新；Windows INI／picture仍在EXE旁，CEF仍在cef/，prg不補回／覆蓋。正式INI最後正常關閉更新Window後保留現況；不宣稱逐位元不變。SDK／壓縮檔／build保留。本輪未提交／推送／發布，固定v0.1.6 Tag不動，後續Git／R02仍依使用者授權。前段Windows「尚未啟用／待回歸」是此次接續前狀態。

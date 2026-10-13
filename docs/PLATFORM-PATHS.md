@@ -52,3 +52,12 @@ INI／picture／logs／instance.lock 不在網站清理目標中；舊網站 Coo
 Mac 新安裝 HomeUrl 空白；內嵌歡迎頁的 data URL 僅供當次顯示，不寫入 INI。使用者確認有效伺服器網址後才保存；已有網址保持直接載入。Windows 也要求相同歡迎頁，但入口預設調整與驗證待回 Windows 完成，現行 Windows 0.1.6 仍是原預設。
 
 Mac 專屬碼在 macOS 開發，Windows 專屬碼在 Windows 開發。共用 INI／app／welcome 保持一份；另一平台的編譯與實機回歸須另外執行。W22 的 Windows 縮放彈窗需求亦先記錄、回 Windows 再實作。
+
+
+## 2026-10-13：Windows W21～W26 接續結果
+
+Windows入口已啟用空白HomeUrl／allow_empty_home_url、hide_zoom_bubble及background_logout_close；W24設定父目錄、W25網站動態title與0.1.6版本、W26右側298 DIP／完整字樣直接編譯原共用app.cpp。共用來源沒有複製或重寫，Mac專屬碼與交付未改。
+
+Windows MSVC Release／CTest1/1、74項與本輪歡迎頁、網址／縮放重啟、ACK／三秒期限／Console／beforeunload／全部退出、UserSet／網站儲存、目錄／動態標題／完整字樣實測已完成；詳見[最新Windows結果](../PROGRESS.md)。正式列印／Microsoft注音／OA登出／Reptool及間距待使用者驗收，未測情境以進度為準，U01未實作。
+
+交付artifacts/oaClient2/oaClient2.exe與安全範例已更新；Windows INI／picture仍在EXE旁，CEF仍在cef/，prg不補回／覆蓋。正式INI最後正常關閉更新Window後保留現況；不宣稱逐位元不變。SDK／壓縮檔／build保留。本輪未提交／推送／發布，固定v0.1.6 Tag不動，後續Git／R02仍依使用者授權。前段Windows「尚未啟用／待回歸」是此次接續前狀態。

@@ -24,6 +24,11 @@ int RunMain(HINSTANCE instance) {
   }
 
   auto context = std::make_shared<oa::AppContext>();
+  //2026.10.13 modify by codex, opt Windows into the shared welcome, zoom and background logout policies.
+  context->settings.home_url.clear();
+  context->settings.allow_empty_home_url = true;
+  context->hide_zoom_bubble = true;
+  context->background_logout_close = true;
   std::string error;
   int result = 1;
   if (oa::GetAppPaths(context->paths, error) &&

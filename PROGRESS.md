@@ -1,6 +1,6 @@
 # oaClient2 進度表
 
-更新：2026-10-13。Windows 簡易版 0.1.6 保留；Mac arm64 0.1.6 已建置交付，列印預覽／注音待使用者驗收。使用者新增工具列、同目錄 INI／picture、啟動最大化及沿用圖示需求已納入。
+更新：2026-10-13。Windows 0.1.6 已完成 W21～W26 接線、MSVC 與本輪實機回歸，交付已更新；Mac arm64 0.1.6 已建置交付，列印預覽／注音待使用者驗收。使用者新增工具列、同目錄 INI／picture、啟動最大化及沿用圖示需求已納入。
 
 ## 工作項目
 
@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | D01 | 閱讀舊 oaClient／Reptool | 已完成第一輪來源盤點；本輪核對 PAS／DFM 工具列並操作舊版 Console 開關。 | 逐一核對其他命令契約。 |
 | D02 | 列印預覽技術查證 | 已確認 Electron 不符內建預覽要求；Windows 採 CEF Chrome。 | Mac 核對 #3410 正式配套及實測。 |
-| D03 | Git／GitHub | 公開JimmyWon1028/oaClient2已建立；ddf1bf9／655a6a1及最新文件提交0fe6f35已推送，origin/main核對一致。 | 發布結果文件本輪追加提交／推送；產物與個人資料不納入Git。 |
+| D03 | Git／GitHub | 接手main／origin/main皆為59a323a，乾淨且無lock／來源衝突；固定v0.1.6指向0fe6f35。本輪功能及文件尚未提交／推送。 | 後續提交、推送與發布依使用者授權；不移動Tag。 |
 | D04 | 計畫／紀錄／跨平台交接 | 已整理 Mac 接續入口，Windows W21／W22 提示詞已存 [WINDOWS-CODEX-PROMPT.md](docs/WINDOWS-CODEX-PROMPT.md)，包含平台開發分工、共用來源與組態路徑差異。 | 回 Windows 先核對同步與來源，再實作／編譯／回歸；Windows 本輪未改。 |
 | D05 | 時間與平台範圍 | 排除環境準備及測試；Mac 固定 arm64。 | 記錄測試後修正。 |
 | D06 | 網站／資料／INI 決策 | Windows 現行預設 OA；Mac 初始 URL 空白、設定後保存。Windows EXE 旁 INI，Mac Application Support；網站全清、設定保留。 | Windows 相同歡迎頁 W21 待 Windows 環境實作。 |
@@ -47,16 +47,15 @@
 | M11 | 瀏覽 Config.ini 所在目錄 | 共用 app.cpp 已調整；Mac Release／CTest1/1、75項通過，Finder 實際開啟 Support 內的設定目錄。交付已更新。 | 未安裝；Windows 編譯／實機回歸另列 W24。 |
 | M12 | 網頁軟體資訊與客戶端版本標題 | 共用 app.cpp 已調整；Mac Release／CTest1/1、75項，歡迎頁及兩個網站動態名稱實測通過，交付已更新。 | 未安裝；Windows 編譯／實機回歸另列 W25。 |
 | M13 | 右側工具列舊版間距／完整文字 | 共用按鈕寬度採舊 DFM，右側346→298 DIP；減少內部留白，Mac完整文字實測及Release／75項通過，交付已更新。 | 保留測試視窗供使用者驗收；Windows另列W26，未安裝；使用者已授權本機提交。 |
-| W21 | Windows 相同歡迎頁 | 使用者已確認需求；頁面共用來源已準備，Windows 空白 URL 預設／入口接線尚未實作。 | 在 Windows 環境實作、MSVC 編譯及實機驗證，保留既有個人網址。 |
-| W22 | Windows 隱藏縮放彈窗 | 使用者明確要求先記錄，回 Windows 再做；目前未啟用、未編譯／實測，交付 EXE 未更新。 | Windows 入口啟用共用旗標並驗證縮放、保存與重啟。 |
-| W23 | Windows 隱藏背景登出／三秒退出 | 新需求及共用模式已備妥，Windows 入口尚未啟用，Windows 專屬碼／交付未改。 | 回 Windows 啟用 background_logout_close，驗證主窗／Console、ACK 提早退出、三秒上限及 beforeunload。 |
-
-| W24 | Windows 設定目錄瀏覽回歸 | M11 共用來源已調整，Windows 專屬碼與交付未改；未編譯／實測。 | 回 Windows 編譯，核對按鈕與提示開啟實際 Config.ini 父目錄，更新交付。 |
-| W25 | Windows 網頁資訊標題回歸 | 使用者明確確認 Windows 與 Mac 標題相同、名稱從 URL 頁面取得。M12 共用來源已調整；Windows 專屬碼／交付未改，未編譯／實測。 | 回 Windows 編譯，驗證未載入與網站動態名稱／版本，沿用共用流程。 |
-| W26 | Windows 工具列間距／完整文字 | 使用者明確要求Windows也與舊版相同間距、完整字樣，先記錄再回Windows編譯測試。M13共用來源已備妥；Windows專屬碼／交付未改、未編譯／實測。 | 回Windows核對完整文字、圖示及舊版間距，不把Mac截圖當成Windows通過。 |
-
+| W21 | Windows 相同歡迎頁 | Windows 入口已啟用空白 HomeUrl／allow_empty_home_url；沿用 welcome.h／app.cpp。MSVC／74項通過，空白頁、兩個設定入口、ESC／X、無效網址拒絕、HTTP保存／重啟已實測。 | 列印／注音及正式使用者驗收待確認；保留既有個人網址。 |
+| W22 | Windows 隱藏縮放彈窗 | 入口 hide_zoom_bubble=true；MSVC／74項，網站及歡迎頁110%→100%、還原100%、網站重啟110%實測，無Chromium彈窗。 | 其他DPI／多螢幕未測；比例保存契約不變。 |
+| W23 | Windows 隱藏背景登出／三秒退出 | 入口 background_logout_close=true；合成ACK649ms、一般桌面ACK1117ms、無回應3007ms；logout一次、主窗／Console隱藏、beforeunload放行及全部程序退出通過。 | 正式OA登出待使用者驗收；到期不代表伺服器登出成功；晚建立窗口競態未獨立重現。 |
+| W24 | Windows 設定目錄瀏覽回歸 | 沿用 paths.config.parent_path()；建置與正式交付位置的按鈕／提示實測，Explorer Shell確認實際Config.ini父目錄。 | 已更新交付EXE；Windows INI仍在EXE旁。 |
+| W25 | Windows 網頁資訊標題回歸 | 歡迎頁預設、正式OA名稱及合成document.title動態更新實測；版本0.1.6。共用標題來源未重寫。 | 正式登入後公司名稱切換由使用者驗收；未新增INI品牌欄位。 |
+| W26 | Windows 工具列間距／完整文字 | M13共用298 DIP／左右2 DIP設定已在Windows編譯，MAC／瀏覽目錄／截圖／還原比例完整顯示、原圖示與順序核對。 | 使用者最終間距驗收、其他DPI／多螢幕未測。 |
+| W27 | 隱藏連結狀態提示 | 共用CefBrowserSettings.chrome_status_bubble=STATE_DISABLED；Windows Release／CTest1/1通過。真實CEF合成JavaScript選單／子選單無左下角提示，原動作正常；EXE已更新及重開OA。 | 正式OA選單由使用者驗收；Mac須在macOS重新編譯／實測，Mac產物未改。 |
 | R01 | Mac ZIP Releases | v0.1.6初版測試Release已公開；ZIP只有.app，GitHub大小／digest、無登入公開下載ZIP與校驗檔逐位元一致。 | 列印／一般注音等仍待使用者驗收；Windows補齊見R02。 |
-| R02 | Windows Release補齊 | 使用者要求在Windows環境完成編譯／測試後再補齊，本輪不提供舊Windows產物。 | 完成W21～W26與平台回歸後，準備不含個人INI／快取的Windows ZIP。 |
+| R02 | Windows Release補齊 | W21～W26的Windows建置／實機回歸已完成，新EXE已交付；本輪尚未製作ZIP或公開發布。 | 後續依使用者授權準備不含個人INI／快取的ZIP、提交與發布；不移動Tag。 |
 
 ## 已完成的驗證
 
@@ -277,3 +276,37 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 僅提供Mac arm64 ZIP與同名.sha256；GitHub大小／digest與本機相同，不帶登入憑證的公開重新下載兩檔逐位元一致，ZIP CRC通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；解壓bundle逐檔／連結一致、10份arm64 Mach-O／簽章核對，無Config.ini、cache、profile、picture、logs或Finder metadata。未把SDK、建置或個人資料推入Git，未安裝或清除本機SDK。
 
 此輪只是發布與下載驗證，沒有重新編譯或擴大功能驗收。Windows R02等在Windows環境完成W21～W26後再補齊，U01仍未實作。發布證據存artifacts/verification/releases-v0.1.6；本段結果文件另行提交推送，最新main SHA以Git log／ls-remote核對。
+
+
+## W21～W26：Windows 接線、建置與實機回歸（2026-10-13）
+
+- 接手：使用者確認Mac已停止編輯／建置／Git且Dropbox同步完成。main與遠端同為59a323a38d8e64122522882b0cb06649c1729e0d，來源乾淨，沒有lock、未合併來源或衝突副本；v0.1.6 annotated Tag的來源仍是0fe6f357173fb7802cca8504c2ea007dd5e7834d。初次受限網路DNS查詢失敗，唯讀提升查詢後核對成功。
+- 實作：src/platform/windows/main.cpp僅新增五行設定／註解，啟用home_url.clear、allow_empty_home_url、hide_zoom_bubble與background_logout_close；config/Config.example.ini改空白HomeUrl。src/common與src/app沒有新增副本或重寫，Windows直接編譯Mac接續後的同一份共用來源；Mac專屬來源與交付未修改。tests/windows_tests.cpp增加五項Windows啟動INI政策檢查，background-close.html增加動態標題按鈕供真實OnTitleChange測試。
+- 建置：沿用固定MSVC、SDK與CEF154.0.34，本機windows-x64-standalone增量Release成功，CTest1/1；74 checks／0 failures。包括共用BackgroundGrace重複關閉不重送／不重設期限、Windows INI metadata／拒寫及Reptool合成兩參數／中文／引號／工作目錄案例。ATL／Doxygen及不需要的DELAYLOAD警告不影響成功結果，未升級CEF。
+- W21：缺少INI建立空白HomeUrl由核心案例驗證；UI使用隔離空白INI，歡迎頁／原圖、正確預設版本標題、歡迎按鈕／工具列入口、ESC取消與無效ftp拒絕均實測。取消／拒絕後INI與範例SHA256相同；有效HTTP localhost確認後才保存，重啟直接載入。歡迎data URL未存INI。首輪啟動曾依既有相容流程遷移舊本機INI到測試EXE旁，之後改用合成設定，沒有更動正式個人網址。
+- W22：網站100%→110%→100%，再110%關閉重啟確認ZOOM_APPLIED percent=110，還原按鈕保存100%；畫面無Chromium縮放彈窗。09:48～09:49另以一般桌面環境補測歡迎頁100%→110%→100%，亦無彈窗且HomeUrl仍空白；網址對話框X取消後INI雜湊不變。其他DPI／多螢幕未執行，不能用Mac測試替代。
+- W23：合成ACK649ms（Codex啟動環境）及一般桌面ACK1117ms；無回應3007ms觸發三秒任務。兩個含Console案例均記CLOSE_WINDOWS_HIDDEN main=1 console=1，logout各一次、實際點擊啟用beforeunload後記UNLOAD_ALLOWED、兩個Browser全部關閉及SHUTDOWN_COMPLETE；CIM核對全部oaClient2程序消失。3007ms包含CEF任務排程誤差，不表示伺服器已登出。晚建立窗口的特定競態與一般彈出窗口本輪未獨立重現，原共用保護／彈出流程保留。
+- W24：按鈕的可存取名稱為「瀏覽 Config.ini 所在目錄」，實際Explorer Shell目錄與測試EXE旁Config.ini父目錄一致；正式交付也開啟artifacts/oaClient2，沒有改用Mac路徑。W25：歡迎標題oaClient2、公開OA標題良穎資訊系統、頁面按鈕改document.title後立即變「動態軟體名稱 [用戶端版本 0.1.6]」。W26：右側23／23／40／67／38／61／23／23 DIP與各側2 DIP保留，Windows真實畫面完整顯示MAC／瀏覽目錄／截圖／還原比例及原圖示，未縮字或藏字。
+- 共用回歸：兩輪原legacy-contract.html真實CEF，首載Cookie在網頁腳本前就緒，cmd=ini／load-userset原func／$usr、合成userid／公司別保存通過；第二次boot-SYNTHETIC-PERSISTED、preferences-pass及site-data-clean。上輪Cookie／Local Storage／IndexedDB／Service Worker／Cache Storage由程式啟動清理消失，INI偏好保留；合成報表由74項核心測試驗證，正式Reptool報表未測。
+- 環境失敗另列：從Codex封裝宿主重啟曾兩次因LocalAppData root／profile實體不同而PROFILE_PATH_REJECTED，不算成功、不放寬校驗。Computer Use檔案總管狀態授權曾逾時；改由既有Explorer程序的Shell啟動建置實體路徑後成功，並經該Shell讀取一般桌面application.log；兩種環境紀錄分別保存。Console輸入嘗試未產生可核對的結果，不將1+1列為通過；Console開啟／Console分頁及含Console退出已通過。
+- 交付：只更新artifacts/oaClient2/oaClient2.exe與安全設定範例，EXE和build一致，SHA256 9b60d756ee39ca6dc3725e4e608f3d63ac18f1602b69c9bf43c53d32fc7daed2。CEF234份與build逐檔SHA256一致，沒有更新CEF／補回prg／增加外部PNG；正式交付已啟動OA、核對目錄並正常退出。Mac產物、prg／picture／tpl等275份受保護檔案不變；正式INI在最後正常關閉經既有Window保存流程後雜湊改變，保留現況，不回寫測前設定、不聲稱INI逐位元不變。測試INI還原為首輪遷移內容，兩個本輪localhost伺服器及全部oaClient2程序已停止。
+- 證據：artifacts/verification/windows-w21-w26的build.log、core-tests.log、background-events.jsonl、legacy-events.jsonl、application.log（一般桌面）、application-packaged.log、dynamic-title.png、welcome-zoom.png、legacy-first.png／legacy-restart.png、delivery.png及目錄／保護雜湊JSON；不含個人INI或登入參數，驗證目錄不納入Git。
+- 時間：本輪開始接線09:13:47，入口／範例／測試第一批完成約09:14:13，建置約09:14～09:15；UI測試約09:16起，合成動態標題測試素材約09:22增補，屬測試後實作另列。UI工具等待與平台映射定位另計，不編造精確累計或把整段等待算成實作。SDK／壓縮檔／build全部保留。
+- 使用者驗收：本輪未驗收列印預覽／Microsoft注音／正式OA登入登出／Reptool／hcopen／最終工具列間距。舊0.1.2注音浮窗確認保留為歷史，未擴大成此交付新驗收；U01線上更新仍未實作。沒有本輪Git提交／推送／Tag操作／公開Release發布，R02後續依授權接續。
+
+- 最後補測09:48～09:49：歡迎頁110%／100%無縮放彈窗，X取消INI不變；歡迎頁沒有logout函式時3014ms期限正常退出、全部程序停止。本機測試INI再次還原，正式INI未被此輪補測改寫。最後原始碼／文件靜態核對另列，未重新執行Mac編譯。
+- 09:52～09:53靜態核對：16份本輪追蹤檔案嚴格UTF-8／LF、無Tab／替代字元、文件相對連結及git diff --check通過；共用實作未變。275份其他受保護檔案與原SHA256一致，正式INI的預期視窗保存變化另列；EXE雜湊仍與建置一致。final-runtime.json確認AppProcesses=0／TestServers=0、SDK與build仍存在，來源差異另存source-changes.patch，不納入Git。
+
+
+## W27：隱藏滑鼠移到選單時的左下角JavaScript提示（2026-10-13）
+
+- 使用者圖片中的javascript:void(0)是Chrome連結狀態泡泡。核對固定CEF154 SDK的chrome_status_bubble官方欄位，在唯一共用src/app/app.cpp的CreateMainWindow新增STATE_DISABLED與英文日期註解，共兩行；未修改OA HTML／JavaScript或另寫平台選單。
+- 約09:59:16核對SDK，09:59:50實作完成；09:59～10:00 Windows MSVC增量Release成功、CTest1/1通過（既有74項套件），沒有新增僅鏡像設定的測試。10:01～10:03真實CEF localhost合成選單／子選單：滑鼠停留在javascript:void(0)連結時左下角無提示，menu-action／submenu-action事件及畫面PASS確認JavaScript動作仍正常。建置與UI測試分開記錄，未擴大其他功能驗收。
+- 正常關閉使用者當時開啟的舊交付版後，只替換artifacts/oaClient2/oaClient2.exe；SHA256 e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，與build一致，仍為0.1.6。INI／picture／prg／CEF配置不變；合成URL僅--url當次記憶體覆寫，未保存。INI的既有關閉Window保存流程保留，不回寫使用者目前偏好。
+- 275份Mac專屬來源／產物、使用者精簡prg／picture／tpl與測前SHA256一致；沒有修改Mac專屬碼、重編Mac或更新Mac.app。共用設定已準備，Mac要在macOS重新編譯及實測後才會有新行為；本輪Windows結果不當成Mac已完成。
+- 本輪localhost伺服器已停止，合成頁完全正常退出；原OA網址已從更新後正式EXE重開供使用者確認實際選單。SDK／壓縮檔／build保留；未提交／推送／移Tag／發布Release，U01仍未實作，列印／注音及正式OA驗收不擴大。
+- 證據在artifacts/verification/windows-w27/build.log、events.jsonl、status-disabled.png、application.log與protected-results.json／results.json；只含本機合成頁與階段紀錄，不收錄個人INI或登入參數。
+
+## D03／R02：使用者授權先提交推送、再打包發布（2026-10-13）
+
+使用者已明確授權打包／發布，並指定先commit、push。先提交W21～W27來源、共用安全範例、測試及本輪文件；不納入個人INI、artifacts、prg或CEF SDK。W27合成選單素材另保留同內容的tests/pages/status-hint.html供Mac接續，與已實測素材SHA256一致，沒有重新修改功能。main／遠端提交前皆為59a323a，v0.1.6仍固定0fe6f35；推送完成與ZIP發布結果另行追加，不移Tag、不動Mac資產。

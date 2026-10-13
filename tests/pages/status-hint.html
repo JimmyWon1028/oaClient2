@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>連結狀態提示測試</title>
+<style>
+  body { margin: 0; font: 18px system-ui; background: #9eb5e4; }
+  nav { height: 44px; background: #eee; padding: 12px; }
+  .menu { position: relative; display: inline-block; }
+  .submenu { display: none; position: absolute; top: 28px; width: 260px; background: white; padding: 12px; }
+  .menu:hover .submenu { display: block; }
+  a { display: block; color: #234; padding: 5px; text-decoration: none; }
+  main { padding: 40px; }
+</style>
+<nav><div class="menu"><a id="menu" href="javascript:void(0)">銷貨管理 ▼</a><div class="submenu"><a id="item" href="javascript:void(0)">測試選單項目</a></div></div></nav>
+<main><p>滑鼠停留在選單時，左下角不應顯示 javascript:void(0)。</p><p id="result">選單動作尚未執行</p></main>
+<script>
+  //2026.10.13 modify by codex, verify menu actions still run when native link status hints are disabled.
+  document.getElementById('menu').addEventListener('click', function () {
+    document.getElementById('result').textContent = 'PASS：選單 JavaScript 動作正常';
+    fetch('/event/menu-action');
+  });
+  document.getElementById('item').addEventListener('click', function () {
+    document.getElementById('result').textContent = 'PASS：子選單 JavaScript 動作正常';
+    fetch('/event/submenu-action');
+  });
+</script>
+</html>

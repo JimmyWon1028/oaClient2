@@ -30,3 +30,8 @@ Releases下載不等於程式內線上更新；U01仍尚未實作，更新來源
 兩個資產的GitHub大小及SHA256 digest與本機相同；不帶登入憑證從公開URL重新下載，ZIP及校驗檔均逐位元一致，ZIP CRC亦通過。ZIP大小144461135 bytes，SHA256：8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；無Config.ini、快取、profile、logs、picture或Finder metadata。詳細證據在本機artifacts/verification/releases-v0.1.6/results.json，不納入Git。
 
 Windows本輪沒有Release資產，R02仍待Windows環境成功編譯及實機測試後補齊。GitHub下載入口沒有完成U01程式內線上更新，亦沒有替使用者安裝程式。
+
+
+## R02 Windows建置／實測已完成（2026-10-13）
+
+Windows W21～W26已在MSVC與真實CEF完成本輪回歸，交付EXE已更新，SHA256：9b60d756ee39ca6dc3725e4e608f3d63ac18f1602b69c9bf43c53d32fc7daed2；結果見[進度](../PROGRESS.md)。本輪功能來源尚未提交，沒有製作Windows ZIP或公開發布。後續依使用者授權提交／推送與製作不含個人INI／快取的ZIP，記錄實際來源提交；既有v0.1.6 Tag與Mac資產保持不動。列印／Microsoft注音／正式OA登出仍待使用者驗收，U01未實作。

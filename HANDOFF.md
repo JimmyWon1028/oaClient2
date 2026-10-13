@@ -1,6 +1,19 @@
 # oaClient2 接續交接
 
-更新：2026-10-13。這是 Mac 上 Codex 的第一入口。
+更新：2026-10-13。這是 Windows／Mac 上 Codex 的接手入口；以下歷史狀態以最新交接段為準。
+
+目前最新Windows交付為W27：已隱藏左下角連結狀態提示，EXE SHA256為e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，版本仍0.1.6；原OA已重開。共用app.cpp新增兩行設定／英文註解，Mac產物未改、待macOS重編／實測。詳見本文末段W27及[進度](PROGRESS.md)；下面W21～W26的9b60d756雜湊為前輪交付。
+
+2026-10-13最新授權：使用者要求打包發布，並指定先commit、push；W21～W27來源／文件及可共用狀態提示測試素材納入本次提交，不包含個人資料／二進位產物。實際推送及R02發布結果接續追加，既有v0.1.6 Tag／Mac資產保持。
+
+## 2026-10-13 Windows W21～W26 最新交接
+
+- 使用者已確認Mac停止操作、兩台Dropbox同步完成；本輪Windows從main／遠端59a323a接手，無lock／來源衝突。
+- Windows入口已啟用空白HomeUrl歡迎頁、隱藏縮放彈窗與背景登出；W24～W26直接沿用共用app.cpp，沒有修改或複製src/common／src/app、Mac專屬碼或Mac產物。
+- MSVC Release／CTest1/1、74項通過；空白歡迎頁、兩個網址入口、ESC／無效URL、HTTP保存重啟、110%重啟、ACK649／1117ms、無回應3007ms、Console隱藏／beforeunload／全部程序退出、兩輪UserSet與完整網站儲存清理、設定目錄／動態標題／完整工具列字樣已在Windows實測。詳細結果、未測項目及工具環境失敗見[進度](PROGRESS.md)最新W21～W26段。
+- 交付入口仍是artifacts/oaClient2/oaClient2.exe，SHA256：9b60d756ee39ca6dc3725e4e608f3d63ac18f1602b69c9bf43c53d32fc7daed2；僅更新EXE與設定範例，CEF234份一致、使用者精簡prg／picture／tpl與Mac交付不變。正式INI最後正常關閉更新Window欄位後保留現況，不回寫測前內容。Windows位置不改，SDK／壓縮檔／build保留。
+- 正式交付已啟動OA並正常關閉；localhost伺服器及全部oaClient2程序已停止。測試INI已還原；列印預覽／Microsoft注音、正式OA登出／Reptool及最終工具列間距待使用者驗收，U01未實作。
+- 本輪未提交／推送／發布；已有Mac Release不需再發。v0.1.6仍指向0fe6f35，不移Tag。後續Git與Windows R02發布依使用者授權；切回Mac前仍需停止操作並確認同步。
 
 ## 目前完成到哪裡
 
@@ -242,3 +255,10 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 僅提供Mac arm64 ZIP與同名.sha256；GitHub大小／digest與本機相同，不帶登入憑證的公開重新下載兩檔逐位元一致，ZIP CRC通過。ZIP大小144461135 bytes，SHA256 8f1cdbdf81990f78eebbf9e79be9e7c8001f4fff240a0b4c07d40f3a929a6493；解壓bundle逐檔／連結一致、10份arm64 Mach-O／簽章核對，無Config.ini、cache、profile、picture、logs或Finder metadata。未把SDK、建置或個人資料推入Git，未安裝或清除本機SDK。
 
 此輪只是發布與下載驗證，沒有重新編譯或擴大功能驗收。Windows R02等在Windows環境完成W21～W26後再補齊，U01仍未實作。發布證據存artifacts/verification/releases-v0.1.6；本段結果文件另行提交推送，最新main SHA以Git log／ls-remote核對。
+
+
+## W27 最新Windows交付（2026-10-13）
+
+使用者要求移到選單時不顯示左下角javascript:void(0)。共用app.cpp停用CEF chrome_status_bubble，未修改OA；Windows增量Release／CTest1/1與真實CEF合成選單／子選單動作測試通過。交付EXE SHA256：e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，取代前輪9b60d756版本，版本仍0.1.6。
+
+原OA網址已重開供使用者測實際選單；合成伺服器已停。Mac產物與prg／picture／tpl不變，Mac需回macOS編譯／實測才能套用這次唯一共用設定。SDK／build保留、Git尚未提交／推送／發布，v0.1.6 Tag不動；詳細結果見[PROGRESS](PROGRESS.md) W27。

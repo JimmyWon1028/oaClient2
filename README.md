@@ -25,7 +25,7 @@ Mac 注音只驗證一般輸入與焦點；額外浮動組字窗是 Windows 專�
 
 ## 開發與交接
 
-Mac 專屬程式在 macOS 開發、Windows 專屬程式在 Windows 開發，共用來源仍只有一份。Windows 相同歡迎頁（W21）與隱藏縮放彈窗（W22）已記錄需求，待回 Windows 實作及驗證。Mac 已啟用隱藏縮放彈窗。
+Mac 專屬程式在 macOS 開發、Windows 專屬程式在 Windows 開發，共用來源仍只有一份。Windows W21～W26已完成入口接線、MSVC Release／74項核心及本輪實機回歸，交付0.1.6已更新：空白歡迎頁、隱藏縮放彈窗、背景登出／三秒退出、設定目錄、動態標題及完整工具列字樣。列印預覽／Microsoft注音與正式OA登出仍待使用者驗收，詳見[進度](PROGRESS.md)。
 
 Windows 與 Mac 的組態位置不同，接續開發先讀[平台路徑對照](docs/PLATFORM-PATHS.md)；共用 INI／UserSet 流程不重寫。
 

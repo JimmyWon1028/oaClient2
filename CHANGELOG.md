@@ -398,3 +398,11 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 ## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
 
 使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。
+
+
+## 2026-10-13：W29／R02 熱鍵驗收與0.1.6同版更新
+
+- 使用者回覆「可以了」並要求重新打包上傳、不進版；Windows W29記錄本次使用者驗收，來源6f2833b已提交／推送，不擴大代理UI矩陣／Mac Cmd或其他功能驗收。
+- 沿用MSVC／CTest1/1、110項及使用者測試的EXE b5a5d19b，未重新編譯；同名Windows ZIP／.sha256先上傳校驗再替換，版本仍0.1.6、Tag／Mac兩資產不變。ZIP 189880195 bytes，SHA256 849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046。
+- 安全清單240檔CRC／SHA256通過，公開原URL無登入重新下載兩檔與GitHub／本機一致；個人INI／網站資料／picture／logs／tpl／SDK／build不公開，prg仍現用4檔、不補回。
+- 本機同名ZIP同步更新，W28歷史副本與證據保留，新證據artifacts/verification/releases-windows-w29/results.json。Mac／prg／picture／tpl275份不變，原OA／SDK／build保留；f1.js已不存在、不還原。更新文件並提交發布結果，Mac W27～W29與其他待驗收及U01保持。

@@ -2,7 +2,7 @@
 
 更新：2026-10-13。這是 Windows／Mac 上 Codex 的接手入口；以下歷史狀態以最新交接段為準。
 
-目前最新本機Windows交付為W29快捷鍵修正，EXE SHA256為b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6；MSVC／CTest1/1、110項通過，原OA已重開，實際熱鍵依使用者要求由其驗收。本輪未提交／推送／重新發布，GitHub ZIP仍為W28的92c371f3；Tag／Mac資產未變，Mac W27～W29待macOS重編／實測，詳見本文末段及[RELEASES](docs/RELEASES.md)。
+目前最新Windows本機與GitHub交付皆為W29快捷鍵修正，EXE SHA256為b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6；MSVC／CTest1/1、110項通過，使用者已回覆「可以了」。來源6f2833b已推送，同名ZIP／校驗檔已替換且公開下載核對，ZIP SHA256為849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046；Tag／Mac資產未變，Mac W27～W29仍待目標平台回歸，詳見本文末段及[RELEASES](docs/RELEASES.md)。
 
 2026-10-13最新結果：依使用者先commit、push再發布的順序，W21～W27來源7958a60已推送，Windows x64 ZIP與.sha256已加入既有[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)，公開下載校驗通過；Tag與Mac資產未變。發布文件與可重現打包腳本另行提交，最新main以Git核對。完整R02結果見本文末段及[Release文件](docs/RELEASES.md)。
 
@@ -307,3 +307,14 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 ## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
 
 使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。
+
+
+## W29／R02 最新交接：熱鍵驗收後已同版發布（2026-10-13）
+
+使用者對W29回覆「可以了」，Windows熱鍵依此記錄驗收通過；代理原未執行逐項UI矩陣仍保留，不擴大為其他功能／Mac Cmd驗收。依「不要進版」維持0.1.6，來源6f2833b7f7789509abb8f4b60d9b3ea0e0daa01f已推送，原Release同名Windows ZIP／.sha256已替換；Tag來源0fe6f35與Mac兩資產ID／大小／digest保持。
+
+最新ZIP 189880195 bytes，SHA256 849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046；EXE b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，與使用者測試及MSVC／110項版本相同。本機及原公開URL無登入下載ZIP／校驗檔、GitHub大小／digest、240檔CRC及SHA256全部一致；不含個人INI／網站資料／picture／logs／tpl／SDK／build，現有prg4份不補回。
+
+artifacts/releases同名兩檔已更新，新增打包副本artifacts/releases/windows-w29；歷史W28副本及驗證證據保留。新證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json，公開Windows資產ID635910442／635911490、Release仍411036061。275份Mac平台／產物與prg／picture／tpl雜湊不變，原OA保持開啟，不重新建置或打斷使用者操作。
+
+本輪接手時f1.js已不在工作目錄，沒有補回或納入Git；無追蹤來源衝突。SDK／build保留，Mac W27～W29仍需macOS重編／實測，其他使用者驗收與U01保持；發布紀錄另行提交推送，最新main以Git核對。跨平台切換前仍須停止Windows操作並確認Dropbox同步。

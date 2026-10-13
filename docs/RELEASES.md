@@ -85,3 +85,14 @@ artifacts/releases/oaClient2-0.1.6-windows-x64.zip與.sha256現在也為最新W2
 ## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
 
 使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。
+
+
+## W29／R02 最新下載與驗收（2026-10-13）
+
+使用者對W29快捷鍵修正回覆「可以了」，並要求同版重新上傳、不進版。最新[Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip)已替換，仍為0.1.6；大小189880195 bytes，SHA256 **849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046**。請使用[最新校驗檔](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip.sha256)，前段W28的92c371f3雜湊及大小為歷史。
+
+實際Windows建置來源6f2833b7f7789509abb8f4b60d9b3ea0e0daa01f已推送，EXE SHA256 b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，沿用已建置／110項與使用者測試的同一檔，沒有重新編譯／進版。打包腳本輸出artifacts/releases/windows-w29/oaClient2-0.1.6-windows-x64.zip，source-commit及expected-exe-sha256使用上述值；安全清單240檔（EXE／安全範例／CEF234／現用prg4）CRC與全部SHA256通過，資料排除及不補回prg保持。
+
+先上傳／校驗暫名兩檔，完整後才刪除前Windows兩資產並改為原名，最新版資產ID635910442／635911490；原Release ID411036061、Tag物件67e296794c1db526e2afc729e4b170f95d09bf5b→0fe6f357173fb7802cca8504c2ea007dd5e7834d，以及Mac兩資產ID／大小／digest均未改。原公開URL不帶登入憑證重新下載ZIP／.sha256逐位元一致，GitHub大小／digest與公開ZIP CRC／240檔SHA256通過；證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json。
+
+本機artifacts/releases同名兩檔亦已更新；前輪artifacts/releases/windows-w28及public-download歷史副本保留，原OA／SDK／build保持，275份Mac平台／產物與prg／picture／tpl雜湊不變。W29 Windows按使用者回報驗收，代理未執行逐項UI矩陣仍保留原紀錄，不擴大為列印／注音／正式OA登入登出／Reptool／hcopen／間距或Mac Cmd驗收；Mac W27～W29待目標平台重編／實測，U01未實作。發布文件另行提交推送，最新main以Git核對。

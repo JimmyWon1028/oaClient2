@@ -1,6 +1,6 @@
 # oaClient2 進度表
 
-更新：2026-10-13。本機Windows x64 0.1.6已編譯W29 Chrome快捷鍵修正，MSVC／CTest1/1、110項通過；使用者要求自行測試，實際按鍵矩陣尚未驗收。GitHub ZIP仍為已公開W28，本輪未提交／推送／重新發布；Tag／Mac資產保持，Mac W27～W29待目標平台回歸，其他未驗收及U01保持。
+更新：2026-10-13。Windows x64 0.1.6 W29 Chrome快捷鍵修正已經使用者回覆「可以了」，MSVC／CTest1/1、110項通過；來源6f2833b已推送，同名公開ZIP／校驗檔已更新並完成下載核對。代理未執行逐項UI矩陣仍保留原紀錄；Tag／Mac資產不變，Mac W27～W29待目標平台回歸，其他驗收及U01未擴大完成。
 
 ## 工作項目
 
@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | D01 | 閱讀舊 oaClient／Reptool | 已完成第一輪來源盤點；本輪核對 PAS／DFM 工具列並操作舊版 Console 開關。 | 逐一核對其他命令契約。 |
 | D02 | 列印預覽技術查證 | 已確認 Electron 不符內建預覽要求；Windows 採 CEF Chrome。 | Mac 核對 #3410 正式配套及實測。 |
-| D03 | Git／GitHub | W28提交c5cd549已透過HTTPS推送；遠端SHA核對一致，固定v0.1.6仍指向0fe6f35。 | 同版重新發布結果另行提交推送，最新main以Git核對；不移動Tag。 |
+| D03 | Git／GitHub | W29提交6f2833b已透過HTTPS推送；遠端SHA核對一致，固定v0.1.6仍指向0fe6f35。 | 發布結果文件另行提交推送，最新main以Git核對；不移動Tag。 |
 | D04 | 計畫／紀錄／跨平台交接 | 已整理 Mac 接續入口，Windows W21／W22 提示詞已存 [WINDOWS-CODEX-PROMPT.md](docs/WINDOWS-CODEX-PROMPT.md)，包含平台開發分工、共用來源與組態路徑差異。 | 回 Windows 先核對同步與來源，再實作／編譯／回歸；Windows 本輪未改。 |
 | D05 | 時間與平台範圍 | 排除環境準備及測試；Mac 固定 arm64。 | 記錄測試後修正。 |
 | D06 | 網站／資料／INI 決策 | 兩平台初始URL空白、設定後保存；Windows EXE旁INI，Mac Application Support，網站全清、程式設定保留。 | W21 Windows歡迎頁／保存／重啟已實測，正式網站由使用者驗收。 |
@@ -55,9 +55,9 @@
 | W26 | Windows 工具列間距／完整文字 | M13共用298 DIP／左右2 DIP設定已在Windows編譯，MAC／瀏覽目錄／截圖／還原比例完整顯示、原圖示與順序核對。 | 使用者最終間距驗收、其他DPI／多螢幕未測。 |
 | W27 | 隱藏連結狀態提示 | 共用CefBrowserSettings.chrome_status_bubble=STATE_DISABLED；Windows Release／CTest1/1通過。真實CEF合成JavaScript選單／子選單無左下角提示，原動作正常；EXE已更新及重開OA。 | 正式OA選單由使用者驗收；Mac須在macOS重新編譯／實測，Mac產物未改。 |
 | W28 | 停用儲存密碼提示 | 共用RequestContext在建立瀏覽器前停用保存／自動登入；MSVC／CTest1/1／74項，舊版提示正向重現、修正版原生及重啟AJAX無提示通過。本機EXE與同版公開ZIP已更新，來源c5cd549。 | 正式OA登入由使用者驗收；Mac W27／W28重編／實測未執行，Tag保持。 |
-| W29 | Chrome衝突熱鍵交回網頁 | 共用按鍵政策及CEF網頁優先／OnKeyEvent fallback已實作；MSVC／CTest1/1、110項通過，本機EXE更新、原OA重開。 | 使用者要求自行驗收實際按鍵；Mac Cmd等未實測，GitHub ZIP尚未更新。 |
+| W29 | Chrome衝突熱鍵交回網頁 | 共用按鍵政策及CEF網頁優先／OnKeyEvent fallback已實作，MSVC／110項通過；使用者回覆「可以了」，本機與同版公開ZIP已更新，來源6f2833b。 | 使用者回報只適用Windows熱鍵；代理逐項UI矩陣未執行、Mac Cmd實機未驗證，其他功能不擴大驗收。 |
 | R01 | Mac ZIP Releases | v0.1.6初版測試Release已公開；ZIP只有.app，GitHub大小／digest、無登入公開下載ZIP與校驗檔逐位元一致。 | 列印／一般注音等仍待使用者驗收；Windows補齊見R02。 |
-| R02 | Windows Release補齊 | 依同版更新授權，v0.1.6同名Windows x64 ZIP／.sha256已替換為W28；240檔CRC／SHA256及無登入公開下載一致，ZIP 189879887 bytes／SHA256 92c371f3。 | 列印／注音／正式OA等仍待驗收，Mac W27／W28待回歸；Tag與Mac資產未變，U01未實作。 |
+| R02 | Windows Release補齊 | 依同版更新授權，v0.1.6同名Windows x64 ZIP／.sha256已替換為W29；240檔CRC／SHA256及無登入公開下載一致，ZIP 189880195 bytes／SHA256 849a2678。 | 其他使用者驗收及Mac W27～W29回歸保持；Tag／Mac資產未變，U01未實作。 |
 
 ## 已完成的驗證
 
@@ -358,3 +358,13 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 ## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
 
 使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。
+
+
+## W29／R02：使用者驗收與同版發布結果（2026-10-13）
+
+- 使用者回覆「可以了」，W29 Windows Chrome衝突熱鍵依本次回報驗收通過；不把代理未執行的逐項UI矩陣補記為已測，也不擴大Mac Cmd／列印／注音／其他功能驗收。
+- W29來源6f2833b7f7789509abb8f4b60d9b3ea0e0daa01f已透過HTTPS推送，與遠端一致；打包沿用已編譯／110項及使用者測試EXE，不重建或進版。新ZIP 189880195 bytes，SHA256 849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046，EXE b5a5d19b。
+- 240檔安全清單只含EXE、安全範例、CEF234與現用prg4，不含個人INI／網站資料／picture／logs／tpl／SDK／build，不補回根prg。先上傳暫名兩檔並核對digest，再替換指定Windows原名資產；新ID635910442／635911490，Release保持411036061／v0.1.6。
+- 原公開URL無登入重新下載ZIP／校驗檔均與本機／GitHub大小及SHA256一致，公開ZIP CRC／全部240檔SHA256通過。Mac兩資產ID／大小／digest與Tag物件67e29679／來源0fe6f35不變，275份本機保護檔案一致。
+- 本機artifacts/releases同名檔更新，歷史W28打包與public-download保留；新證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json。原OA及SDK／build保留，f1.js接手時已不存在、未補回，不將其當成來源衝突。
+- 發布文件／README與操作／工作紀錄已同步，結果文件另行提交推送；Mac W27～W29未編譯／實測，其他待驗收與U01未實作保持。

@@ -160,3 +160,8 @@ GitHub原Windows ZIP／校驗檔連結已更新為W28密碼提示修正，仍為
 Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策檢查）通過，包含Ctrl／Cmd正向及未列出的組合。共用合成頁tests/pages/keyboard-shortcuts.html已載入。使用者隨後要求「你編譯好，我測試」，因此未繼續逐項實機熱鍵矩陣，Chrome搜尋／儲存／新視窗及真實網頁按鍵接收均待使用者驗收，不宣稱UI熱鍵已通過；Cmd實機亦須在Mac回歸。
 
 本機交付EXE已更新、與build一致，SHA256 b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6 x64。合成server／App已停止，原OA已重開供使用者測試；測試URL只在當次記憶體，未保存INI。使用者新增的f1.js清單保留、不執行／修改／納入Git，Mac專屬碼／產物及prg不改，SDK／build保留。此次未提交／推送／移Tag／重新發布，GitHub ZIP仍為W28；Mac W27～W29需回macOS重編／實測，U01未實作。
+
+
+## W29／R02：快捷鍵已驗收並同版上傳（2026-10-13）
+
+使用者回覆「可以了」，Windows W29 Chrome衝突鍵改為網頁先收到、瀏覽器不執行指定預設動作，原F8／F12／Ctrl+P及工具列保留。同名GitHub ZIP／校驗檔已更新、版本仍0.1.6，最新ZIP SHA256為849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046，公開下載校驗通過。更新前正常關閉，保留個人INI／picture／prg／範本；Tag／Mac資產未改，其他驗收與Mac Cmd回歸未擴大，詳見[RELEASES](RELEASES.md)。

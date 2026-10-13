@@ -1,6 +1,7 @@
 #include "app/app.h"
 #include "platform/cef_platform.h"
 #include "common/welcome.h"
+#include "common/keyboard.h"
 
 #include <algorithm>
 #include <cmath>
@@ -297,7 +298,8 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
     ready_ = true;
     context_->main_window = window;
     context_->toggle_console = [this] { ToggleConsole(); };
-    view_->SetPreferAccelerators(true);
+    //2026.10.13 modify by codex, let website handlers run before normal Chrome accelerators.
+    view_->SetPreferAccelerators(false);
     view_->RequestFocus();
   }
 
@@ -642,8 +644,15 @@ void BrowserClient::LogoutTick(int generation) {
 }
 
 bool BrowserClient::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event,
-    CefEventHandle, bool*) {
+    CefEventHandle, bool* is_keyboard_shortcut) {
   if (event.type != KEYEVENT_RAWKEYDOWN) return false;
+  //2026.10.13 modify by codex, forward reserved keys to the renderer before suppressing their Chrome fallback.
+  if (IsWebsiteShortcut(event.windows_key_code, event.modifiers & EVENTFLAG_SHIFT_DOWN,
+      event.modifiers & EVENTFLAG_CONTROL_DOWN, event.modifiers & EVENTFLAG_ALT_DOWN,
+      event.modifiers & EVENTFLAG_COMMAND_DOWN)) {
+    *is_keyboard_shortcut = true;
+    return false;
+  }
   if (event.windows_key_code == 0x7B && context_->toggle_console) {
     context_->toggle_console();
     return true;
@@ -654,6 +663,14 @@ bool BrowserClient::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEve
     return true;
   }
   return false;
+}
+
+bool BrowserClient::OnKeyEvent(CefRefPtr<CefBrowser>, const CefKeyEvent& event, CefEventHandle) {
+  //2026.10.13 modify by codex, stop only the browser default after the website has received the key event.
+  return (event.type == KEYEVENT_RAWKEYDOWN || event.type == KEYEVENT_KEYDOWN) &&
+    IsWebsiteShortcut(event.windows_key_code, event.modifiers & EVENTFLAG_SHIFT_DOWN,
+      event.modifiers & EVENTFLAG_CONTROL_DOWN, event.modifiers & EVENTFLAG_ALT_DOWN,
+      event.modifiers & EVENTFLAG_COMMAND_DOWN);
 }
 
 void BrowserClient::OnAfterCreated(CefRefPtr<CefBrowser> browser) {

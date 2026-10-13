@@ -1,6 +1,6 @@
 # oaClient2 進度表
 
-更新：2026-10-13。Windows x64 0.1.6已完成W28密碼提示修正及MSVC／合成實機驗證，來源c5cd549已推送，同名GitHub ZIP／校驗檔已替換並公開下載核對。維持0.1.6，不移Tag／改Mac資產；Mac W27／W28待目標平台重編／實測，正式OA登入、列印／注音等未擴大驗收。
+更新：2026-10-13。本機Windows x64 0.1.6已編譯W29 Chrome快捷鍵修正，MSVC／CTest1/1、110項通過；使用者要求自行測試，實際按鍵矩陣尚未驗收。GitHub ZIP仍為已公開W28，本輪未提交／推送／重新發布；Tag／Mac資產保持，Mac W27～W29待目標平台回歸，其他未驗收及U01保持。
 
 ## 工作項目
 
@@ -55,6 +55,7 @@
 | W26 | Windows 工具列間距／完整文字 | M13共用298 DIP／左右2 DIP設定已在Windows編譯，MAC／瀏覽目錄／截圖／還原比例完整顯示、原圖示與順序核對。 | 使用者最終間距驗收、其他DPI／多螢幕未測。 |
 | W27 | 隱藏連結狀態提示 | 共用CefBrowserSettings.chrome_status_bubble=STATE_DISABLED；Windows Release／CTest1/1通過。真實CEF合成JavaScript選單／子選單無左下角提示，原動作正常；EXE已更新及重開OA。 | 正式OA選單由使用者驗收；Mac須在macOS重新編譯／實測，Mac產物未改。 |
 | W28 | 停用儲存密碼提示 | 共用RequestContext在建立瀏覽器前停用保存／自動登入；MSVC／CTest1/1／74項，舊版提示正向重現、修正版原生及重啟AJAX無提示通過。本機EXE與同版公開ZIP已更新，來源c5cd549。 | 正式OA登入由使用者驗收；Mac W27／W28重編／實測未執行，Tag保持。 |
+| W29 | Chrome衝突熱鍵交回網頁 | 共用按鍵政策及CEF網頁優先／OnKeyEvent fallback已實作；MSVC／CTest1/1、110項通過，本機EXE更新、原OA重開。 | 使用者要求自行驗收實際按鍵；Mac Cmd等未實測，GitHub ZIP尚未更新。 |
 | R01 | Mac ZIP Releases | v0.1.6初版測試Release已公開；ZIP只有.app，GitHub大小／digest、無登入公開下載ZIP與校驗檔逐位元一致。 | 列印／一般注音等仍待使用者驗收；Windows補齊見R02。 |
 | R02 | Windows Release補齊 | 依同版更新授權，v0.1.6同名Windows x64 ZIP／.sha256已替換為W28；240檔CRC／SHA256及無登入公開下載一致，ZIP 189879887 bytes／SHA256 92c371f3。 | 列印／注音／正式OA等仍待驗收，Mac W27／W28待回歸；Tag與Mac資產未變，U01未實作。 |
 
@@ -345,3 +346,15 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 - 先上傳暫名資產並核對GitHub大小／digest，兩檔完整才替換指定同名Windows ZIP／.sha256；新版資產ID635859578／635860492，Release仍411036061／v0.1.6初版測試。原公開URL無登入重新下載兩檔與本機逐位元一致，新ZIP CRC與240檔SHA256再次通過，Release明列實際來源c5cd549及同版替換。
 - Mac兩資產ID／大小／digest及固定Tag物件67e29679／來源0fe6f35不變；Mac專屬來源／產物與prg／picture／tpl275份雜湊不變，原OA保持，SDK／壓縮檔／build保留。舊Windows ZIP／校驗檔仍存前輪public-download作歷史證據，本機artifacts/releases同名檔已更新為W28。
 - 證據artifacts/verification/releases-windows-w28/results.json／package.json／release-before.json／release-public.json；同步Release／進度／交接／計畫／操作與README，結果文件另行提交推送，最新main以Git核對。公開上傳未增加正式OA／列印／Microsoft注音／Reptool／hcopen／間距驗收；Mac W27／W28回歸未執行，U01未實作。
+
+## W29：Chrome衝突熱鍵交回網頁（2026-10-13）
+
+使用者要求取消oaClient2內建Chrome的F1／F2／F3／F4／F9、Alt+W、Mod+F、Shift+F、Mod+E／S／N（Mod=Ctrl或Cmd，包含Ctrl+N），不是移除網頁自己的設定。共用common/keyboard.h精確匹配，app.cpp改為網頁優先接收一般加速鍵，OnPreKeyEvent不吞掉事件、OnKeyEvent在網頁處理後攔下指定Chrome預設動作；原F8／F12／Ctrl+P高優先功能及工具列保持。
+
+Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策檢查）通過，包含Ctrl／Cmd正向及未列出的組合。共用合成頁tests/pages/keyboard-shortcuts.html已載入。使用者隨後要求「你編譯好，我測試」，因此未繼續逐項實機熱鍵矩陣，Chrome搜尋／儲存／新視窗及真實網頁按鍵接收均待使用者驗收，不宣稱UI熱鍵已通過；Cmd實機亦須在Mac回歸。
+
+本機交付EXE已更新、與build一致，SHA256 b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6 x64。合成server／App已停止，原OA已重開供使用者測試；測試URL只在當次記憶體，未保存INI。使用者新增的f1.js清單保留、不執行／修改／納入Git，Mac專屬碼／產物及prg不改，SDK／build保留。此次未提交／推送／移Tag／重新發布，GitHub ZIP仍為W28；Mac W27～W29需回macOS重編／實測，U01未實作。
+
+## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
+
+使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。

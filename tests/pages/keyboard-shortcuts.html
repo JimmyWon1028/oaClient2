@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>W29 快捷鍵測試</title>
+<style>
+  body { font: 18px sans-serif; margin: 32px; }
+  button, input { font: inherit; margin: 8px; padding: 8px; }
+  pre { white-space: pre-wrap; }
+</style>
+<h1>W29 網頁快捷鍵接收測試</h1>
+<p id="mode"></p>
+<button id="focus">聚焦測試頁</button>
+<label>文字輸入 <input id="typing" autocomplete="off"></label>
+<pre id="events"></pre>
+<script>
+  //2026.10.13 modify by codex, record real key events with and without the website cancelling its default action.
+  const handled = new URLSearchParams(location.search).get('handled') === '1';
+  document.getElementById('mode').textContent = handled ? '網頁會 preventDefault' : '網頁不 preventDefault';
+  document.getElementById('focus').onclick = () => document.getElementById('focus').focus();
+  document.addEventListener('keydown', event => {
+    const modifiers = [event.ctrlKey && 'ctrl', event.metaKey && 'cmd', event.altKey && 'alt', event.shiftKey && 'shift'].filter(Boolean);
+    const chord = [...modifiers, event.key.toLowerCase()].join('+');
+    document.getElementById('events').textContent += chord + '\n';
+    fetch('/event/' + (handled ? 'handled-' : 'unhandled-') + encodeURIComponent(chord));
+    if (handled && /^(f[1-4]|f9|alt\+w|shift\+f|(ctrl|cmd)\+[fesn])$/.test(chord)) event.preventDefault();
+  });
+  var $g = { isLogin: false };
+  function getLoginState() { return 0; }
+  function logout() { console.log('loginState=0'); }
+</script>
+</html>

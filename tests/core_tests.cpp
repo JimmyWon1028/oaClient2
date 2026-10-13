@@ -4,6 +4,7 @@
 #include <iostream>
 #include "common/ini.h"
 #include "common/logout.h"
+#include "common/keyboard.h"
 #include "platform/platform.h"
 
 //2026.10.12 modify by codex, reuse shared cases and delegate native-only checks.
@@ -21,6 +22,28 @@ void Check(bool condition, const char* label) {
 }
 
 int main() {
+  //2026.10.13 modify by codex, verify the exact browser shortcut policy and preserve unrelated combinations.
+  for (int key : {0x70, 0x71, 0x72, 0x73, 0x78}) {
+    Check(oa::IsWebsiteShortcut(key, false, false, false, false), "requested plain function key belongs to website");
+    Check(!oa::IsWebsiteShortcut(key, true, false, false, false), "modified function key is not added to policy");
+  }
+  for (int key : {'F', 'E', 'S', 'N'}) {
+    Check(oa::IsWebsiteShortcut(key, false, true, false, false), "Ctrl website shortcut matches");
+    Check(oa::IsWebsiteShortcut(key, false, false, false, true), "Command website shortcut matches");
+    Check(!oa::IsWebsiteShortcut(key, true, true, false, false), "Ctrl Shift variant remains unchanged");
+  }
+  Check(oa::IsWebsiteShortcut('W', false, false, true, false), "Alt W belongs to website");
+  Check(oa::IsWebsiteShortcut('F', true, false, false, false), "Shift F belongs to website");
+  Check(!oa::IsWebsiteShortcut('W', false, true, false, false), "Ctrl W remains unchanged");
+  for (int key : {'P', 'C', 'V', 'A', 'L'}) {
+    Check(!oa::IsWebsiteShortcut(key, false, true, false, false), "unlisted Ctrl combination remains unchanged");
+  }
+  for (int key : {0x74, 0x77, 0x7B}) {
+    Check(!oa::IsWebsiteShortcut(key, false, false, false, false), "reload and existing app keys remain unchanged");
+  }
+  Check(!oa::IsWebsiteShortcut('F', false, false, false, false), "plain typing remains unchanged");
+  Check(!oa::IsWebsiteShortcut('E', false, true, true, false), "Ctrl Alt variant remains unchanged");
+  Check(!oa::IsWebsiteShortcut('N', false, true, false, true), "mixed Ctrl Command is not a requested chord");
   const auto temporary = std::filesystem::canonical(std::filesystem::temp_directory_path());
   const auto root = temporary / ("oaClient2-core-tests-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
   std::error_code ec;

@@ -77,3 +77,11 @@ W28儲存密碼提示修正已在Windows建置／合成實測並更新本機EXE�
 先以暫名上傳並核對兩檔大小／digest，完成後只刪除原Windows兩資產並將新版改為原名；原Mac兩資產ID／大小／digest不變，Tag仍為67e296794c1db526e2afc729e4b170f95d09bf5b→0fe6f357173fb7802cca8504c2ea007dd5e7834d。新版Windows資產ID635859578／635860492，Release ID411036061不變。原公開URL無登入下載ZIP／校驗檔與本機／GitHub完全一致，公開ZIP CRC及全部240檔SHA256再次通過；證據artifacts/verification/releases-windows-w28/results.json／package.json／release-public.json。
 
 artifacts/releases/oaClient2-0.1.6-windows-x64.zip與.sha256現在也為最新W28。舊W27兩檔保留artifacts/verification/releases-windows-v0.1.6/public-download供追溯；Mac產物／prg／picture／tpl275份雜湊不變，SDK／下載包／build保留。沿用W28 MSVC／CTest1/1、74項及原生／重啟AJAX合成表單結果，正式OA登入及列印／注音等仍待使用者驗收；Mac W27／W28未重編／實測，U01未實作。
+
+## W29本機編譯待使用者測試（2026-10-13）
+
+最新本機EXE為W29快捷鍵修正，版本仍0.1.6，SHA256 b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，MSVC／CTest1/1、110項通過。實際按鍵由使用者驗收，本輪未重新打包／上傳，現有GitHub ZIP仍為W28的92c371f3，不宣稱已包含W29；Tag與Mac資產不動。
+
+## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
+
+使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。

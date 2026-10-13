@@ -192,3 +192,15 @@ Windows MSVC Release／CTest1/1、74項與本輪歡迎頁、網址／縮放重�
 ## R02／W28：同版重新發布完成（2026-10-13）
 
 依使用者明確「不要進版」要求，W28來源c5cd549已推送，Windows ZIP與.sha256已替換為同名新版，版本維持0.1.6；v0.1.6 Tag與Mac兩資產保持。新ZIP SHA256為92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099，公開下載兩檔及240檔CRC／SHA256通過；舊Windows ZIP保留於本機歷史發布證據，最新資訊見[RELEASES](docs/RELEASES.md)。正式OA等及Mac W27／W28回歸仍待驗收，U01未實作；發布結果文件另行提交推送，前段未發布狀態為此次授權前歷史。
+
+## W29：Chrome衝突熱鍵交回網頁（2026-10-13）
+
+使用者要求取消oaClient2內建Chrome的F1／F2／F3／F4／F9、Alt+W、Mod+F、Shift+F、Mod+E／S／N（Mod=Ctrl或Cmd，包含Ctrl+N），不是移除網頁自己的設定。共用common/keyboard.h精確匹配，app.cpp改為網頁優先接收一般加速鍵，OnPreKeyEvent不吞掉事件、OnKeyEvent在網頁處理後攔下指定Chrome預設動作；原F8／F12／Ctrl+P高優先功能及工具列保持。
+
+Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策檢查）通過，包含Ctrl／Cmd正向及未列出的組合。共用合成頁tests/pages/keyboard-shortcuts.html已載入。使用者隨後要求「你編譯好，我測試」，因此未繼續逐項實機熱鍵矩陣，Chrome搜尋／儲存／新視窗及真實網頁按鍵接收均待使用者驗收，不宣稱UI熱鍵已通過；Cmd實機亦須在Mac回歸。
+
+本機交付EXE已更新、與build一致，SHA256 b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6 x64。合成server／App已停止，原OA已重開供使用者測試；測試URL只在當次記憶體，未保存INI。使用者新增的f1.js清單保留、不執行／修改／納入Git，Mac專屬碼／產物及prg不改，SDK／build保留。此次未提交／推送／移Tag／重新發布，GitHub ZIP仍為W28；Mac W27～W29需回macOS重編／實測，U01未實作。
+
+## W29／R02：使用者驗收與同版重新上傳授權（2026-10-13）
+
+使用者對本機快捷鍵修正回覆「可以了」，Windows W29按本次回報記錄為使用者驗收通過，不擴大為列印／注音／正式OA登入登出或Mac Cmd驗收；代理原未執行的逐項UI矩陣仍標示未執行。使用者另要求重新打包上傳、不要進版：提交／推送W29實際來源，打包已編譯且由使用者測過的0.1.6 EXE，替換既有v0.1.6同名Windows ZIP與.sha256，先上傳校驗再替換；Tag／Mac資產與個人資料保持，舊ZIP保留歷史證據。前段待驗收／未發布為此次回報與授權前狀態。

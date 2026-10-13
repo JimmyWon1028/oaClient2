@@ -94,3 +94,7 @@ chrome_status_bubble=STATE_DISABLED僅設在共用app.cpp的CEF BrowserSettings�
 ## W28：共用密碼保存政策（2026-10-13）
 
 共用App::OnContextInitialized在建立任何頁面前透過CEF RequestContext.SetPreference停用credentials_enable_service／credentials_enable_autosignin；不使用舊版失效switch、不複製平台登入邏輯或修改OA JS。Chromium偏好定義見[官方來源](https://chromium.googlesource.com/chromium/src/+/HEAD/components/password_manager/core/common/password_manager_pref_names.h)，本機固定CEF154已成功套用／實測。既有UserSet／userid與啟動專用profile清理保持；false停止詢問保存，不以此單一偏好宣稱所有既存密碼自動填入皆已禁用。Windows完成、Mac待macOS重編／實測，Mac產物未更新。
+
+## W29：唯一共用快捷鍵政策
+
+common/keyboard.h只定義使用者指定的Chrome衝突鍵；app.cpp透過SetPreferAccelerators(false)與OnPreKeyEvent／OnKeyEvent使網頁先收到真實事件，再停止指定Chrome fallback，不用ExecuteJavaScript重送假按鍵。原高優先F8／F12／Ctrl+P保持。CEF154 API及來源已核對，Windows編譯／110項通過，UI矩陣依使用者要求留其驗收；Mac平台碼／產物未改，Cmd實機回歸未執行。使用者提供的f1.js是清單資料，未修改／執行／納入Git。

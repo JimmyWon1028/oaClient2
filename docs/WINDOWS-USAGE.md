@@ -152,3 +152,11 @@ Windows 放大／縮小也須隱藏 Chromium 縮放彈窗，但依使用者最�
 ## R02／W28：0.1.6同版下載已更新（2026-10-13）
 
 GitHub原Windows ZIP／校驗檔連結已更新為W28密碼提示修正，仍為0.1.6；最新ZIP SHA256為92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099。請下載最新.sha256比對，保留自己的INI／picture／prg／範本，更新前正常關閉App。Tag／Mac資產保持，公開下載校驗通過；正式OA登入待使用者驗收，詳見[RELEASES](RELEASES.md)。前節尚未發布為此次同版替換前狀態。
+
+## W29：Chrome衝突熱鍵交回網頁（2026-10-13）
+
+使用者要求取消oaClient2內建Chrome的F1／F2／F3／F4／F9、Alt+W、Mod+F、Shift+F、Mod+E／S／N（Mod=Ctrl或Cmd，包含Ctrl+N），不是移除網頁自己的設定。共用common/keyboard.h精確匹配，app.cpp改為網頁優先接收一般加速鍵，OnPreKeyEvent不吞掉事件、OnKeyEvent在網頁處理後攔下指定Chrome預設動作；原F8／F12／Ctrl+P高優先功能及工具列保持。
+
+Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策檢查）通過，包含Ctrl／Cmd正向及未列出的組合。共用合成頁tests/pages/keyboard-shortcuts.html已載入。使用者隨後要求「你編譯好，我測試」，因此未繼續逐項實機熱鍵矩陣，Chrome搜尋／儲存／新視窗及真實網頁按鍵接收均待使用者驗收，不宣稱UI熱鍵已通過；Cmd實機亦須在Mac回歸。
+
+本機交付EXE已更新、與build一致，SHA256 b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6 x64。合成server／App已停止，原OA已重開供使用者測試；測試URL只在當次記憶體，未保存INI。使用者新增的f1.js清單保留、不執行／修改／納入Git，Mac專屬碼／產物及prg不改，SDK／build保留。此次未提交／推送／移Tag／重新發布，GitHub ZIP仍為W28；Mac W27～W29需回macOS重編／實測，U01未實作。

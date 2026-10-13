@@ -52,6 +52,8 @@ class BrowserClient : public CefClient,
       CefRefPtr<CefDictionaryValue>& extra_info, bool* use_default_window) override;
   bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event,
       CefEventHandle event_handle, bool* is_keyboard_shortcut) override;
+  bool OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event,
+      CefEventHandle event_handle) override;
   void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
   void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
   void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) override;

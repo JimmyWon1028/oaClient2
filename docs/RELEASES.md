@@ -64,3 +64,16 @@ W28儲存密碼提示修正已在Windows建置／合成實測並更新本機EXE�
 ## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
 
 使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。
+
+
+## R02／W28 最新下載：0.1.6同版替換結果（2026-10-13）
+
+使用者明確要求同版重新打包上傳，Windows公開同名ZIP與.sha256已替換為W28，版本仍0.1.6，不移動已發布Tag或修改Mac兩資產。Windows實際來源為c5cd54939caf34d14bd7395fb4f7073b6a134e3c，已推送；後續發布文件提交不變更App來源，最新main以Git核對。前段「ZIP仍為W27／未發布」及舊189879293大小、4d765e6d雜湊為歷史。
+
+最新[Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip)：189879887 bytes，SHA256 **92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099**。下載[最新校驗檔](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip.sha256)比對；EXE SHA256為fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474。相同版本檔案已更新，不能使用舊ZIP的校驗值。
+
+本輪使用既有安全腳本，輸出artifacts/releases/windows-w28/oaClient2-0.1.6-windows-x64.zip，source-commit為c5cd54939caf34d14bd7395fb4f7073b6a134e3c、expected-exe-sha256為上述fb57aac7；完整本機已測EXE／安全範例／CEF234／現用prg4共240檔，CRC及逐檔SHA256通過，不含個人INI／picture／logs／網站資料／tpl／SDK／build。沒有從根prg補回工具或重新建置App。
+
+先以暫名上傳並核對兩檔大小／digest，完成後只刪除原Windows兩資產並將新版改為原名；原Mac兩資產ID／大小／digest不變，Tag仍為67e296794c1db526e2afc729e4b170f95d09bf5b→0fe6f357173fb7802cca8504c2ea007dd5e7834d。新版Windows資產ID635859578／635860492，Release ID411036061不變。原公開URL無登入下載ZIP／校驗檔與本機／GitHub完全一致，公開ZIP CRC及全部240檔SHA256再次通過；證據artifacts/verification/releases-windows-w28/results.json／package.json／release-public.json。
+
+artifacts/releases/oaClient2-0.1.6-windows-x64.zip與.sha256現在也為最新W28。舊W27兩檔保留artifacts/verification/releases-windows-v0.1.6/public-download供追溯；Mac產物／prg／picture／tpl275份雜湊不變，SDK／下載包／build保留。沿用W28 MSVC／CTest1/1、74項及原生／重啟AJAX合成表單結果，正式OA登入及列印／注音等仍待使用者驗收；Mac W27／W28未重編／實測，U01未實作。

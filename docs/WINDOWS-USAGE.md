@@ -147,3 +147,8 @@ Windows 放大／縮小也須隱藏 Chromium 縮放彈窗，但依使用者最�
 ## W28：登入不提示儲存密碼（2026-10-13）
 
 最新本機EXE已停用Chromium儲存密碼及自動登入；登入不再詢問「要儲存密碼嗎」，userid／公司別等UserSet偏好保持原契約。Windows原生及重啟AJAX合成表單已測，正式OA登入待使用者驗收。此修正只在本機交付，既有GitHub ZIP仍是W27；未重新發布，詳見[進度](../PROGRESS.md)。
+
+
+## R02／W28：0.1.6同版下載已更新（2026-10-13）
+
+GitHub原Windows ZIP／校驗檔連結已更新為W28密碼提示修正，仍為0.1.6；最新ZIP SHA256為92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099。請下載最新.sha256比對，保留自己的INI／picture／prg／範本，更新前正常關閉App。Tag／Mac資產保持，公開下載校驗通過；正式OA登入待使用者驗收，詳見[RELEASES](RELEASES.md)。前節尚未發布為此次同版替換前狀態。

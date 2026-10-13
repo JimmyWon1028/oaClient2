@@ -378,3 +378,11 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 ## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
 
 使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。
+
+
+## 2026-10-13：R02／W28 同版重新打包與公開替換
+
+- 依使用者「重新打包上傳，不要進版」，維持0.1.6；W28來源c5cd549已提交／推送，固定v0.1.6 Tag／Mac資產不變。僅重建本機origin/main追蹤快取恢復已推送SHA，不改分支歷史。
+- 打包已測EXE fb57aac7，不重新編譯；ZIP 189879887 bytes，SHA256 92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099，240檔CRC／全部SHA256通過。排除個人INI／網站資料／picture／logs／tpl／SDK／build，不補回精簡prg。
+- 新暫名兩資產上傳／digest確認後才替換指定同名Windows ZIP／.sha256，原公開URL無登入重新下載兩檔完全一致。Release說明已記錄W28來源及同版替換；Mac兩資產ID／大小／digest、Tag及275份本機保護檔案不變。
+- 本機artifacts/releases同名ZIP／校驗檔亦更新，歷史W27檔保留前輪public-download；新證據artifacts/verification/releases-windows-w28/results.json。更新工作與發布文件，結果文件另行提交推送；SDK／壓縮檔／build與原OA視窗保留，未擴大驗收或實作U01。

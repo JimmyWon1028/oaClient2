@@ -2,7 +2,7 @@
 
 更新：2026-10-13。這是 Windows／Mac 上 Codex 的接手入口；以下歷史狀態以最新交接段為準。
 
-目前最新本機Windows交付為W28：已停用Chromium儲存密碼提示與自動登入，EXE SHA256為fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，版本仍0.1.6；原OA已重開，正式登入待使用者驗收。共用app.cpp在建立瀏覽器前套用RequestContext偏好，Mac產物未改、待macOS重編／實測。詳見本文末段W28及[進度](PROGRESS.md)；既有GitHub ZIP仍為W27的e56d3d32，本輪未提交／推送／重新發布。
+目前最新Windows本機與GitHub交付皆為W28：已停用Chromium儲存密碼提示與自動登入，EXE SHA256為fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，版本仍0.1.6；原OA已重開，正式登入待使用者驗收。來源c5cd549已推送，同名Windows ZIP／校驗檔已替換及公開下載校驗，ZIP SHA256為92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099。Tag／Mac資產未變，Mac W27／W28待macOS重編／實測；詳見本文末段及[RELEASES](docs/RELEASES.md)，前段W27公開檔案雜湊為歷史。
 
 2026-10-13最新結果：依使用者先commit、push再發布的順序，W21～W27來源7958a60已推送，Windows x64 ZIP與.sha256已加入既有[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)，公開下載校驗通過；Tag與Mac資產未變。發布文件與可重現打包腳本另行提交，最新main以Git核對。完整R02結果見本文末段及[Release文件](docs/RELEASES.md)。
 
@@ -284,3 +284,14 @@ Mac須在macOS重編／實測W27與W28共用變更，不在Windows修改Mac產�
 ## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
 
 使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。
+
+
+## R02／W28 最新交接：同版Windows ZIP已替換（2026-10-13）
+
+使用者明確要求重新打包上傳但不進版。W28來源c5cd54939caf34d14bd7395fb4f7073b6a134e3c已透過HTTPS推送；App／CMake仍0.1.6，v0.1.6 annotated Tag物件67e29679及來源0fe6f35不變。原Release同名Windows ZIP與.sha256已替換，Mac兩資產ID／大小／digest完全不變。
+
+最新ZIP 189879887 bytes，SHA256 92c371f3560daab3c23de117bb62d11b893be72530b045dbb5b20b8603e24099；EXE仍為W28的fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474。240檔CRC／全部SHA256、本機與GitHub大小／digest及無登入原URL重新下載ZIP／校驗檔一致，不含個人INI／網站資料／picture／logs／tpl／SDK／build，prg只有現用4份。不需重啟使用者現用OA；本輪只提交及打包／發布，沿用W28實測。
+
+artifacts/releases/oaClient2-0.1.6-windows-x64.zip及.sha256現在是最新同版檔；本輪新打包副本在artifacts/releases/windows-w28。歷史W27兩檔保留artifacts/verification/releases-windows-v0.1.6/public-download，SHA256 4d765e6d，不能再當成最新公開下載。新證據artifacts/verification/releases-windows-w28/results.json／package.json／release-public.json。來源及產物可追溯，發布紀錄另行提交，最新main以Git核對。
+
+275份Mac專屬來源／產物與prg／picture／tpl雜湊不變，SDK／壓縮檔／build保留。正式OA登入、列印／注音及其他驗收未擴大，Mac W27／W28待macOS重編／實測，U01未實作。切換平台仍須停止Windows操作並確認Dropbox同步，不能以push完成推定同步完成。

@@ -35,3 +35,23 @@ Windows本輪沒有Release資產，R02仍待Windows環境成功編譯及實機�
 ## R02 Windows建置／實測已完成（2026-10-13）
 
 Windows W21～W26已在MSVC與真實CEF完成本輪回歸，交付EXE已更新，SHA256：9b60d756ee39ca6dc3725e4e608f3d63ac18f1602b69c9bf43c53d32fc7daed2；結果見[進度](../PROGRESS.md)。本輪功能來源尚未提交，沒有製作Windows ZIP或公開發布。後續依使用者授權提交／推送與製作不含個人INI／快取的ZIP，記錄實際來源提交；既有v0.1.6 Tag與Mac資產保持不動。列印／Microsoft注音／正式OA登出仍待使用者驗收，U01未實作。
+
+## R02 Windows公開發布結果（2026-10-13）
+
+使用者要求先commit、push再打包發布；W21～W27實際Windows建置來源為7958a60fc75a35d4387a028ab8ccfb73e98200c0，已透過Git Credential Manager的HTTPS登入推送至main，與遠端核對一致。完成登入後push成功但本機origin/main更新失敗，之後fetch已恢復一致。後續發布文件／腳本提交不變更應用來源，最新main以Git核對。
+
+既有[v0.1.6初版測試Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)已新增[Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip)與[SHA256校驗檔](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip.sha256)。ZIP大小189879293 bytes，SHA256為4d765e6d5748ce3d5768dd6ef5ed431d27dbcb13f07647f4aa71cc480ec0feb2；主程式SHA256為e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，取代前段W21～W26的9b60d756交付，版本仍0.1.6。
+
+ZIP根目錄oaClient2/包含240檔：主程式、安全Config.example.ini、234份CEF（含CEF-LICENSE.txt）及既有精簡prg的docto.exe／Reptool.exe／TSCLIB.dll／zint.dll。沒有個人Config.ini、picture、logs、profile、cache、tpl報表範本、SDK／build或Mac資料，不從根prg補回工具。Windows EXE與libcef.dll的AMD64 PE架構核對通過；prg沿用既有工具架構，不宣稱所有舊工具皆為64位元。
+
+本機ZIP CRC及全部240檔SHA256與交付一致；發布後未帶登入憑證重新下載ZIP與.sha256，兩檔與本機逐位元一致，GitHub大小／digest與公開下載CRC通過。既有Mac兩資產的ID／大小／digest不變，本機Mac專屬來源及產物、prg／picture／tpl共275份保護檔案雜湊不變。v0.1.6 annotated Tag物件仍為67e296794c1db526e2afc729e4b170f95d09bf5b，來源仍0fe6f357173fb7802cca8504c2ea007dd5e7834d，沒有移動；Release明列Windows使用後續7958a60來源。證據在artifacts/verification/releases-windows-v0.1.6/results.json／package.json／release-before.json／release-public.json，不納入Git。
+
+可重現打包使用[scripts/create-windows-release.py](../scripts/create-windows-release.py)，僅Python標準函式庫；從目前artifacts/oaClient2讀取安全清單，不修改交付或補回prg。遇到非二進位prg／未知CEF檔案／既有輸出會停止，須核對再另選輸出檔案。首次製作命令如下，已有ZIP不重跑覆寫：
+
+```powershell
+python scripts/create-windows-release.py --output artifacts/releases/oaClient2-0.1.6-windows-x64.zip --evidence artifacts/verification/releases-windows-v0.1.6/package.json --source-commit 7958a60fc75a35d4387a028ab8ccfb73e98200c0 --expected-exe-sha256 e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c
+```
+
+下載後以PowerShell執行`Get-FileHash .\oaClient2-0.1.6-windows-x64.zip -Algorithm SHA256`比對.sha256；解壓後執行oaClient2/oaClient2.exe。新安裝HomeUrl空白，從歡迎頁設定；更新前正常關閉，保留自己的INI／picture／prg／範本，不把公開ZIP覆蓋視為設定遷移或程式內線上更新。
+
+本次打包／發布沒有重新編譯或擴大驗收，沿用Windows MSVC Release／CTest1/1、74項與W21～W27實機結果。列印預覽／最新版Microsoft注音、正式OA登入登出／Reptool／hcopen及最終間距待使用者驗收；其他DPI、晚建立Console／一般popup競態未獨立實測。W27共用設定待macOS重編／實測，既有MacZIP未套用；SDK／下載壓縮檔／build保留，U01尚未實作。

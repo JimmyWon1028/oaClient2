@@ -1,6 +1,6 @@
 # Windows 操作與設定
 
-2026-10-13，Windows x64 簡易版 0.1.6，W21～W26交付已更新。
+2026-10-13，Windows x64（64位元）簡易版0.1.6，W21～W27已交付，R02 ZIP已公開。
 
 Windows 的 Config.ini／picture 在 EXE 旁，這是 Windows 配置。Mac 改用 Application Support，不能套用到 Windows；共用程式讀寫組態前，先核對[兩平台路徑對照](PLATFORM-PATHS.md)。INI 欄位與共用流程仍相同。
 
@@ -138,3 +138,7 @@ Windows 放大／縮小也須隱藏 Chromium 縮放彈窗，但依使用者最�
 ## W27：滑鼠連結提示隱藏（2026-10-13）
 
 移到選單／連結時不再顯示左下角Chrome網址狀態泡泡（例如javascript:void(0)）；原選單JavaScript與工具列命令保持。Windows交付0.1.6已更新並重開，建置／合成實測見[進度](../PROGRESS.md) W27，正式OA選單由使用者確認。
+
+## R02：公開ZIP下載（2026-10-13）
+
+從[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)下載Windows x64 ZIP及.sha256；解壓後執行oaClient2/oaClient2.exe，首次以歡迎頁設定網址。ZIP只帶程式／CEF／安全範例及現有精簡prg，不含個人Config.ini、picture、logs、網站資料或報表範本。更新前正常關閉，保留自己的設定／截圖／prg／範本。大小、校驗及實際來源見[RELEASES](RELEASES.md)，不將下載校驗當成列印／注音／正式OA驗收。

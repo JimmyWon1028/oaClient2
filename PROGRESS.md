@@ -1,6 +1,6 @@
 # oaClient2 進度表
 
-更新：2026-10-13。Windows 0.1.6 已完成 W21～W26 接線、MSVC 與本輪實機回歸，交付已更新；Mac arm64 0.1.6 已建置交付，列印預覽／注音待使用者驗收。使用者新增工具列、同目錄 INI／picture、啟動最大化及沿用圖示需求已納入。
+更新：2026-10-13。Windows x64 0.1.6 已完成 W21～W27、MSVC 與本輪實機回歸，來源7958a60已推送，R02 ZIP已公開並完成下載校驗；Mac arm64既有資產保持，W27待Mac重編／實測。列印預覽／注音及正式OA等仍待使用者驗收。
 
 ## 工作項目
 
@@ -8,23 +8,23 @@
 | --- | --- | --- | --- |
 | D01 | 閱讀舊 oaClient／Reptool | 已完成第一輪來源盤點；本輪核對 PAS／DFM 工具列並操作舊版 Console 開關。 | 逐一核對其他命令契約。 |
 | D02 | 列印預覽技術查證 | 已確認 Electron 不符內建預覽要求；Windows 採 CEF Chrome。 | Mac 核對 #3410 正式配套及實測。 |
-| D03 | Git／GitHub | 接手main／origin/main皆為59a323a，乾淨且無lock／來源衝突；固定v0.1.6指向0fe6f35。本輪功能及文件尚未提交／推送。 | 後續提交、推送與發布依使用者授權；不移動Tag。 |
+| D03 | Git／GitHub | W21～W27提交7958a60已經HTTPS登入後推送；遠端SHA核對一致，固定v0.1.6仍指向0fe6f35。 | 發布結果與打包腳本另行提交推送，最新main以Git核對；不移動Tag。 |
 | D04 | 計畫／紀錄／跨平台交接 | 已整理 Mac 接續入口，Windows W21／W22 提示詞已存 [WINDOWS-CODEX-PROMPT.md](docs/WINDOWS-CODEX-PROMPT.md)，包含平台開發分工、共用來源與組態路徑差異。 | 回 Windows 先核對同步與來源，再實作／編譯／回歸；Windows 本輪未改。 |
 | D05 | 時間與平台範圍 | 排除環境準備及測試；Mac 固定 arm64。 | 記錄測試後修正。 |
-| D06 | 網站／資料／INI 決策 | Windows 現行預設 OA；Mac 初始 URL 空白、設定後保存。Windows EXE 旁 INI，Mac Application Support；網站全清、設定保留。 | Windows 相同歡迎頁 W21 待 Windows 環境實作。 |
+| D06 | 網站／資料／INI 決策 | 兩平台初始URL空白、設定後保存；Windows EXE旁INI，Mac Application Support，網站全清、程式設定保留。 | W21 Windows歡迎頁／保存／重啟已實測，正式網站由使用者驗收。 |
 | D07 | 共用來源與平台邊界 | 已核對現行來源，新增共用程式碼規則及Mac提示詞：共用功能不重寫、不複製，平台差異獨立；Windows子程序DLL配置及Console handle／座標已透過平台介面最小抽取。 | Mac接手按平台介面最小調整，記錄兩平台回歸狀態。 |
 | W01 | Windows 環境 | 已完成；Build Tools 17.14.40、MSVC 14.44.35207、SDK 10.0.26100.0、CEF 154.0.34 校驗、官方範例編譯。 | 不需重裝完整 Visual Studio。 |
 | W02 | 網站與 INI | 已實作／建置；實機 OA 首頁載入，HTTP 200；UTF-8 INI、位置／大小保存。 | 0.1.4已補UserSet／userid等保存回填；正式登入對話框由使用者測試。 |
 | W03 | 內建列印預覽 | 0.1.0 由使用者測試回報正常；最新版本尚未重新驗收。 | 使用者驗證 OA 列印／取消／PDF／印表機情境。 |
 | W04 | 注音與啟動 | 0.1.1 發生浮動組字窗；0.1.2 已恢復 Views 主網站，使用者確認 Microsoft 注音正常。已有初次主框架 load 記錄，非完整網站初始化時間。 | 同條件比較舊版；記錄輸入法與焦點情境。 |
-| W05 | 網站資料清理 | 已實作；單例、專用目錄校驗、拒絕 reparse；核心合成資料測試通過。 | 真實 Cookie／IndexedDB／Service Worker 逐項重啟回歸未完成。 |
+| W05 | 網站資料清理 | 已實作；單例、專用目錄校驗、拒絕reparse；兩輪真實CEF合成網站Cookie／LocalStorage／IndexedDB／Service Worker／cache清理回歸通過，INI偏好仍回填。 | 正式OA登入資料清理由使用者驗收；不還原密碼／token。 |
 | W06 | 既有 Reptool 呼叫 | 0.1.4已隨附prg，預設相對Reptool路徑；合成程序核對兩參數／中文／引號／工作目錄通過。 | 實際 Reptool 啟動、參數／報表尚未驗收。 |
-| W07 | Windows 交付 | 0.1.6入口在 artifacts/oaClient2/oaClient2.exe；CEF在cef/，圖示內嵌；打包保留Config.ini／picture及使用者資料。 | 可直接壓縮整個oaClient2資料夾；正式簽署／安裝包未做。 |
+| W07 | Windows 交付 | 0.1.6入口在artifacts/oaClient2/oaClient2.exe；CEF在cef/、圖示內嵌。本機交付保留使用者資料，公開ZIP以安全清單排除個人INI／picture／logs／profile／tpl。 | 公開ZIP與下載校驗見R02；正式簽署／安裝包未做。 |
 | W08 | 舊版工具列與 Console | 0.1.2 保留原圖示／順序；主網站為 Views，Console 獨立 Chrome CefWindow 嵌入下方；0.1.3 圖示內嵌。 | Console 開關／分頁、網址對話框、縮放保存、MAC 與截圖已實測；目錄完整路徑 UI 確認未完成。 |
 | W09 | INI 同目錄／最大化／OA 圖示 | 已實作；實際 INI 已建立於交付目錄，主視窗最大化，標題 OA 圖示顯示。 | Mac 最新改為 Application Support；見 M04。 |
 | W10 | Microsoft 注音浮窗修正 | 0.1.2 使用者確認「已正常，沒有額外浮動組字窗」。 | 多螢幕／DPI／其他輸入法待測。 |
 | W11 | CEF 集中與啟動 | 0.1.6不使用沙箱，主程式為獨立EXE；cef/只保留234份原始CEF執行元件，SHA256一致。 | Mac Framework／Helper 已實作；見 M02。 |
-| W12 | URL 對話框 | Win32 單行預選網址、藍字、置中確定、X／ESC；展示與 ESC 取消已測。 | 最新確認／錯誤輸入路徑未重測。 |
+| W12 | URL 對話框 | Win32單行預選網址、藍字、置中確定；W21歡迎／工具列入口、X／ESC取消、無效協定拒絕、HTTP確認保存與重啟通過。 | HTTPS及正式網站完整使用者操作待驗收。 |
 | W13 | 縮放重啟保存 | 0.1.2 125%→150% 保存並重啟套用，測後恢復125%；0.1.3 一般啟動100%→110%→100%均寫回INI。 | Mac 已沿用相同設定契約並測試；見 M03。 |
 | W14 | 圖檔內嵌 EXE | 0.1.3 八張 RCDATA 與原 PNG 逐位元比對相同；root PNG 已移除，一般啟動圖示正常。 | Mac bundle 資源及 ReadApplicationImage 已實作；見 M02。 |
 | W15 | UserSet／userid相容 | cmd=ini、load-userset與$usr已實作；本機CEF首載偏好Cookie、回呼及重啟保存通過。 | 正式登入對話框與完整偏好由使用者確認。 |
@@ -55,7 +55,7 @@
 | W26 | Windows 工具列間距／完整文字 | M13共用298 DIP／左右2 DIP設定已在Windows編譯，MAC／瀏覽目錄／截圖／還原比例完整顯示、原圖示與順序核對。 | 使用者最終間距驗收、其他DPI／多螢幕未測。 |
 | W27 | 隱藏連結狀態提示 | 共用CefBrowserSettings.chrome_status_bubble=STATE_DISABLED；Windows Release／CTest1/1通過。真實CEF合成JavaScript選單／子選單無左下角提示，原動作正常；EXE已更新及重開OA。 | 正式OA選單由使用者驗收；Mac須在macOS重新編譯／實測，Mac產物未改。 |
 | R01 | Mac ZIP Releases | v0.1.6初版測試Release已公開；ZIP只有.app，GitHub大小／digest、無登入公開下載ZIP與校驗檔逐位元一致。 | 列印／一般注音等仍待使用者驗收；Windows補齊見R02。 |
-| R02 | Windows Release補齊 | W21～W26的Windows建置／實機回歸已完成，新EXE已交付；本輪尚未製作ZIP或公開發布。 | 後續依使用者授權準備不含個人INI／快取的ZIP、提交與發布；不移動Tag。 |
+| R02 | Windows Release補齊 | v0.1.6已新增Windows x64 ZIP及.sha256；240檔CRC／SHA256、GitHub大小／digest及無登入公開下載兩檔一致，ZIP 189879293 bytes。 | 列印／注音／正式OA等仍待驗收，Mac W27待回歸；Tag與Mac資產未變，U01未實作。 |
 
 ## 已完成的驗證
 
@@ -310,3 +310,13 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 ## D03／R02：使用者授權先提交推送、再打包發布（2026-10-13）
 
 使用者已明確授權打包／發布，並指定先commit、push。先提交W21～W27來源、共用安全範例、測試及本輪文件；不納入個人INI、artifacts、prg或CEF SDK。W27合成選單素材另保留同內容的tests/pages/status-hint.html供Mac接續，與已實測素材SHA256一致，沒有重新修改功能。main／遠端提交前皆為59a323a，v0.1.6仍固定0fe6f35；推送完成與ZIP發布結果另行追加，不移Tag、不動Mac資產。
+
+
+## D03／R02：Windows x64公開發布結果（2026-10-13）
+
+- W21～W27已提交7958a60fc75a35d4387a028ab8ccfb73e98200c0；Windows首次HTTPS push因尚未登入失敗，使用者自行完成Git Credential Manager device授權後推送成功，遠端SHA一致。本機origin/main更新一度失敗，fetch已恢復；沒有force或移Tag。
+- 既有v0.1.6初版測試Release新增Windows ZIP與.sha256，來源7958a60，EXE仍0.1.6／x64，SHA256 e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c。ZIP 189879293 bytes，SHA256 4d765e6d5748ce3d5768dd6ef5ed431d27dbcb13f07647f4aa71cc480ec0feb2，內容為EXE＋安全範例＋CEF234檔＋現有prg4檔，共240檔。
+- scripts/create-windows-release.py以安全清單打包及全部SHA256／CRC核對，不讀根prg、不改交付，排除個人INI／picture／logs／profile／cache／tpl／SDK／build。GitHub大小／digest與無登入公開重新下載ZIP及校驗檔皆一致，公開ZIP CRC通過。
+- Mac既有兩資產ID／大小／digest及v0.1.6來源0fe6f35未變；本機Mac專屬來源／產物及prg／picture／tpl共275份雜湊不變，SDK／壓縮檔／build保留。原OA視窗保留供使用者操作，本輪沒有再改設定或建置App。
+- 證據artifacts/verification/releases-windows-v0.1.6/results.json／package.json／release-public.json，下載／校驗與重現流程見[RELEASES](docs/RELEASES.md)。發布紀錄及腳本另行提交推送，最新main以Git核對；個人資料和產物不納入Git。
+- 實作／編譯／合成實機結果仍依W21～W27；本輪發布不增加功能驗收。列印／Microsoft注音／正式OA登入登出／Reptool／hcopen／最終間距待使用者；其他DPI及延遲Console／popup競態未獨立重現，Mac W27未重編／實測，U01未實作。

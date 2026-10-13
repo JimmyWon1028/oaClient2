@@ -4,7 +4,7 @@
 
 目前最新Windows交付為W27：已隱藏左下角連結狀態提示，EXE SHA256為e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，版本仍0.1.6；原OA已重開。共用app.cpp新增兩行設定／英文註解，Mac產物未改、待macOS重編／實測。詳見本文末段W27及[進度](PROGRESS.md)；下面W21～W26的9b60d756雜湊為前輪交付。
 
-2026-10-13最新授權：使用者要求打包發布，並指定先commit、push；W21～W27來源／文件及可共用狀態提示測試素材納入本次提交，不包含個人資料／二進位產物。實際推送及R02發布結果接續追加，既有v0.1.6 Tag／Mac資產保持。
+2026-10-13最新結果：依使用者先commit、push再發布的順序，W21～W27來源7958a60已推送，Windows x64 ZIP與.sha256已加入既有[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)，公開下載校驗通過；Tag與Mac資產未變。發布文件與可重現打包腳本另行提交，最新main以Git核對。完整R02結果見本文末段及[Release文件](docs/RELEASES.md)。
 
 ## 2026-10-13 Windows W21～W26 最新交接
 
@@ -262,3 +262,12 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 使用者要求移到選單時不顯示左下角javascript:void(0)。共用app.cpp停用CEF chrome_status_bubble，未修改OA；Windows增量Release／CTest1/1與真實CEF合成選單／子選單動作測試通過。交付EXE SHA256：e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，取代前輪9b60d756版本，版本仍0.1.6。
 
 原OA網址已重開供使用者測實際選單；合成伺服器已停。Mac產物與prg／picture／tpl不變，Mac需回macOS編譯／實測才能套用這次唯一共用設定。SDK／build保留、Git尚未提交／推送／發布，v0.1.6 Tag不動；詳細結果見[PROGRESS](PROGRESS.md) W27。
+
+
+## D03／R02 最新交接：Windows ZIP已公開（2026-10-13）
+
+W21～W27來源7958a60fc75a35d4387a028ab8ccfb73e98200c0已透過Windows Git Credential Manager的HTTPS登入推送；遠端確認一致。既有[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)新增Windows x64 ZIP／.sha256，189879293 bytes，SHA256 4d765e6d5748ce3d5768dd6ef5ed431d27dbcb13f07647f4aa71cc480ec0feb2。EXE e56d3d32版本0.1.6與W27相同，Tag仍0fe6f35，Release明列Windows後續來源，不移Tag、不改Mac資產。
+
+240檔CRC／全部SHA256、GitHub大小／digest、無登入公開重新下載兩檔一致。只包含EXE、安全範例、CEF234份和現有精簡prg4份，沒有個人INI／picture／logs／網站資料／tpl／SDK／build；不從根prg補回。scripts/create-windows-release.py提供可重現打包，已有輸出會拒絕覆寫。發布文件／腳本另行提交推送，最新main以Git核對；詳見[RELEASES](docs/RELEASES.md)及本機artifacts/verification/releases-windows-v0.1.6。
+
+本機保護的Mac專屬來源／產物及prg／picture／tpl共275檔雜湊不變，SDK／壓縮檔／build保留，原OA視窗保留。列印／注音、正式OA登入登出／Reptool／hcopen及間距待使用者驗收；Mac W27共用設定未重編／實測、其他DPI與窗口競態未獨立驗證，U01未實作。切回Mac前仍須停止Windows編輯／建置／Git並確認Dropbox同步，不以Git push推定Dropbox完成。

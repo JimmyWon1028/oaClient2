@@ -325,3 +325,10 @@ Windows MSVC Release、CTest1/1與74項，以及本輪UI／兩輪UserSet儲存�
 使用者要求滑鼠移到OA選單時，左下角不顯示javascript:void(0)。使用CEF正式chrome_status_bubble=STATE_DISABLED停用瀏覽器連結狀態提示；網站選單命令／JavaScript不改，共用app.cpp保持唯一來源。Windows本輪建置／合成選單與子選單實機通過、交付EXE更新，正式OA由使用者驗收。Mac不在Windows重編或改平台實作，需在macOS接續共用設定回歸；U01與其他未驗收範圍保持。
 
 2026-10-13使用者新增授權：先commit／push本輪W21～W27，再接續Windows ZIP打包與公開發布。只納入安全來源／文件／共用測試；ZIP排除個人INI及網站資料，保留既有Mac資產與固定Tag，記錄Windows實際來源提交及下載雜湊。
+
+
+## D03／R02：Windows發布已執行（2026-10-13）
+
+依使用者先commit／push再打包發布的順序，W21～W27來源7958a60已透過HTTPS推送，Windows x64 ZIP與.sha256補齊既有v0.1.6初版測試Release。以安全清單排除個人INI／picture／logs／網站資料／tpl／SDK／build，只保留現有精簡prg4份；CRC／全部240檔SHA256及公開下載一致，Tag與Mac資產未變。實際來源／雜湊與重現流程見[RELEASES](docs/RELEASES.md)。發布文件及腳本另行提交，不改應用來源。
+
+R02完成打包／公開發布／下載校驗，沒有新增安裝程式或U01線上更新。W21～W27的實作、Windows編譯／合成實機已分別記錄；列印／Microsoft注音、正式OA／Reptool／hcopen及最終間距仍待使用者驗收，其他DPI與窗口競態未獨立驗證。Mac需在macOS重編／實測W27才套用共用設定，不在Windows修改Mac產物。

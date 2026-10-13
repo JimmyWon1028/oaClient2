@@ -173,3 +173,8 @@ Windows MSVC Release／CTest1/1、74項與本輪歡迎頁、網址／縮放重�
 ## W27：隱藏連結狀態提示（2026-10-13）
 
 使用者要求滑鼠移到選單時不顯示左下角javascript:void(0)提示；共用app.cpp使用CEF chrome_status_bubble=STATE_DISABLED，不改OA選單JavaScript。Windows已編譯／合成實機驗證並更新交付；Mac專屬碼與產物未修改，Mac需在macOS重編／實測才會套用，不宣稱已更新Mac交付。設定／prg／picture保留，SDK／build不清除。
+
+
+## D03／R02：Windows提交推送與公開發布完成（2026-10-13）
+
+使用者已授權先commit／push再打包發布；W21～W27來源7958a60已透過HTTPS推送。既有v0.1.6 Release新增Windows x64 ZIP與.sha256，排除個人INI／網站資料／picture／logs／tpl，現有精簡prg只有原4份，不補回根prg。240檔CRC／SHA256及無登入公開下載兩檔一致；Tag與Mac資產不變。實際來源／大小／雜湊／可重現腳本見[Release文件](docs/RELEASES.md)，發布文件另行提交，最新main以Git核對。前段未提交／待R02是此次授權前歷史；Mac W27待目標平台重編／實測，其他未驗收及U01保持。

@@ -1,12 +1,12 @@
 # oaClient2
 
-更新：2026-10-12。Windows 簡易版 0.1.6 已可執行；Mac arm64 0.1.6 已建置交付，列印預覽／注音待使用者驗收。
+更新：2026-10-13。Windows x64 與 Mac arm64 0.1.6 已建置交付，列印預覽／注音待使用者驗收。
 
 ## 執行 Windows 版本
 
 開啟 `artifacts/oaClient2/oaClient2.exe`。0.1.6依使用者要求不使用沙箱，全部應用功能編入此EXE；CEF版本未變的一般更新只替換EXE，首次交付仍需完整資料夾。CEF 必要 DLL、資源與 locales 集中在 cef/；視窗與工具列圖示已內嵌主程式 EXE。交付仍須包含 cef/，不能只複製 EXE。
 
-- 每次啟動主視窗最大化，載入 `https://oa.lysm.com.tw/`。
+- 每次啟動主視窗最大化；未設定網址顯示本機歡迎頁，確認 HTTP／HTTPS 網址後保存，已有網址直接載入。
 - `Config.ini` 放在 EXE 同目錄，可手動編輯；首次啟動會建立，若本機有初版 INI，僅在新位置不存在時複製保留。
 - 網站資料預設啟動前全部清除，程式設定與截圖保留。
 - 下方左側按鈕／F12 開啟或關閉嵌入式 Console；右側依序為首頁、伺服器設定、MAC、瀏覽目錄、截圖、還原比例、縮小、放大。
@@ -19,7 +19,7 @@
 
 將 `artifacts/macos-arm64/oaClient2.app` 拖曳至 Applications 後開啟，只支援 Apple Silicon arm64。首次啟動顯示本機歡迎頁，HomeUrl 空白；設定確認後才保存網址。在 `~/Library/Application Support/oaClient2/` 建立組態；Config.ini／picture／logs／profile／lock 均放該目錄，Framework／Helper／圖示全部在 bundle。沿用同一 app／common，沒有另建分岔來源。
 
-正式網站、Console、設定／縮放、截圖及兩輪合成網站清理／登出已測；列印預覽與注音由使用者測試。Windows 共用來源回歸待執行；本機 ad-hoc 簽章，正式簽署／公證與自動更新未實作。詳見 [Mac 操作](docs/MACOS-USAGE.md)與 [PROGRESS](PROGRESS.md)。
+正式網站、Console、設定／縮放、截圖及兩輪合成網站清理／登出已測；列印預覽與注音由使用者測試。Windows W21～W26共用來源回歸已完成，W27隱藏連結狀態提示須回macOS重編／實測；本機 ad-hoc 簽章，正式簽署／公證與自動更新未實作。詳見 [Mac 操作](docs/MACOS-USAGE.md)與 [PROGRESS](PROGRESS.md)。
 
 Mac 注音只驗證一般輸入與焦點；額外浮動組字窗是 Windows 專屬問題，依使用者確認不列入 Mac 測試／待驗收。
 
@@ -52,4 +52,4 @@ Git 為 main 分支，使用者已授權建立公開 repository [JimmyWon1028/oa
 
 ## 下載編譯版本
 
-從 [GitHub Releases](https://github.com/JimmyWon1028/oaClient2/releases) 下載編譯好的ZIP；Mac壓縮包只包含完整oaClient2.app，不含Config.ini、快取、profile、截圖或紀錄。先提供macOS arm64初版測試版本，Windows在Windows環境完成編譯／測試後再補齊。下載與校驗方式見[RELEASES](docs/RELEASES.md)。這不是程式內線上更新功能，U01尚未實作。
+從 [v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6) 下載 [Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip) 或 [Mac arm64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-macos-arm64.zip)，並下載對應.sha256校驗檔。兩平台皆不含個人Config.ini、快取、profile、截圖或紀錄；Windows包含EXE／cef／安全設定範例及現有精簡prg，Mac只包含完整.app。Windows W21～W27來源7958a60已推送，既有Tag及Mac資產未變；Mac W27仍待重編／實測。下載與校驗方式見[RELEASES](docs/RELEASES.md)，U01程式內線上更新尚未實作。

@@ -357,3 +357,12 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 ## 2026-10-13：D03／R02 提交推送及Windows發布授權
 
 使用者要求打包發布，隨後明確指定先commit、push；提交W21～W27來源與文件，W27已實測合成頁以相同內容保留tests/pages/status-hint.html供跨平台重現。提交前main／遠端同59a323a，沒有新lock或來源衝突；產物／個人INI／prg／SDK不納入Git，v0.1.6 Tag不移動，Mac資產保持。實際提交／推送／打包／發布結果後續追加。
+
+
+## 2026-10-13：D03／R02 Windows提交推送、ZIP發布及下載核對
+
+- W21～W27來源提交7958a60；Windows HTTPS首次因未登入失敗，使用者完成device授權後push成功，遠端SHA核對一致。origin/main更新失敗經fetch恢復，未force／移Tag。
+- 製作及公開oaClient2-0.1.6-windows-x64.zip／.sha256至既有v0.1.6初版測試Release；189879293 bytes，ZIP SHA256 4d765e6d5748ce3d5768dd6ef5ed431d27dbcb13f07647f4aa71cc480ec0feb2，EXE e56d3d32仍為W27的0.1.6 x64。
+- 新增scripts/create-windows-release.py，安全清單只納入EXE／安全範例／CEF234檔／現有prg4檔，不補回工具或修改交付。240檔CRC及SHA256一致，GitHub大小／digest與無登入公開下載ZIP／校驗檔逐位元一致。個人Config.ini、picture、logs、profile／cache、tpl、SDK／build皆不在ZIP或Git。
+- 既有Mac兩資產ID／大小／digest、固定Tag來源0fe6f35與本機Mac／prg／picture／tpl共275份保護檔案不變；SDK／壓縮檔／build保留。Release說明明列Windows實際來源7958a60及待驗收項目，未重新編譯或擴大驗收。
+- 更新進度／交接／計畫／Release與Windows操作、README現行歡迎頁／下載入口，發布結果及腳本另行提交推送；詳見artifacts/verification/releases-windows-v0.1.6/results.json。列印／注音／正式OA／Reptool／hcopen及間距、Mac W27目標平台回歸與未測競態保持，U01未實作。

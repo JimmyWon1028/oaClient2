@@ -366,3 +366,15 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 - 新增scripts/create-windows-release.py，安全清單只納入EXE／安全範例／CEF234檔／現有prg4檔，不補回工具或修改交付。240檔CRC及SHA256一致，GitHub大小／digest與無登入公開下載ZIP／校驗檔逐位元一致。個人Config.ini、picture、logs、profile／cache、tpl、SDK／build皆不在ZIP或Git。
 - 既有Mac兩資產ID／大小／digest、固定Tag來源0fe6f35與本機Mac／prg／picture／tpl共275份保護檔案不變；SDK／壓縮檔／build保留。Release說明明列Windows實際來源7958a60及待驗收項目，未重新編譯或擴大驗收。
 - 更新進度／交接／計畫／Release與Windows操作、README現行歡迎頁／下載入口，發布結果及腳本另行提交推送；詳見artifacts/verification/releases-windows-v0.1.6/results.json。列印／注音／正式OA／Reptool／hcopen及間距、Mac W27目標平台回歸與未測競態保持，U01未實作。
+
+
+## 2026-10-13：W28 停用Chromium儲存密碼提示
+
+- 依使用者圖片，在共用App::OnContextInitialized設定credentials_enable_service=false／credentials_enable_autosignin=false；政策成功才建立網頁，失敗回報及結束message loop。未改OA／userid／UserSet／INI契約或網頁安全設定。
+- Windows增量MSVC Release／CTest1/1、74項通過；同一合成表單舊版會提示，修正版原生POST結果頁與重啟AJAX送出皆無提示，兩次啟動政策紀錄通過。新增共用合成表單及localhost測試server，丟棄表單值、只記route／時間，未用正式帳密；server GET／303／204核對通過。
+- 只更新本機交付EXE，SHA256 fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，版本0.1.6 x64，與build一致；個人INI保持正常關閉保存、測試網址未寫入，Mac專屬來源／產物與prg／picture／tpl275份雜湊不變，SDK／壓縮檔／build保留。
+- 合成App及server已停止，原OA已從修正版重開供使用者驗收；同步工作文件／操作／共用規則／Release狀態，證據artifacts/verification/windows-w28。Mac W27／W28未重編／實測；本輪未提交／推送／移Tag／重新發布，GitHub ZIP仍為W27，正式OA及其他使用者驗收與U01保持。
+
+## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
+
+使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。

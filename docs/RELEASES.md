@@ -55,3 +55,12 @@ python scripts/create-windows-release.py --output artifacts/releases/oaClient2-0
 下載後以PowerShell執行`Get-FileHash .\oaClient2-0.1.6-windows-x64.zip -Algorithm SHA256`比對.sha256；解壓後執行oaClient2/oaClient2.exe。新安裝HomeUrl空白，從歡迎頁設定；更新前正常關閉，保留自己的INI／picture／prg／範本，不把公開ZIP覆蓋視為設定遷移或程式內線上更新。
 
 本次打包／發布沒有重新編譯或擴大驗收，沿用Windows MSVC Release／CTest1/1、74項與W21～W27實機結果。列印預覽／最新版Microsoft注音、正式OA登入登出／Reptool／hcopen及最終間距待使用者驗收；其他DPI、晚建立Console／一般popup競態未獨立實測。W27共用設定待macOS重編／實測，既有MacZIP未套用；SDK／下載壓縮檔／build保留，U01尚未實作。
+
+
+## W28本機修正與既有ZIP差異（2026-10-13）
+
+W28儲存密碼提示修正已在Windows建置／合成實測並更新本機EXE，SHA256 fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，仍為0.1.6。既有Windows ZIP保持W27的e56d3d32、來源7958a60與原ZIP SHA256，本次尚未提交／推送／打包／重新發布，不宣稱下載資產已有W28。v0.1.6 Tag及Mac資產不變，後續版本／發布依使用者授權，不移Tag或靜默覆蓋已公開同名ZIP。
+
+## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
+
+使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。

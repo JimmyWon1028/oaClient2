@@ -332,3 +332,14 @@ Windows MSVC Release、CTest1/1與74項，以及本輪UI／兩輪UserSet儲存�
 依使用者先commit／push再打包發布的順序，W21～W27來源7958a60已透過HTTPS推送，Windows x64 ZIP與.sha256補齊既有v0.1.6初版測試Release。以安全清單排除個人INI／picture／logs／網站資料／tpl／SDK／build，只保留現有精簡prg4份；CRC／全部240檔SHA256及公開下載一致，Tag與Mac資產未變。實際來源／雜湊與重現流程見[RELEASES](docs/RELEASES.md)。發布文件及腳本另行提交，不改應用來源。
 
 R02完成打包／公開發布／下載校驗，沒有新增安裝程式或U01線上更新。W21～W27的實作、Windows編譯／合成實機已分別記錄；列印／Microsoft注音、正式OA／Reptool／hcopen及最終間距仍待使用者驗收，其他DPI與窗口競態未獨立驗證。Mac需在macOS重編／實測W27才套用共用設定，不在Windows修改Mac產物。
+
+
+## W28：登入後不再詢問儲存密碼（2026-10-13）
+
+使用者要求關閉圖片中的Chromium儲存密碼彈窗。共用App在建立瀏覽器前停用RequestContext credentials_enable_service及credentials_enable_autosignin，沒有新增INI欄位、修改OA登入表單或停用網頁安全檢查；設定失敗回報並停止啟動。userid／公司別及其他UserSet偏好回填照舊，不把程式偏好當成密碼或登入token還原。
+
+Windows已實作／MSVC／CTest1/1、74項／舊版正向重現與修正版原生、重啟AJAX實測，本機交付更新；正式OA登入待使用者驗收。共用來源只有一份，Mac平台與產物保持，Mac重編／實測未執行。GitHub ZIP仍為已發布W27，本輪未提交／推送／移Tag／重新發布；列印／注音等與U01未實作不擴大完成。
+
+## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
+
+使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。

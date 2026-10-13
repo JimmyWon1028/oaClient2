@@ -2,7 +2,7 @@
 
 更新：2026-10-13。這是 Windows／Mac 上 Codex 的接手入口；以下歷史狀態以最新交接段為準。
 
-目前最新Windows交付為W27：已隱藏左下角連結狀態提示，EXE SHA256為e56d3d3285bd71a4f0e6791c011a6cf7b45e1eedebdece23e55b90217bbf8b7c，版本仍0.1.6；原OA已重開。共用app.cpp新增兩行設定／英文註解，Mac產物未改、待macOS重編／實測。詳見本文末段W27及[進度](PROGRESS.md)；下面W21～W26的9b60d756雜湊為前輪交付。
+目前最新本機Windows交付為W28：已停用Chromium儲存密碼提示與自動登入，EXE SHA256為fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，版本仍0.1.6；原OA已重開，正式登入待使用者驗收。共用app.cpp在建立瀏覽器前套用RequestContext偏好，Mac產物未改、待macOS重編／實測。詳見本文末段W28及[進度](PROGRESS.md)；既有GitHub ZIP仍為W27的e56d3d32，本輪未提交／推送／重新發布。
 
 2026-10-13最新結果：依使用者先commit、push再發布的順序，W21～W27來源7958a60已推送，Windows x64 ZIP與.sha256已加入既有[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)，公開下載校驗通過；Tag與Mac資產未變。發布文件與可重現打包腳本另行提交，最新main以Git核對。完整R02結果見本文末段及[Release文件](docs/RELEASES.md)。
 
@@ -271,3 +271,16 @@ W21～W27來源7958a60fc75a35d4387a028ab8ccfb73e98200c0已透過Windows Git Cred
 240檔CRC／全部SHA256、GitHub大小／digest、無登入公開重新下載兩檔一致。只包含EXE、安全範例、CEF234份和現有精簡prg4份，沒有個人INI／picture／logs／網站資料／tpl／SDK／build；不從根prg補回。scripts/create-windows-release.py提供可重現打包，已有輸出會拒絕覆寫。發布文件／腳本另行提交推送，最新main以Git核對；詳見[RELEASES](docs/RELEASES.md)及本機artifacts/verification/releases-windows-v0.1.6。
 
 本機保護的Mac專屬來源／產物及prg／picture／tpl共275檔雜湊不變，SDK／壓縮檔／build保留，原OA視窗保留。列印／注音、正式OA登入登出／Reptool／hcopen及間距待使用者驗收；Mac W27共用設定未重編／實測、其他DPI與窗口競態未獨立驗證，U01未實作。切回Mac前仍須停止Windows編輯／建置／Git並確認Dropbox同步，不以Git push推定Dropbox完成。
+
+
+## W28 最新交接：本機已停用儲存密碼提示（2026-10-13）
+
+共用app.cpp在OnContextInitialized以CEF RequestContext偏好停用密碼保存與自動登入，先設定成功才建立網頁，不改OA／INI／userid／UserSet契約。Windows MSVC Release／CTest1/1、74項通過；同一合成表單舊版提示可重現，修正版原生送出及重啟AJAX無提示且正常完成，啟動紀錄確認政策套用。正式OA登入由使用者驗收，原網址已重開，合成server已停止。
+
+本機EXE版本0.1.6，SHA256 fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，與build一致。個人設定保留原關閉Window保存，localhost網址未寫INI；Mac／prg／picture／tpl共275份不變，SDK／壓縮檔／build保留。現有GitHub Windows ZIP仍為W27，沒有W28修正；main基準80402ed，本輪未提交／推送／移Tag／重新發布，後續依使用者授權處理。
+
+Mac須在macOS重編／實測W27與W28共用變更，不在Windows修改Mac產物。合成素材tests/pages/password-save.html，測試server用python tests/serve-password-save.py指定事件檔（例如artifacts/verification/windows-w28/events.jsonl），僅127.0.0.1:8765，丟棄表單值；啟動App加--url=http://127.0.0.1:8765/只覆寫當次記憶體。Windows證據見artifacts/verification/windows-w28，未驗收項目及U01保持。
+
+## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
+
+使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。

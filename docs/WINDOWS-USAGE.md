@@ -142,3 +142,8 @@ Windows 放大／縮小也須隱藏 Chromium 縮放彈窗，但依使用者最�
 ## R02：公開ZIP下載（2026-10-13）
 
 從[v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6)下載Windows x64 ZIP及.sha256；解壓後執行oaClient2/oaClient2.exe，首次以歡迎頁設定網址。ZIP只帶程式／CEF／安全範例及現有精簡prg，不含個人Config.ini、picture、logs、網站資料或報表範本。更新前正常關閉，保留自己的設定／截圖／prg／範本。大小、校驗及實際來源見[RELEASES](RELEASES.md)，不將下載校驗當成列印／注音／正式OA驗收。
+
+
+## W28：登入不提示儲存密碼（2026-10-13）
+
+最新本機EXE已停用Chromium儲存密碼及自動登入；登入不再詢問「要儲存密碼嗎」，userid／公司別等UserSet偏好保持原契約。Windows原生及重啟AJAX合成表單已測，正式OA登入待使用者驗收。此修正只在本機交付，既有GitHub ZIP仍是W27；未重新發布，詳見[進度](../PROGRESS.md)。

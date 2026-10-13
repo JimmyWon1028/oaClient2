@@ -1,6 +1,6 @@
 # oaClient2 進度表
 
-更新：2026-10-13。Windows x64 0.1.6 已完成 W21～W27、MSVC 與本輪實機回歸，來源7958a60已推送，R02 ZIP已公開並完成下載校驗；Mac arm64既有資產保持，W27待Mac重編／實測。列印預覽／注音及正式OA等仍待使用者驗收。
+更新：2026-10-13。Windows x64本機交付0.1.6已完成W28儲存密碼提示修正與MSVC／本輪合成實機驗證；正式登入待使用者驗收。GitHub R02 ZIP仍是已公開／校驗的W27來源7958a60，本輪未提交／推送／重新發布；main基準80402ed。Mac arm64產物保持，W27／W28待Mac重編／實測，列印／注音等未擴大驗收。
 
 ## 工作項目
 
@@ -54,6 +54,7 @@
 | W25 | Windows 網頁資訊標題回歸 | 歡迎頁預設、正式OA名稱及合成document.title動態更新實測；版本0.1.6。共用標題來源未重寫。 | 正式登入後公司名稱切換由使用者驗收；未新增INI品牌欄位。 |
 | W26 | Windows 工具列間距／完整文字 | M13共用298 DIP／左右2 DIP設定已在Windows編譯，MAC／瀏覽目錄／截圖／還原比例完整顯示、原圖示與順序核對。 | 使用者最終間距驗收、其他DPI／多螢幕未測。 |
 | W27 | 隱藏連結狀態提示 | 共用CefBrowserSettings.chrome_status_bubble=STATE_DISABLED；Windows Release／CTest1/1通過。真實CEF合成JavaScript選單／子選單無左下角提示，原動作正常；EXE已更新及重開OA。 | 正式OA選單由使用者驗收；Mac須在macOS重新編譯／實測，Mac產物未改。 |
+| W28 | 停用儲存密碼提示 | 共用RequestContext在建立瀏覽器前設定credentials_enable_service=false／credentials_enable_autosignin=false。MSVC／CTest1/1／74項通過；舊版同表單重現提示，修正版原生及重啟AJAX送出無提示，流程正常；本機EXE已更新。 | 正式OA登入由使用者驗收，Mac重編／實測未執行；GitHub ZIP仍為W27，未提交／推送／重新發布。 |
 | R01 | Mac ZIP Releases | v0.1.6初版測試Release已公開；ZIP只有.app，GitHub大小／digest、無登入公開下載ZIP與校驗檔逐位元一致。 | 列印／一般注音等仍待使用者驗收；Windows補齊見R02。 |
 | R02 | Windows Release補齊 | v0.1.6已新增Windows x64 ZIP及.sha256；240檔CRC／SHA256、GitHub大小／digest及無登入公開下載兩檔一致，ZIP 189879293 bytes。 | 列印／注音／正式OA等仍待驗收，Mac W27待回歸；Tag與Mac資產未變，U01未實作。 |
 
@@ -320,3 +321,18 @@ Mac ZIP本機已核對：只有完整.app，無INI／profile／cache／picture�
 - Mac既有兩資產ID／大小／digest及v0.1.6來源0fe6f35未變；本機Mac專屬來源／產物及prg／picture／tpl共275份雜湊不變，SDK／壓縮檔／build保留。原OA視窗保留供使用者操作，本輪沒有再改設定或建置App。
 - 證據artifacts/verification/releases-windows-v0.1.6/results.json／package.json／release-public.json，下載／校驗與重現流程見[RELEASES](docs/RELEASES.md)。發布紀錄及腳本另行提交推送，最新main以Git核對；個人資料和產物不納入Git。
 - 實作／編譯／合成實機結果仍依W21～W27；本輪發布不增加功能驗收。列印／Microsoft注音／正式OA登入登出／Reptool／hcopen／最終間距待使用者；其他DPI及延遲Console／popup競態未獨立重現，Mac W27未重編／實測，U01未實作。
+
+
+## W28：登入時不跳儲存密碼提示（2026-10-13）
+
+- 接手main／origin/main為80402ed，乾淨且無Git lock；沿用使用者已確認的Mac停止操作／Dropbox同步交接，未動Mac平台碼或產物。
+- 使用者圖片及舊交付視窗重現Chromium密碼提示。共用App::OnContextInitialized先以CEF SetPreference停用credentials_enable_service及credentials_enable_autosignin，再建立client／回填偏好Cookie／主視窗；兩項成功才記錄PASSWORD_SAVING_AND_AUTO_SIGNIN_DISABLED，失敗回報並結束message loop。不改網站JS／UserSet／INI／password或token保存流程，不加入安全停用參數。
+- Windows增量MSVC Release成功，CTest1/1、74 checks／0 failures。相同localhost合成表單在舊e56d3d32版本會顯示儲存提示；修正版原生POST→303結果頁無提示。重啟後AJAX POST→204／移除表單亦無提示，兩次啟動紀錄確認政策在頁面建立前套用，表單仍正常送出。未使用正式帳密，伺服器丟棄表單值，只記錄route／時間；可共用素材tests/pages/password-save.html與tests/serve-password-save.py，後者GET／303／204核對通過。
+- 第一個測試server在沙箱內使正常CEF連線逾時，改由已授權的localhost程序啟動後成功；一次座標未命中及一次geometry unavailable未列為通過，重新觀察後確認POST事件及結果頁。CTest文字紀錄含Windows本機編碼，74項結果以ASCII bytes核對，未用有替代字元的解碼覆寫來源。
+- 正常關閉舊版後僅更新artifacts/oaClient2/oaClient2.exe，與build相同，SHA256 fb57aac7e2400c22ffcca61e7d00cba22d741fdd59145a0eb9ddc0a4be61f474，版本仍0.1.6 x64。INI既有關閉Window保存保留，測試URL只在記憶體覆寫、未存INI；275份Mac專屬來源／產物與prg／picture／tpl雜湊不變，未補回工具，SDK／壓縮檔／build保留。
+- 合成App正常退出，server停止；修正版原OA已重開供使用者自行登入驗收，不把合成成功當作正式OA驗收。證據artifacts/verification/windows-w28/results.json／build.log／application.log／baseline.txt／native-disabled.txt／ajax-disabled.txt／events.jsonl，不含正式帳密或個人INI。
+- 本輪未提交／推送／移Tag／重新發布；既有v0.1.6 Windows公開ZIP仍是W27的e56d3d32，尚無W28修正。Mac W27／W28未重編或實測；列印／注音及其他待驗收、U01未實作保持。
+
+## R02／W28：同版Windows ZIP重新上傳授權（2026-10-13）
+
+使用者明確要求「重新打包上傳，不要進版」：維持0.1.6，提交／推送W28實際來源供發布追溯，重新打包已建置及合成實測的本機EXE，替換既有v0.1.6 Release同名Windows ZIP與.sha256。先完成新ZIP及遠端上傳校驗，才替換指定Windows兩資產；保留舊ZIP及雜湊作歷史證據，更新Release說明與下載校驗結果。Tag不移動、不建立新版本，Mac資產不改，個人INI／網站資料／picture／logs／tpl不打包，現有prg4份不補回。前段「本輪未提交／ZIP仍為W27」是此次重新發布授權前狀態。

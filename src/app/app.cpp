@@ -801,6 +801,20 @@ void App::OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) {
 
 void App::OnContextInitialized() {
   CEF_REQUIRE_UI_THREAD();
+  //2026.10.13 modify by codex, disable browser password saving and automatic sign-in before opening any page.
+  auto request_context = CefRequestContext::GetGlobalContext();
+  auto disabled = CefValue::Create();
+  disabled->SetBool(false);
+  for (const auto* preference : {"credentials_enable_service", "credentials_enable_autosignin"}) {
+    CefString error;
+    if (!request_context->SetPreference(preference, disabled, error)) {
+      AppendLog(context_->paths, "PASSWORD_POLICY_FAILED preference=" + std::string(preference));
+      ShowError("Cannot disable browser password saving: " + error.ToString());
+      CefQuitMessageLoop();
+      return;
+    }
+  }
+  AppendLog(context_->paths, "PASSWORD_SAVING_AND_AUTO_SIGNIN_DISABLED");
   client_ = new BrowserClient(context_);
   CefRefPtr<App> self = this;
   CefCookieManager::GetGlobalManager(new CompletionCallback([self] { self->RestorePreferenceCookies(); }));

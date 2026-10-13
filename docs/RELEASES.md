@@ -96,3 +96,9 @@ artifacts/releases/oaClient2-0.1.6-windows-x64.zip與.sha256現在也為最新W2
 先上傳／校驗暫名兩檔，完整後才刪除前Windows兩資產並改為原名，最新版資產ID635910442／635911490；原Release ID411036061、Tag物件67e296794c1db526e2afc729e4b170f95d09bf5b→0fe6f357173fb7802cca8504c2ea007dd5e7834d，以及Mac兩資產ID／大小／digest均未改。原公開URL不帶登入憑證重新下載ZIP／.sha256逐位元一致，GitHub大小／digest與公開ZIP CRC／240檔SHA256通過；證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json。
 
 本機artifacts/releases同名兩檔亦已更新；前輪artifacts/releases/windows-w28及public-download歷史副本保留，原OA／SDK／build保持，275份Mac平台／產物與prg／picture／tpl雜湊不變。W29 Windows按使用者回報驗收，代理未執行逐項UI矩陣仍保留原紀錄，不擴大為列印／注音／正式OA登入登出／Reptool／hcopen／間距或Mac Cmd驗收；Mac W27～W29待目標平台重編／實測，U01未實作。發布文件另行提交推送，最新main以Git核對。
+
+## W30／R02：使用者驗收與同版發布授權（2026-10-13）
+
+使用者對本機Ctrl+W修正回覆「可以了」，W30按此回報記錄Windows使用者驗收通過；不擴大為Mac、列印／注音或其他功能驗收。另明確授權commit、push、重新打包上傳、不進版：先提交／推送本次Windows修正與紀錄，再打包已建置／115項及使用者測過的同一EXE，替換既有v0.1.6同名Windows ZIP／.sha256。Tag、Mac兩資產及個人資料保持；先上傳校驗兩個暫名資產才替換，舊ZIP保留本機歷史證據。
+
+Mac M14～M18及D04是接手時已有的未提交差異，保留於工作目錄，本次Windows提交只納入W30及發布紀錄。Mac新共用關閉保護仍須在macOS編譯回歸；U01未實作。前段待驗收／未發布是本次回報及授權前狀態，實際結果另行追加。

@@ -1,5 +1,7 @@
 # oaClient2 接續交接
 
+最新Windows本機交付W30已由使用者驗收：Ctrl+W保留OA處理、取消Chrome關閉；MSVC／115項與合成實機通過。依授權同版0.1.6提交／推送後重新發布；Tag及Mac資產保持，詳見末段。
+
 更新：2026-10-13。這是 Windows／Mac 上 Codex 的接手入口；以下歷史狀態以最新交接段為準。
 
 目前最新Windows本機與GitHub交付皆為W29快捷鍵修正，EXE SHA256為b5a5d19b56f0078543351296d455692698a3a6303a1222e125b9153b8e69100a，版本仍0.1.6；MSVC／CTest1/1、110項通過，使用者已回覆「可以了」。來源6f2833b已推送，同名ZIP／校驗檔已替換且公開下載核對，ZIP SHA256為849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046；Tag／Mac資產未變，Mac W27～W29仍待目標平台回歸，詳見本文末段及[RELEASES](docs/RELEASES.md)。
@@ -318,3 +320,17 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 artifacts/releases同名兩檔已更新，新增打包副本artifacts/releases/windows-w29；歷史W28副本及驗證證據保留。新證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json，公開Windows資產ID635910442／635911490、Release仍411036061。275份Mac平台／產物與prg／picture／tpl雜湊不變，原OA保持開啟，不重新建置或打斷使用者操作。
 
 本輪接手時f1.js已不在工作目錄，沒有補回或納入Git；無追蹤來源衝突。SDK／build保留，Mac W27～W29仍需macOS重編／實測，其他使用者驗收與U01保持；發布紀錄另行提交推送，最新main以Git核對。跨平台切換前仍須停止Windows操作並確認Dropbox同步。
+
+## W30：Windows Ctrl+W 交回網頁與關閉回呼保護（2026-10-13）
+
+依使用者選定行為，Windows只取消Chrome的Ctrl+W關閉分頁，OA網頁仍收到按鍵。沿用W29網頁先處理／Chrome後備攔截；Windows入口啟用disable_chrome_ctrl_w，Mac預設false且Cmd+W不變。共用關閉回呼增加失效browser／main frame保護，避免Chrome先銷毀主瀏覽器後再執行logout而解參照空frame；兩次Windows事件皆0xc0000005／RVA0x1053e，來源定位及詳細證據見[進度](PROGRESS.md)。
+
+MSVC Release／CTest1/1、115項通過；合成頁有／無preventDefault各3次真正Ctrl+W均交給網頁且不關閉；正常Alt+F4、ACK1434ms／含Console1525ms、無ACK3019ms、logout一次／主窗與Console隱藏／beforeunload／全部程序退出通過。正式OA內部分頁與實體高速連按／長按待使用者驗收，Mac共用關閉保護須在macOS重新編譯回歸。
+
+本機EXE版本仍0.1.6，SHA256 504b76190af73bdff7c235e410a3b0ba4297017649142be50cf403f566f24b09，與build一致；Mac／CEF／prg等507份保護雜湊不變，保留已同步Mac M14～M18及D04差異、個人INI與SDK／build。測試App／server已停止，證據artifacts/verification/windows-w30；本輪未提交／推送／移Tag／發布，公開Windows仍W29、Mac仍M13，U01未實作。
+
+## W30／R02：使用者驗收與同版發布授權（2026-10-13）
+
+使用者對本機Ctrl+W修正回覆「可以了」，W30按此回報記錄Windows使用者驗收通過；不擴大為Mac、列印／注音或其他功能驗收。另明確授權commit、push、重新打包上傳、不進版：先提交／推送本次Windows修正與紀錄，再打包已建置／115項及使用者測過的同一EXE，替換既有v0.1.6同名Windows ZIP／.sha256。Tag、Mac兩資產及個人資料保持；先上傳校驗兩個暫名資產才替換，舊ZIP保留本機歷史證據。
+
+Mac M14～M18及D04是接手時已有的未提交差異，保留於工作目錄，本次Windows提交只納入W30及發布紀錄。Mac新共用關閉保護仍須在macOS編譯回歸；U01未實作。前段待驗收／未發布是本次回報及授權前狀態，實際結果另行追加。

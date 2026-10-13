@@ -406,3 +406,17 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 - 沿用MSVC／CTest1/1、110項及使用者測試的EXE b5a5d19b，未重新編譯；同名Windows ZIP／.sha256先上傳校驗再替換，版本仍0.1.6、Tag／Mac兩資產不變。ZIP 189880195 bytes，SHA256 849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046。
 - 安全清單240檔CRC／SHA256通過，公開原URL無登入重新下載兩檔與GitHub／本機一致；個人INI／網站資料／picture／logs／tpl／SDK／build不公開，prg仍現用4檔、不補回。
 - 本機同名ZIP同步更新，W28歷史副本與證據保留，新證據artifacts/verification/releases-windows-w29/results.json。Mac／prg／picture／tpl275份不變，原OA／SDK／build保留；f1.js已不存在、不還原。更新文件並提交發布結果，Mac W27～W29與其他待驗收及U01保持。
+
+## W30：Windows Ctrl+W 交回網頁與關閉回呼保護（2026-10-13）
+
+依使用者選定行為，Windows只取消Chrome的Ctrl+W關閉分頁，OA網頁仍收到按鍵。沿用W29網頁先處理／Chrome後備攔截；Windows入口啟用disable_chrome_ctrl_w，Mac預設false且Cmd+W不變。共用關閉回呼增加失效browser／main frame保護，避免Chrome先銷毀主瀏覽器後再執行logout而解參照空frame；兩次Windows事件皆0xc0000005／RVA0x1053e，來源定位及詳細證據見[進度](PROGRESS.md)。
+
+MSVC Release／CTest1/1、115項通過；合成頁有／無preventDefault各3次真正Ctrl+W均交給網頁且不關閉；正常Alt+F4、ACK1434ms／含Console1525ms、無ACK3019ms、logout一次／主窗與Console隱藏／beforeunload／全部程序退出通過。正式OA內部分頁與實體高速連按／長按待使用者驗收，Mac共用關閉保護須在macOS重新編譯回歸。
+
+本機EXE版本仍0.1.6，SHA256 504b76190af73bdff7c235e410a3b0ba4297017649142be50cf403f566f24b09，與build一致；Mac／CEF／prg等507份保護雜湊不變，保留已同步Mac M14～M18及D04差異、個人INI與SDK／build。測試App／server已停止，證據artifacts/verification/windows-w30；本輪未提交／推送／移Tag／發布，公開Windows仍W29、Mac仍M13，U01未實作。
+
+## W30／R02：使用者驗收與同版發布授權（2026-10-13）
+
+使用者對本機Ctrl+W修正回覆「可以了」，W30按此回報記錄Windows使用者驗收通過；不擴大為Mac、列印／注音或其他功能驗收。另明確授權commit、push、重新打包上傳、不進版：先提交／推送本次Windows修正與紀錄，再打包已建置／115項及使用者測過的同一EXE，替換既有v0.1.6同名Windows ZIP／.sha256。Tag、Mac兩資產及個人資料保持；先上傳校驗兩個暫名資產才替換，舊ZIP保留本機歷史證據。
+
+Mac M14～M18及D04是接手時已有的未提交差異，保留於工作目錄，本次Windows提交只納入W30及發布紀錄。Mac新共用關閉保護仍須在macOS編譯回歸；U01未實作。前段待驗收／未發布是本次回報及授權前狀態，實際結果另行追加。

@@ -35,6 +35,12 @@ int main() {
   Check(oa::IsWebsiteShortcut('W', false, false, true, false), "Alt W belongs to website");
   Check(oa::IsWebsiteShortcut('F', true, false, false, false), "Shift F belongs to website");
   Check(!oa::IsWebsiteShortcut('W', false, true, false, false), "Ctrl W remains unchanged");
+  //2026.10.13 modify by codex, reserve only Windows Ctrl W and preserve all other close chords.
+  Check(oa::IsWebsiteShortcut('W', false, true, false, false, true), "Windows Ctrl W belongs to website");
+  Check(!oa::IsWebsiteShortcut('W', false, false, false, true, true), "Command W remains unchanged");
+  Check(!oa::IsWebsiteShortcut('W', true, true, false, false, true), "Ctrl Shift W remains unchanged");
+  Check(!oa::IsWebsiteShortcut('W', false, true, true, false, true), "Ctrl Alt W remains unchanged");
+  Check(!oa::IsWebsiteShortcut('W', false, true, false, true, true), "mixed Ctrl Command W remains unchanged");
   for (int key : {'P', 'C', 'V', 'A', 'L'}) {
     Check(!oa::IsWebsiteShortcut(key, false, true, false, false), "unlisted Ctrl combination remains unchanged");
   }

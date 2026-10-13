@@ -20,6 +20,8 @@ struct AppContext {
   AppPaths paths;
   //2026.10.12 modify by codex, let each platform opt in after implementing and validating its zoom UI policy.
   bool hide_zoom_bubble = false;
+  //2026.10.13 modify by codex, let the Windows entry opt in to suppressing Chrome tab close.
+  bool disable_chrome_ctrl_w = false;
   //2026.10.12 modify by codex, keep Windows shutdown unchanged until its platform adopts the new policy.
   bool background_logout_close = false;
   bool closing_in_background = false;

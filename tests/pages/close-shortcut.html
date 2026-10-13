@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>W30 Ctrl+W 測試</title>
+<style>
+  body { font: 18px sans-serif; margin: 32px; }
+  button { font: inherit; padding: 8px; }
+</style>
+<h1>Ctrl+W 網頁接收與 Chrome 關閉測試</h1>
+<p id="mode"></p>
+<button id="focus">聚焦測試頁</button>
+<p id="count">Ctrl+W 次數：0</p>
+<pre id="events"></pre>
+<script>
+  //2026.10.13 modify by codex, verify trusted Ctrl W events before Chrome fallback and normal shutdown.
+  const query = new URLSearchParams(location.search);
+  const handled = query.get('handled') === '1';
+  const mode = query.get('mode') === 'noack' ? 'noack' : 'ack';
+  const prefix = (handled ? 'handled' : 'unhandled') + '-' + mode;
+  let count = 0;
+  let logoutCount = 0;
+  var $g = { isLogin: true };
+  document.getElementById('mode').textContent = prefix;
+  document.getElementById('focus').onclick = () => document.getElementById('focus').focus();
+  document.addEventListener('keydown', event => {
+    fetch('/event/' + prefix + '-key-' + encodeURIComponent(event.code) + '-keyCode-' + event.keyCode +
+      '-ctrl-' + event.ctrlKey + '-trusted-' + event.isTrusted);
+    if ((event.code !== 'KeyW' && event.keyCode !== 87) || !event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) return;
+    if (handled) event.preventDefault();
+    count++;
+    document.getElementById('count').textContent = 'Ctrl+W 次數：' + count;
+    const result = prefix + '-ctrl-w-' + count + '-trusted-' + event.isTrusted;
+    document.getElementById('events').textContent += result + '\n';
+    fetch('/event/' + result);
+  });
+  function getLoginState() { return $g.isLogin ? 1 : 0; }
+  function logout() {
+    fetch('/event/' + prefix + '-logout-' + (++logoutCount));
+    if (mode === 'ack') {
+      setTimeout(() => {
+        $g.isLogin = false;
+        console.log('loginState=0');
+      }, 600);
+    }
+  }
+  window.addEventListener('beforeunload', event => {
+    event.preventDefault();
+    event.returnValue = '';
+  });
+  fetch('/event/' + prefix + '-ready');
+  console.log('cmd=clientReady');
+</script>
+</html>

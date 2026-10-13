@@ -226,7 +226,7 @@ class ConsoleWindowDelegate : public CefWindowDelegate {
   }
   bool CanClose(CefRefPtr<CefWindow>) override {
     auto browser = view_ ? view_->GetBrowser() : nullptr;
-    return !browser || browser->GetHost()->TryCloseBrowser();
+    return !browser || !browser->IsValid() || browser->GetHost()->TryCloseBrowser();
   }
   void OnWindowDestroyed(CefRefPtr<CefWindow>) override {
     dock_->window = nullptr;
@@ -346,7 +346,7 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
         ShowError(error);
       }
     }
-    return !browser || browser->GetHost()->TryCloseBrowser();
+    return !browser || !browser->IsValid() || browser->GetHost()->TryCloseBrowser();
   }
 
   void OnWindowDestroyed(CefRefPtr<CefWindow> window) override {
@@ -546,6 +546,13 @@ void BrowserClient::OnLoadStart(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFram
 bool BrowserClient::PrepareWindowClose(CefRefPtr<CefBrowser> browser, CefRefPtr<CefWindow> window,
                                       CefRefPtr<CefWindow> console) {
   CEF_REQUIRE_UI_THREAD();
+  //2026.10.13 modify by codex, mandatory Chrome close callbacks can outlive the browser main frame.
+  if (!browser->IsValid()) return true;
+  auto frame = browser->GetMainFrame();
+  if (!frame) {
+    AppendLog(context_->paths, "CLOSE_MAIN_FRAME_UNAVAILABLE");
+    return true;
+  }
   const auto mode = context_->background_logout_close ? LogoutFlow::Mode::BackgroundGrace : LogoutFlow::Mode::PollForState;
   const auto action = logout_.Begin(site_ready_, mode);
   if (action == LogoutFlow::Action::Close) return true;
@@ -555,7 +562,7 @@ bool BrowserClient::PrepareWindowClose(CefRefPtr<CefBrowser> browser, CefRefPtr<
     closing_window_ = window;
     context_->closing_in_background = true;
     background_close_started_ = std::chrono::steady_clock::now();
-    browser->GetMainFrame()->ExecuteJavaScript("if(typeof logout==='function')logout();", "", 0);
+    frame->ExecuteJavaScript("if(typeof logout==='function')logout();", "", 0);
     AppendLog(context_->paths, "CLOSE_BACKGROUND_LOGOUT_DISPATCHED");
     if (console) console->Hide();
     window->Hide();
@@ -594,7 +601,9 @@ void BrowserClient::FinishBackgroundClose() {
 
 void BrowserClient::ProbeLoginState() {
   if (!closing_browser_) return;
-  closing_browser_->GetMainFrame()->ExecuteJavaScript(
+  auto frame = closing_browser_->GetMainFrame();
+  if (!frame) return;
+  frame->ExecuteJavaScript(
     "(function(){var state=-1;try{if(window.$g&&typeof $g.isLogin==='boolean')"
     "state=$g.isLogin?1:0;if(typeof getLoginState==='function'){var ret=getLoginState();"
     "if(ret===0||ret===1)state=ret;}}catch(e){}console.log('loginState='+state);})();", "", 0);
@@ -649,7 +658,7 @@ bool BrowserClient::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEve
   //2026.10.13 modify by codex, forward reserved keys to the renderer before suppressing their Chrome fallback.
   if (IsWebsiteShortcut(event.windows_key_code, event.modifiers & EVENTFLAG_SHIFT_DOWN,
       event.modifiers & EVENTFLAG_CONTROL_DOWN, event.modifiers & EVENTFLAG_ALT_DOWN,
-      event.modifiers & EVENTFLAG_COMMAND_DOWN)) {
+      event.modifiers & EVENTFLAG_COMMAND_DOWN, context_->disable_chrome_ctrl_w)) {
     *is_keyboard_shortcut = true;
     return false;
   }
@@ -670,7 +679,7 @@ bool BrowserClient::OnKeyEvent(CefRefPtr<CefBrowser>, const CefKeyEvent& event, 
   return (event.type == KEYEVENT_RAWKEYDOWN || event.type == KEYEVENT_KEYDOWN) &&
     IsWebsiteShortcut(event.windows_key_code, event.modifiers & EVENTFLAG_SHIFT_DOWN,
       event.modifiers & EVENTFLAG_CONTROL_DOWN, event.modifiers & EVENTFLAG_ALT_DOWN,
-      event.modifiers & EVENTFLAG_COMMAND_DOWN);
+      event.modifiers & EVENTFLAG_COMMAND_DOWN, context_->disable_chrome_ctrl_w);
 }
 
 void BrowserClient::OnAfterCreated(CefRefPtr<CefBrowser> browser) {

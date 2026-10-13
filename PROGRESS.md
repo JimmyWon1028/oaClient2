@@ -1,5 +1,7 @@
 # oaClient2 進度表
 
+最新Windows本機交付W30已由使用者驗收：Ctrl+W保留OA處理、取消Chrome關閉；MSVC／115項與合成實機通過。依授權同版0.1.6提交／推送後重新發布；Tag及Mac資產保持，詳見末段。
+
 更新：2026-10-13。Windows x64 0.1.6 W29 Chrome快捷鍵修正已經使用者回覆「可以了」，MSVC／CTest1/1、110項通過；來源6f2833b已推送，同名公開ZIP／校驗檔已更新並完成下載核對。代理未執行逐項UI矩陣仍保留原紀錄；Tag／Mac資產不變，Mac W27～W29待目標平台回歸，其他驗收及U01未擴大完成。
 
 ## 工作項目
@@ -368,3 +370,21 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 - 原公開URL無登入重新下載ZIP／校驗檔均與本機／GitHub大小及SHA256一致，公開ZIP CRC／全部240檔SHA256通過。Mac兩資產ID／大小／digest與Tag物件67e29679／來源0fe6f35不變，275份本機保護檔案一致。
 - 本機artifacts/releases同名檔更新，歷史W28打包與public-download保留；新證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json。原OA及SDK／build保留，f1.js接手時已不存在、未補回，不將其當成來源衝突。
 - 發布文件／README與操作／工作紀錄已同步，結果文件另行提交推送；Mac W27～W29未編譯／實測，其他待驗收與U01未實作保持。
+
+## W30：Windows Ctrl+W 交回網頁與關閉回呼保護（2026-10-13）
+
+使用者回報Windows連續Ctrl+W當機，後續明確選定「取消Chrome關閉動作，保留OA網頁自己的Ctrl+W處理」。Windows事件17:40:38／17:41:42皆為oaClient2.exe的0xc0000005、RVA0x1053e；原交付EXE與app.obj反組譯對照到PrepareWindowClose中GetMainFrame()回傳物件後的解參照。application.log在兩次當機前已記BROWSER_CLOSED，沒有SHUTDOWN_COMPLETE，確認Chrome關閉分頁先銷毀主瀏覽器，後續窗口關閉回呼仍嘗試對失效main frame執行logout。
+
+Windows入口啟用AppContext.disable_chrome_ctrl_w，common/keyboard.h精確保留Ctrl+W給網頁；app.cpp沿用W29的OnPreKeyEvent／OnKeyEvent，網頁先接收，未處理才抑制Chrome預設關閉。沒有吞掉OA自己的事件，也沒有新增網頁分頁邏輯。Mac政策預設false，Cmd+W未加入攔截；Mac專屬來源及交付保持。共用CanClose／PrepareWindowClose／ProbeLoginState檢查browser／main frame有效性，避免已關閉瀏覽器再次解參照；原背景登出一次、ACK／三秒期限及UserSet／INI契約保持。
+
+Windows增量MSVC Release／CTest1/1、115 checks／0 failures通過（新增5項Ctrl+W及其他修飾鍵界線）。tests/pages/close-shortcut.html兩種模式各3次真正Ctrl+W，網頁不preventDefault及有preventDefault皆收到isTrusted=true的事件且窗口保留；輸入工具產生的code為空，以keyCode=87核對，未人工重送JS事件。初輪合成頁僅比對code而未計數已修正測試素材，未改產品政策。正常Alt+F4合成ACK1434ms（另一次含Console1525ms）、無ACK3019ms、logout一次、主窗／Console隱藏、beforeunload自動放行與全部oaClient2程序退出通過；驗證後無新增當機事件。這些是逐次按鍵測試，正式OA關閉內部分頁與實體高速連按／長按仍待使用者驗收。
+
+本機交付僅更新EXE，版本仍0.1.6，SHA256：504b76190af73bdff7c235e410a3b0ba4297017649142be50cf403f566f24b09。與本機Release一致，Mac／CEF／prg等507份保護雜湊不變。使用者確認Mac停止操作／同步完成；接手main／origin/main為cb68ba2，保留Mac M14～M18及D04未提交差異，無lock／conflicted來源。本輪未提交／推送／移Tag／發布，公開Windows ZIP仍是W29，公開Mac ZIP仍M13。本機SDK／下載包／build保留；合成URL僅當次命令列，不寫入INI，正常Window保存現況保留。證據在artifacts/verification/windows-w30；實作／必要建置與實機測試分開記錄，不虛構逐秒工時。
+
+Mac M14～M18既有結果保持；本次共用關閉保護需要後續macOS增量編譯／回歸才能進入Mac交付，不能以Windows測試代替。列印／注音與其他既有待驗收保持，U01仍未實作。
+
+## W30／R02：使用者驗收與同版發布授權（2026-10-13）
+
+使用者對本機Ctrl+W修正回覆「可以了」，W30按此回報記錄Windows使用者驗收通過；不擴大為Mac、列印／注音或其他功能驗收。另明確授權commit、push、重新打包上傳、不進版：先提交／推送本次Windows修正與紀錄，再打包已建置／115項及使用者測過的同一EXE，替換既有v0.1.6同名Windows ZIP／.sha256。Tag、Mac兩資產及個人資料保持；先上傳校驗兩個暫名資產才替換，舊ZIP保留本機歷史證據。
+
+Mac M14～M18及D04是接手時已有的未提交差異，保留於工作目錄，本次Windows提交只納入W30及發布紀錄。Mac新共用關閉保護仍須在macOS編譯回歸；U01未實作。前段待驗收／未發布是本次回報及授權前狀態，實際結果另行追加。

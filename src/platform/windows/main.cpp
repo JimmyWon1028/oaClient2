@@ -28,6 +28,7 @@ int RunMain(HINSTANCE instance) {
   context->settings.home_url.clear();
   context->settings.allow_empty_home_url = true;
   context->hide_zoom_bubble = true;
+  context->disable_chrome_ctrl_w = true;
   context->background_logout_close = true;
   std::string error;
   int result = 1;

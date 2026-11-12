@@ -38,17 +38,17 @@ bool IsReparsePoint(const std::filesystem::path& path) {
 }
 
 bool RejectReparseTree(const std::filesystem::path& path, std::string& error) {
-  if (IsReparsePoint(path)) { error = "Refusing to clear a browser profile containing a reparse point."; return false; }
+  if (IsReparsePoint(path)) { error = "瀏覽器資料目錄含有重新解析點，為保護其他資料，已停止清理。"; return false; }
   std::error_code ec;
   std::filesystem::recursive_directory_iterator it(path, ec), end;
   while (!ec && it != end) {
     if (IsReparsePoint(it->path())) {
-      error = "Refusing to clear a browser profile containing a reparse point.";
+      error = "瀏覽器資料目錄含有重新解析點，為保護其他資料，已停止清理。";
       return false;
     }
     it.increment(ec);
   }
-  if (ec) { error = "Cannot inspect the browser profile: " + ec.message(); return false; }
+  if (ec) { error = "無法檢查瀏覽器資料目錄，錯誤代碼：" + std::to_string(ec.value()); return false; }
   return true;
 }
 
@@ -85,12 +85,12 @@ std::filesystem::path PictureDirectory(const AppPaths& paths) { return paths.app
 bool GetAppPaths(AppPaths& paths, std::string& error) {
   std::wstring executable(32768, L'\0');
   const DWORD length = GetModuleFileNameW(nullptr, executable.data(), static_cast<DWORD>(executable.size()));
-  if (!length || length >= executable.size()) { error = "Cannot locate oaClient2.exe."; return false; }
+  if (!length || length >= executable.size()) { error = "無法取得 oaClient2.exe 的所在位置。"; return false; }
   executable.resize(length);
   paths.application = std::filesystem::path(executable).parent_path();
   PWSTR local = nullptr;
   if (FAILED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &local))) {
-    error = "Cannot locate LocalAppData.";
+    error = "無法取得本機應用程式資料目錄（LocalAppData）。";
     return false;
   }
   paths.data = std::filesystem::path(local) / L"oaClient2" / L"data";
@@ -101,14 +101,14 @@ bool GetAppPaths(AppPaths& paths, std::string& error) {
   std::error_code ec;
   std::filesystem::create_directories(paths.data, ec);
   if (ec || IsReparsePoint(paths.data) || IsReparsePoint(paths.data.parent_path())) {
-    error = "Cannot use the local app data directory, or it is a reparse point.";
+    error = "無法使用本機應用程式資料目錄，或該目錄含有重新解析點。";
     return false;
   }
   // Preserve prototype settings when moving to the executable-side INI.
   const auto previous = paths.data / L"Config.ini";
   if (!std::filesystem::exists(paths.config, ec) && std::filesystem::is_regular_file(previous, ec)) {
     std::filesystem::copy_file(previous, paths.config, std::filesystem::copy_options::none, ec);
-    if (ec) { error = "Cannot migrate Config.ini beside oaClient2.exe: " + ec.message(); return false; }
+    if (ec) { error = "無法將設定檔 Config.ini 移轉至 oaClient2.exe 所在目錄，錯誤代碼：" + std::to_string(ec.value()); return false; }
   }
   return true;
 }
@@ -152,23 +152,23 @@ bool ClearBrowserProfile(const AppPaths& paths, std::string& error) {
   std::error_code ec;
   const auto root = std::filesystem::weakly_canonical(paths.data, ec);
   if (ec || !root.is_absolute() || paths.profile.lexically_normal() != (paths.data / L"browser-profile").lexically_normal()) {
-    error = "Browser profile is not the dedicated oaClient2 profile.";
+    error = "瀏覽器資料路徑不是 oaClient2 專用目錄，已停止清理。";
     return false;
   }
   if (!std::filesystem::exists(paths.profile, ec)) {
-    if (ec) { error = "Cannot inspect browser profile: " + ec.message(); return false; }
+    if (ec) { error = "無法檢查瀏覽器資料目錄，錯誤代碼：" + std::to_string(ec.value()); return false; }
     return true;
   }
   const auto target = std::filesystem::weakly_canonical(paths.profile, ec);
   if (ec || target.parent_path() != root || target.filename() != L"browser-profile") {
     AppendLog(paths, "PROFILE_PATH_REJECTED root=" + PathUtf8(root) + " target=" + PathUtf8(target) +
       " error=" + ec.message());
-    error = "Browser profile resolved outside the dedicated app data directory.";
+    error = "瀏覽器資料的實際位置超出 oaClient2 專用資料目錄，已停止清理。";
     return false;
   }
   if (!RejectReparseTree(target, error)) return false;
   std::filesystem::remove_all(target, ec);
-  if (ec) { error = "Cannot clear site data. Close other oaClient2 processes and retry: " + ec.message(); return false; }
+  if (ec) { error = "無法清除網站資料，請關閉其他 oaClient2 程式後再試一次。錯誤代碼：" + std::to_string(ec.value()); return false; }
   return true;
 }
 
@@ -184,7 +184,7 @@ bool CommitSettingsFile(const std::filesystem::path& from, const std::filesystem
   const DWORD replace_error = GetLastError();
   if (replace_error != ERROR_ACCESS_DENIED && replace_error != ERROR_SHARING_VIOLATION &&
       replace_error != ERROR_LOCK_VIOLATION && replace_error != ERROR_UNABLE_TO_REMOVE_REPLACED) {
-    error = "Cannot save Config.ini. Windows error " + std::to_string(replace_error);
+    error = "無法儲存設定檔 Config.ini，Windows 錯誤代碼：" + std::to_string(replace_error);
     return false;
   }
 
@@ -193,7 +193,7 @@ bool CommitSettingsFile(const std::filesystem::path& from, const std::filesystem
   HANDLE file = CreateFileW(to.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ,
     nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
   if (file == INVALID_HANDLE_VALUE) {
-    error = "Cannot write Config.ini. Windows error " + std::to_string(GetLastError());
+    error = "無法寫入設定檔 Config.ini，Windows 錯誤代碼：" + std::to_string(GetLastError());
     return false;
   }
   std::ifstream input(from, std::ios::binary);
@@ -222,10 +222,10 @@ bool CommitSettingsFile(const std::filesystem::path& from, const std::filesystem
     if (!success) {
       const auto write_error = GetLastError();
       const bool restored = write(original);
-      error = "Cannot finish saving Config.ini. Windows error " + std::to_string(write_error) +
-        (restored ? "; original contents restored." : "; temporary copy retained for recovery.");
+      error = "無法完成設定檔 Config.ini 的儲存，Windows 錯誤代碼：" + std::to_string(write_error) +
+        (restored ? "；已還原原始內容。" : "；已保留暫存檔供復原使用。");
     }
-  } else error = "Cannot safely read Config.ini before saving; original file was not changed.";
+  } else error = "儲存前無法安全讀取設定檔 Config.ini，原始檔案未變更。";
   CloseHandle(file);
   input.close();
   if (success) DeleteFileW(from.c_str());
@@ -236,7 +236,7 @@ bool OpenConfiguration(const std::filesystem::path& path, std::string& error) {
   const auto result = reinterpret_cast<INT_PTR>(ShellExecuteW(nullptr, L"open", L"notepad.exe",
     QuoteArgument(path.wstring()).c_str(), nullptr, SW_SHOWNORMAL));
   if (result > 32) return true;
-  error = "Cannot open Config.ini. Windows shell error " + std::to_string(result);
+  error = "無法開啟設定檔 Config.ini，Windows 殼層錯誤代碼：" + std::to_string(result);
   return false;
 }
 
@@ -244,7 +244,7 @@ bool OpenDirectory(const std::filesystem::path& path, std::string& error) {
   const auto result = reinterpret_cast<INT_PTR>(ShellExecuteW(nullptr, L"open", path.c_str(),
     nullptr, nullptr, SW_SHOWNORMAL));
   if (result > 32) return true;
-  error = "Cannot open directory. Windows shell error " + std::to_string(result);
+  error = "無法開啟資料夾，Windows 殼層錯誤代碼：" + std::to_string(result);
   return false;
 }
 
@@ -260,14 +260,14 @@ void ResizeBrowserChild(void* child, void* parent, int screen_x, int screen_y,
 
 bool AttachConsoleWindow(void* child, void* parent, std::string& error) {
   const HWND handle = static_cast<HWND>(child), owner = static_cast<HWND>(parent);
-  if (!IsWindow(handle) || !IsWindow(owner)) { error = "Invalid Console window."; return false; }
+  if (!IsWindow(handle) || !IsWindow(owner)) { error = "主視窗或主控台（Console）視窗無效。"; return false; }
   auto style = GetWindowLongPtrW(handle, GWL_STYLE);
   style &= ~(WS_POPUP | WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
   style |= WS_CHILD | WS_CLIPSIBLINGS;
   SetWindowLongPtrW(handle, GWL_STYLE, style);
   SetLastError(0);
   if (!SetParent(handle, owner) && GetLastError()) {
-    error = "Cannot embed the Console window. Windows error " + std::to_string(GetLastError());
+    error = "無法嵌入主控台（Console）視窗，Windows 錯誤代碼：" + std::to_string(GetLastError());
     return false;
   }
   SetWindowPos(handle, nullptr, 0, 0, 1, 1, SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
@@ -353,20 +353,20 @@ bool CaptureWindow(void* window, const std::filesystem::path& directory,
   }
   RECT bounds{};
   if (FAILED(DwmGetWindowAttribute(handle, DWMWA_EXTENDED_FRAME_BOUNDS, &bounds, sizeof(bounds))) &&
-      !GetWindowRect(handle, &bounds)) { error = "Cannot locate the oaClient2 window."; return false; }
+      !GetWindowRect(handle, &bounds)) { error = "無法取得 oaClient2 視窗的位置。"; return false; }
   const int width = bounds.right - bounds.left;
   const int height = bounds.bottom - bounds.top;
-  if (width <= 0 || height <= 0) { error = "Invalid capture bounds."; return false; }
+  if (width <= 0 || height <= 0) { error = "截圖範圍無效。"; return false; }
   std::error_code ec;
   std::filesystem::create_directories(directory, ec);
-  if (ec) { error = "Cannot create picture directory: " + ec.message(); return false; }
+  if (ec) { error = "無法建立截圖資料夾 picture，錯誤代碼：" + std::to_string(ec.value()); return false; }
   HDC screen = GetDC(nullptr);
   HDC memory = screen ? CreateCompatibleDC(screen) : nullptr;
   HBITMAP bitmap = memory ? CreateCompatibleBitmap(screen, width, height) : nullptr;
   if (!bitmap) {
     if (memory) DeleteDC(memory);
     if (screen) ReleaseDC(nullptr, screen);
-    error = "Cannot allocate a window snapshot.";
+    error = "無法建立視窗截圖所需的影像資源。";
     return false;
   }
   HGDIOBJ previous = SelectObject(memory, bitmap);
@@ -404,7 +404,7 @@ bool CaptureWindow(void* window, const std::filesystem::path& directory,
     Gdiplus::GdiplusShutdown(token);
   }
   DeleteObject(bitmap);
-  if (!saved) error = "Cannot save the window screenshot as JPG.";
+  if (!saved) error = "無法將視窗截圖儲存為 JPG 圖片。";
   return saved;
 }
 
@@ -454,18 +454,18 @@ bool LaunchReport(const std::string& executable, const std::string& parameters,
   const auto path = Utf8Path(executable);
   std::error_code ec;
   if (path.empty() || !path.is_absolute() || !std::filesystem::is_regular_file(path, ec)) {
-    error = "Set an absolute, existing ReptoolPath in Config.ini.";
+    error = "找不到報表程式 Reptool，請檢查設定檔 Config.ini 的 ReptoolPath 是否指向現有的程式檔案。";
     return false;
   }
   if (!std::filesystem::is_regular_file(config, ec)) {
-    error = "The Reptool settings file does not exist.";
+    error = "報表程式 Reptool 的設定檔不存在。";
     return false;
   }
   const std::wstring arguments = QuoteArgument(Wide(parameters)) + L" " + QuoteArgument(config.wstring());
   const auto result = reinterpret_cast<INT_PTR>(ShellExecuteW(nullptr, L"open", path.c_str(),
     arguments.c_str(), working_directory.c_str(), SW_SHOWNORMAL));
   if (result > 32) return true;
-  error = "Cannot launch Reptool. Windows shell error " + std::to_string(result);
+  error = "無法啟動報表程式 Reptool，Windows 殼層錯誤代碼：" + std::to_string(result);
   return false;
 }
 

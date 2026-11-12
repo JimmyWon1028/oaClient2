@@ -1,6 +1,6 @@
 # Windows 操作與設定
 
-2026-10-13，Windows x64（64位元）簡易版0.1.6，W21～W27已交付，R02 ZIP已公開。
+2026-11-11，Windows x64（64位元）本機交付為0.1.8／W39，包含W38列印背景修正；公開ZIP仍為0.1.6，尚未發布本輪新版。
 
 Windows 的 Config.ini／picture 在 EXE 旁，這是 Windows 配置。Mac 改用 Application Support，不能套用到 Windows；共用程式讀寫組態前，先核對[兩平台路徑對照](PLATFORM-PATHS.md)。INI 欄位與共用流程仍相同。
 
@@ -10,7 +10,7 @@ Windows 的 Config.ini／picture 在 EXE 旁，這是 Windows 配置。Mac 改�
 
 | 資料 | 位置 | 保留規則 |
 | --- | --- | --- |
-| 程式設定 | EXE 同目錄 Config.ini | 保留；可手動編輯 UTF-8，支援 BOM／CRLF，拒絕 UTF-16。 |
+| 程式設定 | EXE 同目錄 Config.ini | 保留；UTF-8 BOM／LF 保存，讀取支援 CRLF，拒絕 UTF-16；0.1.7 啟動自動修復舊無 BOM 檔。 |
 | 截圖 | EXE 同目錄 picture/Snapshot*.jpg | 保留；不屬網站清理範圍。 |
 | 網站資料 | LocalAppData/oaClient2/data/browser-profile | ClearCache=Y 時，主程序取得單例鎖後、初始化 CEF 前整個刪除。 |
 | 執行紀錄 | LocalAppData/oaClient2/data/application.log、cef.log | 不包含在網站 profile 清理範圍。自有 application.log 只記錄階段、狀態和時間，不記錄登入參數。 |
@@ -55,7 +55,7 @@ F8 用記事本開啟實際設定。語系、快取選項、Reptool 等於下次
 
 ## 目前相容範圍
 
-已實作 `cmd=clientReady`、`cmd=loginParam`、`apiUrl`、`cmd=prt`、`cmd=ini`、`cmd=load-userset`、登入狀態回報與關閉登出；`hcopen:///`承接OS協定處理器。Reptool 呼叫保留原命令、當次登入參數（分號轉 |）及第二個 INI 路徑參數；參數以 Windows 引號規則包裝。登入參數僅保存在記憶體，不寫入 INI。
+已實作 `cmd=clientReady`、`cmd=loginParam`、`apiUrl`、`cmd=prt`、`cmd=ini`、`cmd=load-userset`、登入狀態回報與關閉登出；W32外部協定依不分大小寫的 `[其他字樣]open[可選其他字樣]` 規則交給OS處理，例如 `hcopen:///`、`hcopenprint:///`、`wjopen:///`，不檢查Windows登錄或外部程式是否存在。Reptool 呼叫保留原命令、當次登入參數（分號轉 |）及第二個 INI 路徑參數；參數以 Windows 引號規則包裝。登入參數僅保存在記憶體，不寫入 INI。
 
 Reptool 實際啟動、報表列印與完整舊 OA 命令尚未驗收。`scale`、`opendir`、`clearcache`、`openurl`、`printLandscape`與其他未列明命令仍待後續盤點；簡易版不等於全部命令相容。
 
@@ -185,3 +185,31 @@ Windows Ctrl+W修正已由使用者回覆「可以了」驗收，來源a56ec0568
 ZIP仍只含EXE、安全範例、CEF234及現用prg4；不含個人INI／picture／logs／profile／cache／tpl／SDK／build，不補回工具。本機artifacts/releases同名兩檔已同步，W29歷史副本保留。Mac兩資產ID／大小／digest及固定Tag67e29679→0fe6f35不變，507份Mac平台／產物與CEF／prg等保護檔案雜湊一致。Mac M14～M18及D04既有未提交差異保留於工作目錄，未混入Windows提交；SDK／下載包／build保留。U01未實作。
 
 證據artifacts/verification/releases-windows-w30/results.json／package.json／release-public.json及public-download；發布結果文件另行提交推送，最新main以Git核對。前段W30待驗收／未發布及W29公開雜湊為本次驗收／發布前歷史。
+
+
+## W31：附件選檔（2026-10-16）
+
+本機0.1.6 EXE已修正：每次依網頁input的accept／CEF MIME展開，預設 Custom Files 同時顯示全部允許格式，另可明確切換 All Files。保留單選／多選、Unicode檔名與取消；All Files只解除本機視窗篩選，不改網站或伺服器檢核。無限制／目錄／PDF Save仍用原CEF流程。
+
+請以artifacts/oaClient2/oaClient2.exe驗收BSI010010→圖檔→加入；公開ZIP仍為W30，本次沒有上傳。EXE SHA256為91ffcaceab028182599fb4fd5e0d40ad4cc887869967ffc84fbfb715e5289ee9。測試App／localhost已停止，重新啟動會按既有清理選項清除網站登入狀態；INI／picture／prg保留。MSVC／123項及合成原生UI結果與未測範圍見[進度](../PROGRESS.md)。
+
+固定CEF的一般EXE更新可使用`./scripts/package-windows.ps1 -BuildRoot <本機build目錄> -ExecutableOnly`；先正常關閉App，僅替換EXE，保留CEF及所有現有交付檔。不加此旗標仍是原完整交付流程。
+
+## W33：固定視窗亮色外觀
+
+2026-10-20起本機Windows版本依使用者要求，上方標題列及下方工具列固定亮色，不跟隨Windows系統主題；工具列維持淺灰底與深色字，圖示／尺寸／命令不變。設定在CEF初始化時套用，更新EXE後需重新啟動；版本仍0.1.6。Windows系統亮暗切換實測尚待確認，建置／143項與亮色視窗初驗見[進度](../PROGRESS.md)W33。公開ZIP未更新，Mac產物未套用此政策。
+
+## W35：匯出與下載位置
+
+2026-10-29 起本機 Windows 交付版啟用下載前詢問，匯出／下載以瀏覽器原生「另存新檔」選擇目錄及檔名。原建議檔名保留，取消就不儲存該檔案；未新增 INI 設定。實測及限制見 [進度](../PROGRESS.md) W35；目前 GitHub ZIP 未更新。
+
+## 0.1.7／W36：印表字型及既有INI自動修復
+
+Windows本機交付已更新0.1.7。直接使用原Config.ini：下次啟動會自動將原先無BOM的UTF-8檔修復成UTF-8 BOM，保留原有網址、UserSet與其他設定，無需手動轉碼或重建設定。之後每次保存均保留BOM，讓舊Reptool正確讀取中文字型；內容相同不重寫。檔案真正唯讀／拒寫時顯示錯誤並停止啟動，不自行解除保護。
+
+印表字型仍存[UserSet] report_font，由原Reptool讀取並處理FRX。已用合成頁確認選定及重啟保存，正式OA請選定印表字型後開啟FRX報表確認；本輪未修改Reptool。主視窗及網站client_version為0.1.7；公開ZIP仍0.1.6，未發布新版，Mac.app保持原版本。
+
+
+## W38 列印背景（2026-11-11）
+
+本機0.1.7預設開啟原生列印預覽的「背景圖形」，避免報表黑底白字在列印時變成白底淡字。每次啟動後會重新套用；預覽內仍可自行切換，不需要修改MRT或INI。直接頁面、Blob輸出頁與重啟的合成預覽已測，正式報表與印表機由使用者驗收。

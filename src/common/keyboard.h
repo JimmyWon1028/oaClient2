@@ -12,7 +12,6 @@ inline bool IsWebsiteShortcut(int key_code, bool shift, bool control, bool alt, 
       key_code == 0x73 || key_code == 0x78;
   }
   if (alt && !shift && !control && !command) return key_code == 'W';
-  if (shift && !control && !alt && !command) return key_code == 'F';
   if (!shift && !alt && (control != command)) {
     return key_code == 'F' || key_code == 'E' || key_code == 'S' || key_code == 'N';
   }

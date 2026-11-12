@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>W36 印表字型保存驗證</title>
+<style>
+  body { font: 22px "Microsoft JhengHei", sans-serif; padding: 32px; }
+  select { font: inherit; padding: 8px; }
+</style>
+<h1>印表字型保存驗證（本機合成頁）</h1>
+<p>使用舊版 cmd=ini／report_font 契約，不登入或產生正式報表。</p>
+<label for="font">印表字型：</label>
+<select id="font">
+  <option>預設</option>
+  <option>標楷體</option>
+  <option>新細明體</option>
+  <option>Arial Unicode MS</option>
+</select>
+<p id="boot">等待偏好還原</p>
+<p id="result">請選擇印表字型</p>
+<script>
+  var $g = { isLogin: false };
+  var $tmp = {};
+  const font = document.querySelector('#font');
+  const earlyFont = document.cookie.split('; ').find(value => value.startsWith('report_font='));
+  let expectedFont = '';
+  function record(event, value) {
+    fetch('/event/' + event + '?font=' + encodeURIComponent(value));
+  }
+  function verifySavedFont() {
+    const saved = $tmp.userSet.split('|').find(value => value.startsWith('report_font='));
+    const passed = saved === 'report_font=' + expectedFont;
+    document.querySelector('#result').textContent = (passed ? 'PASS：已保存 ' : 'FAIL：保存 ') + expectedFont;
+    record(passed ? 'font-saved' : 'font-failed', expectedFont);
+  }
+  function verifyBootFont() {
+    const current = window.$usr?.report_font || '';
+    const cookie = earlyFont ? decodeURIComponent(earlyFont.slice('report_font='.length)) : '';
+    const saved = $tmp.userSet.split('|').find(value => value.startsWith('report_font='));
+    const passed = current !== '' && cookie === current && saved === 'report_font=' + current;
+    font.value = current;
+    document.querySelector('#boot').textContent = (passed ? 'PASS：啟動還原 ' : 'FAIL：啟動還原 ') + current;
+    record(passed ? 'font-restored' : 'restore-failed', current);
+  }
+  font.addEventListener('change', () => {
+    expectedFont = font.value;
+    console.log('cmd=ini|key=report_font|val=' + expectedFont);
+    console.log('cmd=load-userset|func=verifySavedFont();');
+  });
+  const timer = setInterval(() => {
+    if (!window.$g?.win_client || !window.$usr) return;
+    clearInterval(timer);
+    console.log('cmd=load-userset|func=verifyBootFont();');
+  }, 100);
+</script>
+</html>

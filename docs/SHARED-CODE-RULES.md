@@ -98,3 +98,21 @@ chrome_status_bubble=STATE_DISABLED僅設在共用app.cpp的CEF BrowserSettings�
 ## W29：唯一共用快捷鍵政策
 
 common/keyboard.h只定義使用者指定的Chrome衝突鍵；app.cpp透過SetPreferAccelerators(false)與OnPreKeyEvent／OnKeyEvent使網頁先收到真實事件，再停止指定Chrome fallback，不用ExecuteJavaScript重送假按鍵。原高優先F8／F12／Ctrl+P保持。CEF154 API及來源已核對，Windows編譯／110項通過，UI矩陣依使用者要求留其驗收；Mac平台碼／產物未改，Cmd實機回歸未執行。使用者提供的f1.js是清單資料，未修改／執行／納入Git。
+
+## M14～M17 Mac 共用回歸結果（2026-10-13）
+
+Mac已直接編譯W27～W29的原common／app，共用來源沒有修改或新增副本；keyboard政策、RequestContext偏好、Chrome狀態泡泡與INI／UserSet／登出只有一份。Mac native按鍵兩種頁面情境各15組、111項核心與合成實機結果見[PROGRESS](../PROGRESS.md)，Windows既有W29交付／驗收保持。
+
+唯一新平台修正為main.mm保留weak Cocoa delegate的strong precise lifetime、正常reopen啟用共用main_window，closing_in_background時保持隱藏；不另寫登出或按鍵邏輯，不改Windows專屬碼。最終背景reopen與全部退出已實測。本機Mac.app已更新但公開ZIP／安裝未更新，U01仍未實作。
+
+## 2026-10-30：M20～M23 Mac 補齊 W32～W35
+
+Mac 本機 arm64 0.1.6 已沿用共用外部協定／下載政策，Mac 入口補上共用亮色回呼與 Aqua，平台錯誤改為繁體中文及必要數字代碼；不修改系統外觀或 OA 主題。共用來源／Windows 專屬碼未再改，原有 UserSet／INI／附件與平台路徑保持。
+
+Release／CTest 1/1、136項、10份arm64及簽章通過；GET／POST／Blob／popup／右鍵下載、取消／兩目錄／中文及空白名稱／內容／重啟，以及 Ctrl+P 完整預覽另存 PDF 已實測。系統亮暗切換、暗色環境、正式 OA／一般注音／外部程式及所有原生錯誤分支未驗收；一次複合退出殘留列 M24 待定位，兩輪交付最小退出正常，不宣稱全部關閉情境通過。只更新本機 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；公開Mac仍M13、U01未實作。詳見 [本輪結果](../PROGRESS.md)。
+
+## 2026-10-30：M24 Mac Cmd+Q 背景殘留修正完成
+
+M24 已重現並修正：Console 有焦點時 Cmd+Q 未進入原生結束入口，之後關閉全部 Browser／Views 仍可能留下 CEF 主迴圈。Mac sendEvent 現在先讓既有原生選單處理精確的 Command+Q，呼叫原 terminate → 共用登出／隱藏／三秒流程；沒有改寫登出或強制結束程序。
+
+最終 arm64 Release／CTest 1/1、136 checks／0 failures、10 份 arm64 與 deep strict 簽章通過；Console 焦點 Cmd+Q、已啟用 beforeunload、附件取消組合的 ACK619ms／無ACK3032ms及實際交付3043ms期限後皆正常 SHUTDOWN_COMPLETE，主程序／Helper 全部退出。 產品只改Mac main.mm，共用來源／Windows及附件實作保持；暫時診斷已撤回。新簽章測試的鑰匙圈等待另行辨識，僅隔離localhost測試帶官方 --use-mock-keychain，正式產品未加入這個參數。只更新本機0.1.6 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；正式OA／真實鑰匙圈、系統亮暗切換及其他原未驗收範圍保持。詳見 [M24結果](../PROGRESS.md)。

@@ -15,11 +15,11 @@ int RunMain(HINSTANCE instance) {
   if (child_result >= 0) return child_result;
 
   const HANDLE mutex = CreateMutexW(nullptr, FALSE, L"Local\\oaClient2.Windows.Profile");
-  if (!mutex) { oa::ShowError("Cannot lock the oaClient2 browser profile."); return 1; }
+  if (!mutex) { oa::ShowError("無法鎖定 oaClient2 專用瀏覽器資料目錄。"); return 1; }
   const DWORD lock_result = WaitForSingleObject(mutex, 0);
   if (lock_result != WAIT_OBJECT_0 && lock_result != WAIT_ABANDONED) {
     CloseHandle(mutex);
-    oa::ShowError("oaClient2 is already running. Close it before opening a new instance.");
+    oa::ShowError("oaClient2 已在執行，請先關閉原視窗後再重新開啟。");
     return 0;
   }
 
@@ -30,6 +30,8 @@ int RunMain(HINSTANCE instance) {
   context->hide_zoom_bubble = true;
   context->disable_chrome_ctrl_w = true;
   context->background_logout_close = true;
+  //2026.10.20 by codex, keep the title bar and toolbar light when Windows changes theme.
+  context->fixed_light_window_appearance = true;
   std::string error;
   int result = 1;
   if (oa::GetAppPaths(context->paths, error) &&
@@ -37,7 +39,7 @@ int RunMain(HINSTANCE instance) {
     CefRefPtr<CefCommandLine> command = CefCommandLine::CreateCommandLine();
     command->InitFromString(GetCommandLineW());
     if (command->HasSwitch("url")) context->settings.home_url = command->GetSwitchValue("url").ToString();
-    oa::AppendLog(context->paths, "START version=0.1.6");
+    oa::AppendLog(context->paths, "START version=0.1.8");
     if (context->settings.clear_site_data && !oa::ClearBrowserProfile(context->paths, error)) {
       oa::ShowError(error);
     } else {
@@ -54,6 +56,8 @@ int RunMain(HINSTANCE instance) {
       CefRefPtr<oa::App> app = new oa::App(context);
       if (CefInitialize(args, settings, app, nullptr)) {
         CefRunMessageLoop();
+        //2026.10.16 by codex, finish native pickers after the UI loop and before CEF shutdown.
+        oa::ShutdownPlatformFileDialogs();
         CefShutdown();
         oa::AppendLog(context->paths, "SHUTDOWN_COMPLETE");
         result = 0;

@@ -1,18 +1,38 @@
 # oaClient2 進度表
 
+最新 Mac M26（2026-11-11）：已沿用Windows W38列印背景預設並更新本機arm64 0.1.8 App。Release／151項／簽章及直接、Blob、重啟原生預覽實測通過，正式OA／印表機待驗收，未安裝／發布。詳見末段。
+
+最新 Mac M25（2026-11-03）：已取消客戶端 Shift+F 攔截並更新本機 arm64 0.1.7 App。Release／CTest1/1、151項、簽章及純文字頁大寫F實測通過；正式CPN留使用者驗收，未安裝／發布。詳見末段。
+
+最新 Mac M24（2026-10-30）：Console 焦點 Cmd+Q 背景殘留已定位並修正，最終 Release／136項、ACK／三秒與複合交付回歸通過；只更新本機 .app，未安裝／發布。詳見本文末段。
+
+最新文件 D04（2026-10-30）：已將 Windows W32～W35 修改彙整於 AGENTS／README，新增 [Mac 接續提示詞](docs/MAC-WINDOWS-2026-10-30-PROMPT.md)。本輪只更新文件，Mac 尚未實作／建置；W35 的 Windows 實測限制保持，詳見末段。
+
+
+最新 W35（2026-10-29）：Windows 匯出／下載啟用每次詢問儲存位置，沿用 Chromium 原生另存新檔。Release／CTest1/1、143項及 GET 匯出對話框跳出實測通過，選路徑後存檔／取消等因UI工具限制未完成實測；本機0.1.6 EXE已更新，未提交／發布。Mac需目標平台重編回歸，詳見本文末段。
+
+
+最新 W34（2026-10-28）：Windows 與共用來源的自訂錯誤提示已改為繁體中文；Release／CTest1/1、143項及重複啟動對話框實測通過，本機0.1.6 EXE已更新。Mac專屬訊息待macOS處理，未提交／發布；詳見本文末段。
+
+
+最新 W31：Windows 附件已修正並更新本機0.1.6 EXE；MSVC／CTest1/1、123項及原生實測通過，正式 BSI010010 待使用者驗收。沒有提交／推送／Release更新；詳見末段。
+
+2026-10-16：M19 Mac 附件選檔修正已建置、更新本機交付，使用者回覆「我剛剛測試 oaclient2 附件 正確」。預設 Custom Files 合併網頁允許格式，另提供 All Files；版本仍0.1.6，未提交／推送／發布。詳見末段。
+
 最新Windows W30已由使用者驗收、提交／推送並同版更新公開ZIP；版本0.1.6、Tag與Mac資產保持，詳見末段。Mac新共用關閉保護仍須在macOS編譯回歸。
 
-更新：2026-10-13。Windows x64 0.1.6 W29 Chrome快捷鍵修正已經使用者回覆「可以了」，MSVC／CTest1/1、110項通過；來源6f2833b已推送，同名公開ZIP／校驗檔已更新並完成下載核對。代理未執行逐項UI矩陣仍保留原紀錄；Tag／Mac資產不變，Mac W27～W29待目標平台回歸，其他驗收及U01未擴大完成。
+更新：2026-10-13。Mac M14～M17已沿用W27～W29共用來源建置、合成實機回歸與更新本機完整.app；Release／CTest1/1、111項通過，版本仍0.1.6，詳見末段。尚未安裝、提交／推送或替換公開MacZIP；正式列印／一般注音／OA驗收仍待使用者。Windows W29使用者回覆「可以了」，MSVC／110項及來源6f2833b的同版公開ZIP保持；固定Tag與U01未實作狀態不變。
 
 ## 工作項目
 
 | ID | 工作 | 狀態與證據 | 下一步 |
 | --- | --- | --- | --- |
+| W31 | Windows 附件合併篩選 | 已重現／修正；MSVC x64／123項及原生 UI、關閉清理通過，本機0.1.6 EXE已更新。 | 使用者驗收BSI010010；Mac共用介面回歸待執行，未提交／發布。 |
 | W30 | Windows Ctrl+W與關閉保護 | 使用者驗收；MSVC／115項與合成實機通過，0.1.6同名ZIP已更新、公開下載核對。 | Mac共用關閉保護待目標平台編譯回歸；其他既有待驗收與U01保持。 |
 | D01 | 閱讀舊 oaClient／Reptool | 已完成第一輪來源盤點；本輪核對 PAS／DFM 工具列並操作舊版 Console 開關。 | 逐一核對其他命令契約。 |
 | D02 | 列印預覽技術查證 | 已確認 Electron 不符內建預覽要求；Windows 採 CEF Chrome。 | Mac 核對 #3410 正式配套及實測。 |
 | D03 | Git／GitHub | W29提交6f2833b已透過HTTPS推送；遠端SHA核對一致，固定v0.1.6仍指向0fe6f35。 | 發布結果文件另行提交推送，最新main以Git核對；不移動Tag。 |
-| D04 | 計畫／紀錄／跨平台交接 | 已整理 Mac 接續入口，Windows W21／W22 提示詞已存 [WINDOWS-CODEX-PROMPT.md](docs/WINDOWS-CODEX-PROMPT.md)，包含平台開發分工、共用來源與組態路徑差異。 | 回 Windows 先核對同步與來源，再實作／編譯／回歸；Windows 本輪未改。 |
+| D04 | 計畫／紀錄／跨平台交接 | 已新增 [Mac 接續 Windows 今日功能提示詞](docs/MAC-WINDOWS-2026-10-13-PROMPT.md)，以已推送cb68ba2／W29來源6f2833b整理W27～W29、Mac Cmd／密碼政策與既有功能回歸；首次移植提示保留為歷史。 | 停止Windows編輯／建置／Git並確認同步後，Mac沿用共用來源編譯／實測；本輪只寫文件，未提交／推送。 |
 | D05 | 時間與平台範圍 | 排除環境準備及測試；Mac 固定 arm64。 | 記錄測試後修正。 |
 | D06 | 網站／資料／INI 決策 | 兩平台初始URL空白、設定後保存；Windows EXE旁INI，Mac Application Support，網站全清、程式設定保留。 | W21 Windows歡迎頁／保存／重啟已實測，正式網站由使用者驗收。 |
 | D07 | 共用來源與平台邊界 | 已核對現行來源，新增共用程式碼規則及Mac提示詞：共用功能不重寫、不複製，平台差異獨立；Windows子程序DLL配置及Console handle／座標已透過平台介面最小抽取。 | Mac接手按平台介面最小調整，記錄兩平台回歸狀態。 |
@@ -50,6 +70,11 @@
 | M11 | 瀏覽 Config.ini 所在目錄 | 共用 app.cpp 已調整；Mac Release／CTest1/1、75項通過，Finder 實際開啟 Support 內的設定目錄。交付已更新。 | 未安裝；Windows 編譯／實機回歸另列 W24。 |
 | M12 | 網頁軟體資訊與客戶端版本標題 | 共用 app.cpp 已調整；Mac Release／CTest1/1、75項，歡迎頁及兩個網站動態名稱實測通過，交付已更新。 | 未安裝；Windows 編譯／實機回歸另列 W25。 |
 | M13 | 右側工具列舊版間距／完整文字 | 共用按鈕寬度採舊 DFM，右側346→298 DIP；減少內部留白，Mac完整文字實測及Release／75項通過，交付已更新。 | 保留測試視窗供使用者驗收；Windows另列W26，未安裝；使用者已授權本機提交。 |
+| M14 | Mac W27連結狀態提示 | 唯一app.cpp的chrome_status_bubble直接編譯；JavaScript選單／子選單及HTTP連結實機無泡泡，動作／導航正常。 | 正式OA選單由使用者驗收；本機.app已更新，公開ZIP未更新。 |
+| M15 | Mac W28密碼保存政策 | 原共用RequestContext偏好成功；原生POST及重啟AJAX正常、無保存提示，啟動政策紀錄通過。 | 正式OA登入由使用者驗收；不擴大成所有既存密碼填入皆已停用。 |
+| M16 | Mac W29網頁快捷鍵／共用回歸 | 15組指定鍵在handled／unhandled均有trusted事件；編輯／F12 Console及兩輪UserSet／網站清理通過，111項核心／完整arm64配套核對。 | 使用者實體鍵盤／Fn、正式列印／一般注音與OA功能驗收保留；不移Tag、不發布。 |
+| M17 | Mac delegate生命週期／background reopen | main.mm僅保留弱delegate的強參照並檢查關閉狀態；最終Finder background=1兩次、期限3019ms／ACK1418ms與Console／beforeunload／全部退出通過。 | 沒有共用／Windows碼變動；最小Mac修正與未測窗口操作詳見末段。 |
+| M18 | Mac交付.app系統打包時間 | 已修正package-macos.sh，外層mtime為當次系統13:43:20；265份內容不變／簽章及Shell語法通過。 | Finder顯示交付時間；實際編譯及功能驗收仍按各自證據，不改Windows。 |
 | W21 | Windows 相同歡迎頁 | Windows 入口已啟用空白 HomeUrl／allow_empty_home_url；沿用 welcome.h／app.cpp。MSVC／74項通過，空白頁、兩個設定入口、ESC／X、無效網址拒絕、HTTP保存／重啟已實測。 | 列印／注音及正式使用者驗收待確認；保留既有個人網址。 |
 | W22 | Windows 隱藏縮放彈窗 | 入口 hide_zoom_bubble=true；MSVC／74項，網站及歡迎頁110%→100%、還原100%、網站重啟110%實測，無Chromium彈窗。 | 其他DPI／多螢幕未測；比例保存契約不變。 |
 | W23 | Windows 隱藏背景登出／三秒退出 | 入口 background_logout_close=true；合成ACK649ms、一般桌面ACK1117ms、無回應3007ms；logout一次、主窗／Console隱藏、beforeunload放行及全部程序退出通過。 | 正式OA登出待使用者驗收；到期不代表伺服器登出成功；晚建立窗口競態未獨立重現。 |
@@ -372,6 +397,36 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 - 本機artifacts/releases同名檔更新，歷史W28打包與public-download保留；新證據artifacts/verification/releases-windows-w29/results.json／package.json／release-public.json。原OA及SDK／build保留，f1.js接手時已不存在、未補回，不將其當成來源衝突。
 - 發布文件／README與操作／工作紀錄已同步，結果文件另行提交推送；Mac W27～W29未編譯／實測，其他待驗收與U01未實作保持。
 
+## D04：Mac接續Windows今日功能提示詞（2026-10-13）
+
+依使用者要求將Mac接續提示寫成.md，新增[MAC-WINDOWS-2026-10-13-PROMPT.md](docs/MAC-WINDOWS-2026-10-13-PROMPT.md)。基準main／已推送cb68ba2、Windows實際W29來源6f2833b；核心範圍W27連結狀態提示、W28密碼保存政策及W29 Chrome衝突熱鍵（包含Mac Cmd）。Mac已完成M01～M13，不重做平台移植，W21～W26只作既有共用功能回歸；版本維持0.1.6、共用來源唯一、平台路徑／SDK隔離／交付與未驗收範圍明列。
+
+原MAC-CODEX-PROMPT.md新增最新提示入口並保留首次移植歷史，README／交接入口同步。提示詞包含Windows停止操作／Dropbox同步、Git差異核對、Mac固定CEF／Release／核心測試／簽章／實機、保留SDK及個人設定、先更新交付不自動安裝／發布，以及不把Windows熱鍵驗收當成Mac Cmd已通過。
+
+本輪只建立／更新文件，沒有修改程式、建置／操作App、更新SDK或產物、提交／推送／移Tag／發布。文件UTF-8／LF與相對連結核對；Mac W27～W29仍待目標平台編譯／實測，其他未驗收及U01未實作保持。切換Mac前仍須停止Windows編輯／建置／Git，等待兩台Dropbox同步；未提交文件須辨識保留。
+
+## M14～M17：Mac 接續 W27～W29 與交付（2026-10-13）
+
+- 接手：使用者確認Windows停止編輯／建置／Git、兩台Dropbox同步完成。本機main與唯讀ls-remote均為cb68ba20a7c1862cd58f851c3a3c1940cf555a05，origin正確；Tag物件67e29679／來源0fe6f35不變。沒有conflicted copy／Git lock。六份未提交文件及新Mac提示詞已辨識為D04工作，保留，不reset／checkout。最初受限DNS查詢失敗，唯讀提升後成功，不當成來源不一致。
+- 來源：src/common／src/app沒有修改或複製，直接沿用W27狀態泡泡、W28 RequestContext密碼政策及W29 keyboard.h／網頁優先／OnKeyEvent。Windows專屬碼、Windows交付／ZIP／prg不改。唯一產品差異為M17的src/platform/macos/main.mm：NSApplication的weak delegate使用objc_precise_lifetime強參照維持至CEF message loop結束；既有Cocoa reopen回呼只啟用共用main_window，closing_in_background時返回已處理。沒有保留嘗試的Apple Event替換、沒有另一份按鍵清單。
+- 建置：native arm64／macOS26.7.1，保留的154.0.34 SDK／原下載包／build均存在，壓縮檔SHA256仍2e4a60880addad09c85d9ea27f4df09cb803069e1709377576e9cf62169648fe。沿用build-macos.sh，初輪及最終Release／CTest1/1成功，實際111 checks／0 failures。codesign deep strict通過；不把編譯當成UI驗收。新增平台修正後只重測相關reopen／關閉及設定回歸，共用來源與原核心案例保持。
+- M14：原status-hint.html選單及子選單兩個event／畫面PASS，停留無javascript:void(0)泡泡；本輪證據目錄副本另加普通HTTP連結，停留無泡泡，點擊後URL變/normal-link。原OA JavaScript未改；網站自己的hint不在停用範圍。
+- M15：固定CEF Mac成功設定兩個偏好；原生POST→303結果頁、重啟AJAX→204／移除表單均正常，畫面無保存／更新密碼詢問。啟動有PASSWORD_SAVING_AND_AUTO_SIGNIN_DISABLED，沒有PASSWORD_POLICY_FAILED。僅合成值、server丟棄表單內容，正式OA登入未測；false不被解讀為所有既存密碼填入功能都停用。
+- M16快捷鍵：Computer Use native pressKey送F1／F2／F3／F4／F9、Option+W、Shift+F及Cmd／Ctrl+F／E／S／N，共15組；網頁不preventDefault與會preventDefault兩輪各15組trusted=true，handled輪15個cancelled事件。原keyboard-shortcuts頁先測，因目前注音來源Ctrl鍵的event.key是注音符號，證據副本補記code／keyCode／isTrusted並用KeyF等實體位置取消預設；KeyF／E／S／N與70／69／83／78皆正確。沒有人工JavaScript重送key事件。畫面無搜尋／儲存／新視窗／網址列焦點；Shift+F及未列出的Shift+A可輸入，Cmd+A／C／V／Z實測複製貼上再還原，F12開關Console、native輸入1+1=2通過。Console貼上被DevTools正常阻擋後改用鍵盤輸入，沒有解除保護。未列出的Cmd+R有網頁事件，但未確認Chrome重新載入，不記為reload通過；F8、Ctrl+P／Cmd+P本輪UI未執行。工具直接送功能鍵，實體鍵盤／Fn設定未查改或驗收，一般注音仍留使用者。
+- 既有回歸：在/private/tmp隔離home啟動同一app，CFFIXED_USER_HOME只供本輪程序，已核對實際Cocoa INI／profile／logs在隔離Application Support。沒有產品路徑override功能或個人INI副本。空白HomeUrl歡迎頁／預設版本標題、兩個URL入口、全選網址、ESC／X取消與ftp拒絕、有效HTTP／HTTPS保存及各自重啟直接載入通過；data URL沒有寫入INI。110%保存／重啟ZOOM_APPLIED110，縮小與100%還原無泡泡。Finder目錄等於該次實際Config.ini父目錄，完整工具列／原圖／最大化正常；一般popup開啟與關閉、document.title動態名稱及公開OA名稱更新通過。隔離home不替代正式資料位置驗收；正常使用仍是使用者Application Support，平台路徑沒有修改。
+- 兩輪legacy-contract：首輪boot-SYNTHETIC-INITIAL，重啟boot-SYNTHETIC-PERSISTED；各有preferences-pass／site-data-clean／site-data-created。首個網站腳本前Cookie、cmd=ini、load-userset的$tmp.userSet／func／$usr、userid／公司別及特殊字元通過。前輪網站Cookie／LocalStorage／IndexedDB／ServiceWorker／CacheStorage皆清除，INI偏好仍回填；--url覆寫localhost後隔離INI的HomeUrl仍HTTPS，正式個人設定未注入合成值。
+- M17失敗與修正：舊交付及初輪build在背景期限前重新啟用曾生成Chrome新分頁；全部CEF browser回呼關閉後仍持鎖，該輪失敗，僅SIGTERM已核對的殘留PID37325／37478／37791。採樣仍在NSApplication run／CEF loop；固定CEF runner等待全部Chrome Browser keepalive退出。Cocoa delegate原區域值在ARC下可能於最後使用點提前釋放，最終以明確lifetime保留，並用既有reopen回呼保持隱藏。最終真實Finder重新開啟有MAC_REOPEN_HANDLED background=0；關閉中Cmd+O再開啟有background=1兩次，無新browser／窗口，不延長期限。timeout3019ms／ACK1418ms、logout各一次、main=1 console=1隱藏、beforeunload允許、SHUTDOWN_COMPLETE／exit0與全部Helper消失通過。中間AppleEvent嘗試的3034ms結果保留為診斷，不當作最終來源；正式OA伺服器登出未驗收。
+- 交付：package-macos.sh更新完整artifacts/macos-arm64/oaClient2.app，主執行檔SHA256 **879b1e1747f0a59f75afa7cfc0790f257aa3acfe62b72edbd8239226e99c4a7e**；build／交付265份檔案與連結／mode一致、無斷鏈、10份Mach-O全部arm64、codesign deep strict通過。未安裝Applications／製作或上傳新ZIP；272份Windows來源／交付／既有Releases／prg保護項目不變，SDK／壓縮檔／build保留。現用個人INI保留正常Window保存現況，不回寫快照，不宣稱整檔逐位元不變。
+- 證據：artifacts/verification/macos-m14-m16（M17同批），build*.log／core-tests.log、各合成event與runtime、application.log／application-isolated.log、bundle-manifest.json／delivery-results.json／source差異。UI圖像見本輪Computer Use回傳；未另儲存PNG，不把不存在的截圖列為檔案證據。所有測試app／server已停止。伺服器以Ctrl+C正常結束，exit130／KeyboardInterrupt屬測試server停止，不是建置或驗證中斷。
+- 時間：環境與交接唯讀核對後，約13:05首次建置／核心；13:07～13:31合成實機與工具等待另列。平台修正與建置約13:18～13:20、最小lifetime版約13:25～13:26，屬測試後實作／必要建置；13:31交付核對。沒有精確累計，不將UI等待算成兩小時實作。
+- 待驗收／未執行：正式列印預覽／PDF／印表機、一般注音／實體Fn、正式OA登入登出／實際選單與快捷鍵、hcopen／Mac報表、F8／列印快捷鍵本輪UI、最小化／多螢幕／其他系統、延遲Console建立特定競態。Mac使用者尚未回報本輪驗收；Windows原W29回報保持，沒有Mac修改的共用來源需要另行承接。U01未實作。尚未commit／push／移Tag／公開Mac同版替換，舊Mac公開ZIP仍為M13，不能拿它測W27～W29。
+
+## M18：Finder 時間問題與修正（2026-10-13）
+
+使用者截圖顯示oaClient2.app為上午05:06。核對確認系統為Asia/Taipei／UTC+8，外層.app目錄mtime為05:06:07，內部主執行檔為13:26:11；不是時區差異或舊binary。增量建置只改內部檔案，而package-macos.sh的rsync -a保留build外層舊目錄時間，導致Finder顯示早期時間。
+
+依使用者要求，scripts/package-macos.sh於交付簽章核對成功後新增touch -m，只將交付.app外層修改時間設為目前系統打包時間。現有交付已更新為2026-10-13 13:43:20（UTC+8），當次系統時間同為13:43:20。265份內部檔案／連結內容未變，codesign deep strict及bash -n通過；證據artifacts/verification/macos-m18/results.json。沒有重新編譯、執行功能測試、安裝、提交／推送或發布，版本仍0.1.6；SDK／build／Windows資料保持。Finder此欄代表交付打包時間，不能作為編譯時間或功能驗收證據。
+
 ## W30：Windows Ctrl+W 交回網頁與關閉回呼保護（2026-10-13）
 
 使用者回報Windows連續Ctrl+W當機，後續明確選定「取消Chrome關閉動作，保留OA網頁自己的Ctrl+W處理」。Windows事件17:40:38／17:41:42皆為oaClient2.exe的0xc0000005、RVA0x1053e；原交付EXE與app.obj反組譯對照到PrepareWindowClose中GetMainFrame()回傳物件後的解參照。application.log在兩次當機前已記BROWSER_CLOSED，沒有SHUTDOWN_COMPLETE，確認Chrome關閉分頁先銷毀主瀏覽器，後續窗口關閉回呼仍嘗試對失效main frame執行logout。
@@ -399,3 +454,256 @@ Windows Ctrl+W修正已由使用者回覆「可以了」驗收，來源a56ec0568
 ZIP仍只含EXE、安全範例、CEF234及現用prg4；不含個人INI／picture／logs／profile／cache／tpl／SDK／build，不補回工具。本機artifacts/releases同名兩檔已同步，W29歷史副本保留。Mac兩資產ID／大小／digest及固定Tag67e29679→0fe6f35不變，507份Mac平台／產物與CEF／prg等保護檔案雜湊一致。Mac M14～M18及D04既有未提交差異保留於工作目錄，未混入Windows提交；SDK／下載包／build保留。U01未實作。
 
 證據artifacts/verification/releases-windows-w30/results.json／package.json／release-public.json及public-download；發布結果文件另行提交推送，最新main以Git核對。前段W30待驗收／未發布及W29公開雜湊為本次驗收／發布前歷史。
+
+## 2026-10-16：M19 Mac 附件選檔修正
+
+狀態：已實作、Mac arm64 Release建置／實機測試、更新交付，使用者回覆「我剛剛測試 oaclient2 附件 正確」，本次附件修正驗收通過。
+
+涉及src/app/app.h、src/platform/cef_platform.h、src/platform/macos/CMakeLists.txt、新增file_dialog.mm及tests/pages/file-dialog.html。共用端僅平台handler接線；Cocoa選檔與格式UI只在Mac，Windows仍採CEF預設nullptr，不修改Windows專屬來源或交付，Windows編譯回歸未執行。
+
+- Custom Files合併CEF提供的所有允許副檔名，預設顯示格式選項；All Files另行解除格式篩選，與使用者Chrome參考圖相同兩選項。MIME使用CEF展開結果，不猜測、不寫死OA格式。單選／多選按原mode；儲存／選目錄／無限制不攔截。
+- 實際CEF合成頁：JPG／PNG／PDF／XLS／XLSX五檔同選並回傳名稱；TXT預設不可選。MIME image/*＋PDF＋XLSX可同選PDF及XLSX，未列XLS／TXT不可選。PNG預設只允許PNG；All Files可選TXT且仍只回一個檔案。再次開啟重設Custom Files；ESC保留原五個選檔，Cancel正常。無限制／目錄CEF視窗開啟取消正常；儲存／pending sheet父窗關閉未獨立實測。
+- 固定CEF154.0.34 SDK／下載包原本不存在，重新下載同版並核對既有SHA256；SDK／壓縮檔／build保留於本機非同步目錄。Release／CTest1/1、116 checks／0 failures；10份Mach-O arm64及codesign deep strict通過。這116項是既有核心回歸，選檔結果另以實機UI為證，不將核心測試當成選檔UI證明。
+- artifacts/macos-arm64/oaClient2.app與build265項內容／連結／mode一致，主EXE SHA256 9388faa75d04e2aaf8df5e4105b0fcd6632ac4b901aec8f55f6b0ee82190b3e2。原.app回復副本在/private/tmp/oaClient2-m19-before.app。版本0.1.6，未安裝或公開發布；WindowsEXE／平台來源及既有main.mm差異保持。
+- 測試使用/private/tmp隔離Cocoa home並核對實際紀錄；副檔名素材不驗證文件解碼／正式上傳。server已停止，沒有向正式OA送出代理測試附件；使用者自行實測回報按其範圍記錄。原INI正常關閉更新現況，不宣稱逐位元不變，無合成偏好／網址回寫。
+- 舊交付已收到登出ACK且全部Browser關閉但未完成程序退出，核對後SIGTERM結束，未修改登出碼。隔離新建置正常3005ms期限與SHUTDOWN_COMPLETE；UI工具其後重新啟動build版至正常OA，使用者於修正版驗收，保留該視窗、不再操作。build／交付逐項一致。
+
+證據：artifacts/verification/macos-m19/results.json、build.log、package.log、isolated-application.log；實機圖像與AX狀態在本對話工具回傳。正式列印／一般注音、其他原待驗收及U01未實作保持；共用W30關閉保護已隨此次Mac重編，僅本次正常無ACK退出有回歸，不擴大為W30完整Mac驗證。
+
+## 2026-10-16：D04／W31 Windows 附件修正交接文件
+
+使用者回報 Windows 同樣有附件選檔問題，已依要求建立[Windows 附件選檔修正提示詞](docs/WINDOWS-FILE-DIALOG-2026-10-16-PROMPT.md)，可直接貼到 Windows Codex 接續。W31 目前為待實作／Windows 建置及實機驗證未執行；提示詞明列 Chrome Custom Files／All Files 目標、Mac M19 參考及驗收邊界、既有 factory 的 Windows nullptr、平台實作／共用來源邊界、測試素材、資料保留與本機 EXE 交付。
+
+只新增 UTF-8／LF Markdown 並核對相對連結、更新交接／計畫／變更紀錄；未修改程式、測試頁、SDK、個人設定、Windows EXE 或 Mac .app，未建置／操作 App、提交／推送／發布。M19 使用者驗收與 U01 等其他狀態保持。
+
+## 2026-10-16：W31 Windows 附件選檔格式修正與本機交付
+
+狀態：已在 Windows 重現、修正、MSVC x64 Release／原生實機測試及更新本機 EXE；版本維持0.1.6，正式 OA BSI010010 圖檔→加入待使用者驗收。未提交、推送、移 Tag、打包 ZIP 或更新 GitHub Release；公開 Windows 仍 W30、Mac 仍 M13。
+
+接手由使用者確認 Mac 停止編輯／建置／Git、兩台 Dropbox 同步完成。實際 main HEAD 為8d104ba7af6c75b91527a14a6d2b6ed64d03dc2b，無 Git lock／來源衝突副本；M14～M19、D04 既有未提交差異保留，未 reset／checkout。接手差異在 artifacts/verification/windows-w31/baseline.patch／baseline-status.txt；Mac 專屬來源、打包腳本與 .app 雜湊均不變。
+
+Windows 根因：同一跨平台 tests/pages/file-dialog.html 的 accept=.jpg,.png,.pdf,.xls,.xlsx 完整傳入 CEF，原生預設卻列 JPEG／PNG／PDF／兩種 Excel／自訂檔／所有檔案七項，預選 JPEG。觀測版確認五項 accept_extensions 完整，MIME image/*、application/pdf、XLSX 亦由固定 CEF 正確展開；沒有把 Mac 原因當 Windows 證據，也沒有修改正式附件或 OA JavaScript。
+
+平台實作 src/platform/windows/file_dialog.cpp 使用 IFileOpenDialog，動態合併 CEF 副檔名為第一項 Custom Files、第二項 All Files；不寫死 OA 清單。file_dialog_filter.h 對未展開、未知、空項或 wildcard 拒絕自訂處理並交回 CEF；Save／選目錄／無 accept 沿用原流程。Unicode、原單多選、檔案／路徑存在與 owner 保持。COM／Show 在獨立 STA，CEF UI 延遲任務完成 callback；取消不回傳空成功。瀏覽器關閉先非同步取消對應視窗，UI loop 結束後於 CefShutdown 前收束 worker。
+
+沿用 M19 app.h 的唯一 GetDialogHandler 接線，沒有另造 BrowserClient／工具列。W31 新差異為 Windows CMake source、cef_platform.h Windows factory／取消介面、app.cpp OnBeforeClose 的兩行平台通知、Windows main.cpp shutdown hook、兩份 Windows 選檔來源、Windows 核心測試及共用測試頁附加關閉情境。Mac factory／實作保持，取消 hook 在非 Windows 為 no-op；必要共用 header／app.cpp 仍待 macOS 編譯回歸，不在 Windows 宣稱 Mac 產物更新。
+
+MSVC Release／CTest1/1、**123 checks／0 failures**（Windows 原115＋8項篩選契約）通過；不是 Mac116項或 UI 驗證替代品。第一次原生編譯缺少 cef_callback.h 的 include 順序而失敗，已修正並保留 build-first-failed.log。最終 UI：五格式同選／FileList、TXT預設隱藏、MIME JPG／PNG／PDF／XLSX 同選且 XLS／TXT 被篩掉、PNG單選、明確 All Files 選TXT仍單選、中文及空白路徑、ESC／Cancel 保留原選檔、重開預設均通過。無限制原對話框回傳TXT，原目錄流程回傳6個拋棄式檔名；原 Chromium PDF Save 視窗成功產生111832 bytes測試檔。這些只驗證篩選、原生回呼與 change／檔名，不代表文件內容解碼或正式上傳。
+
+第一輪 UI 曾發現 popup 已關閉而 picker 留下，記為失敗；補上 OnBeforeClose 通知與原生非同步 WM_CLOSE 後重測通過。最終 popup 關閉只完成一次 Cancel、無殘留；主瀏覽器在選檔 pending 時關閉亦 Cancel、SHUTDOWN_COMPLETE、全部程序退出。最終 build 另重測五檔；交付 EXE 再實測 MIME PDF／XLSX、Cancel／重開及一般 Alt+F4 約3秒退出。未知 MIME fallback 的原生 UI、其他 Windows／DPI／網路路徑未執行。
+
+本機 EXE **91ffcaceab028182599fb4fd5e0d40ad4cc887869967ffc84fbfb715e5289ee9**，PE machine=0x8664，build／交付一致。package-windows.ps1 新增可選 -ExecutableOnly，本輪使用此模式只換 EXE；不寫 CEF、範例或任何個人交付檔。最終515項保護雜湊全部與接手一致。正式 Config.ini 在中途正常關閉保存後曾有差異，交付版最後正常關閉後與原雜湊相同；全程保留實際現況、不回寫過期快照，未將 localhost／合成偏好保存至正式 INI。Windows INI／picture 仍在 EXE旁，prg／tpl／下載、Mac／公開 ZIP 不動；SDK／下載包／build 均保留。
+
+工具環境失敗：Codex 宿主 LocalAppData 重導向曾觸發既有 PROFILE_PATH_REJECTED；未放寬程式保護。停止 App 後，只針對明確核對的 oaClient2 專用 mapped browser-profile 清理再測；Python alias 不可執行，改用 bundled Python，localhost server 於正常桌面可存取的執行環境啟動，綁127.0.0.1。測試 URL 僅 --url 當次記憶體，不注入 UserSet；server 與測試 App 最後皆停止，不自動重開正式 OA。再次啟動仍依既有設定清除網站登入狀態。
+
+證據 artifacts/verification/windows-w31/results.json、build.log／core-tests.log、observed-cef.log、ui-first-*／ui-final-*／delivery-*、protected-before.json／protected-result.json 及 save-regression.pdf；UI 截圖在本次 Computer Use 回傳，沒有另外保存 PNG。約15:57～16:07查證／觀測、16:07～16:11初版實作及建置、16:12～16:19實測，約16:19～16:20生命週期修正／建置，16:20後最終回歸與交付；工具等待與測試另計，不虛構精確累計工時。
+
+下一步：由使用者以本機交付測正式 BSI010010 附件；Mac 在 macOS 回歸必要共用介面，不能沿用本輪 Windows 結果。其他列印／注音／正式 OA／Reptool 待驗收、U01未實作保持。
+
+## 2026-10-20：W32 外部協定改為前綴＋open＋可選後綴
+
+- 使用者最終要求 `[其他字樣]+open+[其他字樣]:///`，明確包含 `hcopen:///`、`hcopenprint:///`、`wjopen:///`；不限定hc，open前至少一個字元、後方可空、不分大小寫。先前未編譯的hcopen限定方案已由此規則取代。
+- 只修改唯一共用src/common/ini.cpp的IsLegacyOpenProtocol及tests/core_tests.cpp。取第一個冒號前的scheme，從索引1起找open；不把一般HTTP路徑內的open當協定、不放行bare open／openprint或沒有冒號的字串。CEF原有GetRequestHandler／GetResourceRequestHandler／OnProtocolExecution接線不改，不自行解析、解碼或執行URI內命令。
+- 依使用者「只要送出命令就好，不用驗證 windows 註冊」，應用程式沒有新增任何登錄、處理器或外部程式存在檢查。使用者提出此前的W17唯讀系統查詢只是本輪最初檢查，不是新功能啟動條件，未註冊或修改系統。
+- Windows既有SDK／MSVC x64 Release編譯成功，CTest1/1、143 checks／0 failures；22項協定正反案例涵蓋hcopen、wjopen、不同大小寫、其他前後綴、bare open／openprint、一般HTTPS路徑、缺冒號及空字串。建置有CEF既有未使用delay-load DLL之LNK4199警告，無編譯錯誤。未重新執行UI矩陣或正式OA／外部命令，實際外部開啟由使用者測試。
+- 以package-windows.ps1 -ExecutableOnly只更新artifacts/oaClient2/oaClient2.exe，版本仍0.1.6；與build SHA256一致：3a03b124a48864af570f6ba070b332fb25c95b9a1d84d076394ca11c2df1e6f3。交付其餘檔案與Mac專屬來源253項保護雜湊不變；沒有啟動OA／改寫正式INI／清除網站資料，CEF、prg、picture、Mac.app與公開ZIP均未更新，SDK／下載包／build保留。
+- 接手main HEAD仍8d104ba7af6c75b91527a14a6d2b6ed64d03dc2b，保留先前未提交W31／Mac／文件差異。未commit／push／移Tag／發布。共用規則需回macOS重編及回歸才套用Mac交付；其他既有未驗收與U01未實作保持。
+- 證據：artifacts/verification/windows-w32/build.log、core-tests.log、protected-before.json、results.json。最初舊規則受限核心執行曾INI建立失敗且中止，隨後原W31版本123項通過；新規則最終143項通過，不混用兩次結果。實作／建置與核心測試分開記錄，未虛構累計工時。
+
+## 2026-10-20：W33 視窗標題列與工具列固定亮色
+
+- 使用者明確指系統主題，要求上下兩處都不要跟著變色；本輪Windows採固定亮色。新增AppContext.fixed_light_window_appearance預設false，由Windows main.cpp啟用；Mac入口／產物不改，不在Windows啟用Mac政策。
+- src/app/app.h／app.cpp沿用唯一App與工具列：OnBeforeCommandLineProcessing在瀏覽器初始化前移除force-dark-mode、加入CEF文件指定的force-light-mode，停止原生系統亮暗主題追隨；OnContextInitialized對全域RequestContext指定Chrome LIGHT／預設色，避免Chrome配色再跟隨系統。這固定CEF色彩模式，沒有修改OA的主題偏好或CSS；不宣稱網頁prefers-color-scheme仍跟隨Windows。
+- CEF文件明確指出SetBackgroundColor在OnThemeChanged時會重設，故HeightDelegate於啟用時重套工具列背景，WindowDelegate於按鈕主題回呼重套底色與字色。原淺灰#F0F0F0、文字#222222、圖示、尺寸／排列與按鈕命令保留，未改網站宿主、INI／UserSet／登出／W32協定或Mac專屬碼。
+- Windows MSVC x64 Release成功，CTest1/1、143 checks／0 failures；沒有新增鏡像固定值的單元測試，UI結果另記。既有CEF未使用delay-load DLL之LNK4199警告仍在，無編譯錯誤。以computer-use在空白網址／ClearCache=N的拋棄式Config.ini啟動新版，標題列／工具列亮色、完整文字與圖示正常；Alt+F4後測試程序退出。無正式OA登入／正式資料操作，正式Config.ini雜湊不變。
+- 系統亮／暗模式切換實測未執行：SystemSettings.exe未出現可控制視窗，沒有改系統設定；不可把亮色視窗檢查當作已驗收完整切換矩陣。最初AppData路徑測試版未出現可控制視窗；改用workspace拋棄式副本，CEF junction首次權限不足，建立完成後啟動成功。背景擷取曾回傳其他前景，該檔已捨棄；重新選取／啟用目標後才保存有效JPG，不把工具失敗當產品通過。
+- package-windows.ps1 -ExecutableOnly僅更新artifacts/oaClient2/oaClient2.exe，版本0.1.6；build／交付SHA256一致：3890581dc08216046c3c7dab87b0bef945ce7b22fda3e0886608eb17821b3d53。253項交付其他檔案與Mac平台來源保護雜湊不變，CEF／prg／picture／Mac.app／公開ZIP未改，SDK／下載包／build保留。共用新增介面需macOS編譯回歸，Mac顏色政策尚未啟用；既有未驗收及U01保持。
+- 未提交／推送／移Tag／發布，保留前輪所有工作差異。證據artifacts/verification/windows-w33/build.log、core-tests.log、window-light.jpg、protected-before.json、results.json；實作與編譯／工具準備／UI測試分別記錄，不虛構精確累計工時。
+
+## W34：使用者可見錯誤訊息改為繁體中文（2026-10-28）
+
+- 依使用者圖片及「顯示的錯誤訊息都使用繁體中文」，Windows 入口、平台函式與唯一共用 INI／app 的自訂錯誤提示改為繁體中文。重複啟動顯示「oaClient2 已在執行，請先關閉原視窗後再重新開啟。」；涵蓋設定檔讀寫／編碼、網站資料清理保護、主控台、開啟目錄、截圖及 Reptool 啟動。檔名、設定鍵、產品名與錯誤代碼保留供辨識。
+- 使用者可見訊息不再附加可能是英文的 std::error_code::message() 或 CEF 偏好錯誤；檔案系統／Windows 錯誤以中文說明加數字代碼呈現，密碼政策失敗的原始 CEF 診斷寫入 application.log，既有停止啟動政策保持。不改 OA 網頁內容、INI 格式／偏好、命令、清理或登出流程。
+- Windows MSVC x64 Release／CTest 1/1、143 checks／0 failures 通過。Computer Use 實際啟動交付版，再次啟動確認中文重複執行對話框、確定按鈕及文字無亂碼；兩個重複提示皆關閉，測試主視窗 Alt+F4 正常退出，有 SHUTDOWN_COMPLETE。未逐一強制觸發所有磁碟／權限／截圖／報表錯誤；列印、注音與其他既有待驗收範圍不擴大。
+- 單例測試最初以沙箱 PowerShell 持有 mutex，與正常桌面命名物件隔離，沒有觸發預期分支；已釋放，改以正常桌面真正啟動第二個交付 EXE 驗證。Computer Use 一次無截圖幾何的點擊失敗，重新擷取視窗後正常關閉；未把上述工具結果當作產品失敗。
+- package-windows.ps1 -ExecutableOnly 只更新 artifacts/oaClient2/oaClient2.exe，版本仍 0.1.6。build／交付 SHA256 同為 ac03403cefdb9ae0e5415141e887b07b0a582552afa2513566c31c008670562c；528 份受保護檔案雜湊一致，含交付 Config.ini／CEF／prg／picture 及 Mac 平台來源／產物。正式 INI 保留正常關閉後現況，沒有寫入合成設定或回復快照。
+- 共用改動僅 src/common/ini.cpp 與 src/app/app.cpp，Windows 專屬改動為 main.cpp／platform.cpp；Mac 專屬碼及 .app 未改。Mac 平台既有英文錯誤與系統 localizedDescription 仍待 macOS 環境改為繁體中文，並沿用共用來源重編／實測；不能宣稱 Mac 全部訊息已完成。本輪未提交、推送、移 Tag、打包 ZIP 或更新 Release，SDK／下載包／build 保留，U01 未實作。
+- 證據：artifacts/verification/windows-w34/build.log、core-tests.log、source-audit.json、protected-before.json／protected-result.json 及 results.json；對話框圖像在本輪 Computer Use 回傳，未另存 PNG。約 10:26～10:28 實作／建置，10:29～10:34 工具與實機驗證，其後文件／核對另計，不捏造逐秒累計。
+
+## W35：匯出／下載每次詢問儲存位置（2026-10-29）
+
+- 使用者要求匯出檔案或另存時一律跳出「另存新檔」，由使用者指定路徑，取代直接存到預設路徑。共用 src/app/app.cpp 在建立任何瀏覽器前設定全域 RequestContext 的 download.prompt_for_download=true；沿用 Chromium 的原生儲存對話框、建議檔名與取消處理，未改 OA 網頁、上傳選檔、下載目錄或 INI 欄位，未增加平台流程副本。
+- 固定 CEF154 SDK 的 tests/ceftests/download_unittest.cc 已使用同名偏好驗證 Chrome 預設下載；本輪實際啟動政策成功並記錄 DOWNLOAD_PROMPT_REQUIRED。若偏好套用失敗，寫原始診斷至程式紀錄、顯示繁體中文錯誤並停止啟動，避免靜默直接儲存。
+- Windows MSVC x64 Release、CTest 1/1、143 checks／0 failures 通過。使用剛更新的交付 EXE 與 localhost 合成 GET attachment，實際點擊後跳出繁體中文「另存新檔」，保留中文建議檔名 W35伺服器匯出.csv；對話框停留時，C:/Users/Lenovo/Downloads 中該測試檔未出現。
+- 驗證限制：Computer Use 對已出現的原生對話框無法 set_value，重新擷取後的輸入亦回報 failed to activate captured window。因此未完成選路徑後實際儲存、取消、POST／Blob／新視窗匯出、右鍵另存連結、PDF／列印儲存或重啟 UI 回歸；不把測試素材或編譯成功當作這些情境已通過。正式 OA 匯出由使用者接續驗收。
+- 因工具無法操作對話框，最後只核對並結束本輪記錄 PID／EXE 路徑的測試程序及其子程序，再停止本輪 localhost 伺服器，確認無 oaClient2 殘留；這不是正常退出實測。測試網址只由 --url 傳入當次記憶體，未寫入正式 INI，沒有登入或上傳至外部網站。
+- package-windows.ps1 -ExecutableOnly 只更新 artifacts/oaClient2/oaClient2.exe，版本仍 0.1.6；build／交付 SHA256：57d1a8d2426525f0ce567efe04809709898bb80e5ade6a4e2794e06970fb2290。528 份保護檔案雜湊不變，含交付 Config.ini、CEF、prg、picture 與 Mac 平台來源／產物；SDK／下載包／build 保留，未提交／推送／移 Tag／打包 ZIP／發布。
+- Mac 專屬碼及 .app 未改；共用下載政策須回 macOS 重編及實機確認才會套用 Mac 交付，W34 的 Mac 專屬錯誤翻譯與其他原待驗收項目、U01 未實作狀態保持。
+- 證據：artifacts/verification/windows-w35/build.log、core-tests.log、app-before.cpp、startup.log、protected-before.json／protected-result.json、results.json 與僅本機合成下載素材 serve-downloads.py／requests.jsonl。UI 畫面在 Computer Use 回傳，未另存 PNG；約 17:19～17:20 實作／建置，17:20～17:24 實測與工具排除，其後文件核對另計，不捏造累計工時。
+
+## D04：Windows 修改紀錄與 Mac 接續提示詞（2026-10-30）
+
+使用者要求把 Windows 修改記錄於 AGENTS／README，並另存可在 Mac 執行相同修改的 .md 提示詞。已新增 [MAC-WINDOWS-2026-10-30-PROMPT.md](docs/MAC-WINDOWS-2026-10-30-PROMPT.md)，彙整 W32 外部協定、W33 固定亮色、W34 繁體中文錯誤與 W35 每次詢問儲存路徑；Mac 直接沿用共用來源，在 macOS 入口啟用亮色政策及翻譯平台錯誤，再於目標平台建置／實測。這是待 Mac 執行的工作範圍，不代表本輪已完成 Mac 修改。
+
+AGENTS.md 與 README.md 已加入近期功能／Windows實際驗證／Mac待辦，README另核對更新本機 Mac M19 與公開 ZIP Windows W30／Mac M13 的差異；舊 Mac 提示入口加註最新連結、保留歷史。W31／M19 附件不重做，W27～W29已完成範圍不回退，Windows Ctrl+W政策不移植成Mac Cmd+W。提示詞明列W35只驗證GET對話框跳出、實際存檔／取消等未測完，以及共用唯一來源、兩平台路徑、同步、SDK保留、0.1.6與交付／發布邊界。
+
+本輪接手 main／HEAD 8d104ba7af6c75b91527a14a6d2b6ed64d03dc2b，保留既有未提交Windows／Mac來源與文件，未發現Git lock或衝突副本。僅更新文件，沒有修改程式、建置／操作App、變更SDK或平台交付、提交／推送／移Tag／安裝／發布。檢查UTF-8／LF、相對連結、git diff --check及程式／腳本／測試／主要交付檔雜湊；Mac實作、編譯與實機驗證未執行，既有其他未驗收及U01未實作狀態保持。文件核對證據在artifacts/verification/docs-mac-2026-10-30。
+
+下一步：Windows 停止編輯、建置與 Git，待兩台 Dropbox 同步完成，再於 Mac 開啟同一專案使用新提示詞；本輪不宣稱同步已完成。
+
+## 2026-10-30：M20～M23 Mac 補齊 W32～W35
+
+使用者讀取歷史 10/13 提示後，明確補充「只要mac 版少的 都要補齊」，並確認 Windows 已停止編輯／建置／Git、Dropbox 同步完成。本機 main／HEAD 8d104ba，無 Git lock 或衝突副本；接手已有 M14～M19、W31～W35 與文件差異，均保留，未 reset／pull／checkout。W27～W29 已完成，不重做；Windows 專屬 Ctrl+W 不套用到 Mac。
+
+| ID | 修改與狀態 | 實際驗證與限制 |
+| --- | --- | --- |
+| M20／W32 | 直接編譯唯一共用 IsLegacyOpenProtocol，前綴＋open＋可選後綴，不分大小寫；CEF 系統轉交流程保持。 | 核心正反向案例通過；未啟動真實外部協定，不新增處理器查詢、註冊或 URI 執行。 |
+| M21／W33 | Mac main.mm 啟用 fixed_light_window_appearance；MacApp 的 OnBeforeCommandLineProcessing 呼叫共用基底，保留原 no-startup-window，讓 force-light-mode 生效；NSApplication 使用 Aqua，原生標題與對話框沿用亮色。 | 主窗／工具列／原圖／完整字樣與多次重啟初驗正常，啟動有 WINDOW_APPEARANCE_FIXED_LIGHT。未變更系統外觀，系統亮暗切換與暗色環境未實測，不宣稱通過。 |
+| M22／W34 | platform.mm 的 Application Support、profile、INI 暫存／metadata／替換、TextEdit、目錄、Console、截圖提示繁體中文化。檔案系統／POSIX 錯誤附數字代碼，fsync 失敗先保存 errno；NSError 的 localizedDescription 只用 NSLog 記診斷，不直接顯示，非同步截圖亦相同。既有中文報表未支援提示保持。 | 錯誤字串及資料流靜態核對；核心實際涵蓋唯讀拒寫／原檔保留、符號連結清理拒絕、錯誤目錄、UTF-16；UI 確認 ftp 無效網址中文提示。未逐一觸發所有原生磁碟／截圖／TextEdit 失敗。第二個測試程序未能由 UI 工具個別選取，重複啟動中文對話框本輪不列通過。 |
+| M23／W35 | 直接沿用共用 download.prompt_for_download=true 與停止啟動的錯誤政策，不新增 Mac 下載管理器或 INI 欄位。 | 真實 CEF GET／POST／Blob／新視窗／右鍵另存每次均出現原生 Save；中文建議檔名、兩個目錄、中文／空白新檔名、5 份內容逐位元一致。Blob 取消不落檔，再次匯出仍詢問；重啟 GET 仍詢問並可取消。Ctrl+P 完整 Chrome 預覽與原生 PDF 另存成功，PDF 105108 bytes；未測正式 OA 匯出、內嵌 PDF 檢視器及實體列印。 |
+
+本輪產品差異只有 src/platform/macos/main.mm、platform.mm；src/common／src/app／共用介面及 Windows 專屬來源未再修改或複製。Mac 沿用最新共用來源建置，沒有新增需 Windows 承接的共用修改，也未在 Mac 建置 Windows。
+
+建置：沿用保留的固定 CEF154.0.34 macosarm64 SDK／下載包／本機 build。下載包 SHA256 仍 2e4a60880addad09c85d9ea27f4df09cb803069e1709377576e9cf62169648fe。既有 build-macos.sh Release／CTest 1/1、**136 checks／0 failures**；package-macos.sh 交付 265 個檔案／連結／mode 與 build 一致，10 份 Mach-O 全 arm64、codesign --verify --deep --strict 通過。主執行檔 SHA256 **6797e8a69846e43d0e0b5e11a27292fefbd3fe0c0c342129696af6aa313c01f0**。
+
+合成回歸使用 /private/tmp 隔離 Cocoa home，核對實際 INI／profile／logs 均在隔離 Application Support；未複製個人 INI，也未向正式 OA 上傳。110% 保存／重啟還原、密碼政策、動態標題、Console 開關與原生附件 Custom Files／All Files／ESC 正常。UserSet／公司別／特殊字元、$tmp.userSet／func／$usr、首個腳本前偏好 Cookie，以及 Cookie／Local Storage／IndexedDB／Service Worker／Cache Storage 的重啟清理通過。首輪是空白合成 INI 且在程序中途導航，未先種入測試頁要求的初始偏好，因此 cookies-fail／preferences-fail 保留為測試前置不足；頁面保存合成偏好後正常重啟得到 boot-SYNTHETIC-PERSISTED／preferences-pass／site-data-clean，沒有為此修改產品流程。
+
+關閉回歸：初輪已登出 ACK 29ms、合成登入 ACK 1509ms 均正常 SHUTDOWN_COMPLETE；實際交付版單獨無 ACK 3012ms、開關 Console 後無 ACK 3011ms，logout 各一次並完整退出。一次包含附件取消、beforeunload 啟用、Console 與快捷鍵的複合測試，在期限 3034ms／CLOSE_BACKGROUND_UNLOAD_ALLOWED／全部 BROWSER_CLOSED 後主程序仍留在 CEF／NSApplication loop；已保留短堆疊，最後僅 SIGTERM 核對的測試 PID93040。這次不是正常退出，不宣稱原因已定位或修正；最小回歸通過不抹除該失敗。記為 **M24：複合退出殘留待定位**，M19 也曾有類似症狀，但不據此斷定同一原因。Cmd+P／Cmd+Q 本輪工具輸入未造成可見動作，Ctrl+P 與主窗關閉按鈕已實測；未擴大為 Mac Command 快捷鍵驗收。
+
+保護：301 份 Windows 平台來源／交付／公開 ZIP／prg、共用來源及 Mac 個人 Config.ini／picture 雜湊與接手一致。僅更新 artifacts/macos-arm64/oaClient2.app，不安裝 /Applications、不製作 ZIP、不提交／推送／移 Tag／發布，公開 Mac 仍 M13。SDK／下載包／build 全保留，未補回已清除交付外部檔案。正式 OA／一般注音／外部協定／Mac 報表及原未驗收範圍保持，U01 未實作。
+
+證據在 artifacts/verification/macos-m20：baseline.patch／baseline-status.txt、build.log、core-tests.log、package.log、application-isolated.log、regression-events.jsonl、requests.jsonl、delivery-results.json、bundle-manifest.json、protected-before.json、close-sample.txt、指定路徑中的合成下載／PDF 與 runtime 紀錄；UI 圖像／AX 在本輪 Computer Use 回傳，未另存 PNG。初次受限建置無法寫本機 Cache、受限 localhost bind 失敗，提升後完成；8765 已被既有程序使用，本輪改用 18766，未停止既有服務。約 12:29～12:31 實作／建置，12:31～12:44 測試與工具等待另列，後續文件核對另計，不捏造累計工時。
+
+## 2026-10-30：M24 Mac Cmd+Q 背景殘留修正完成
+
+使用者要求繼續查明 M24，修好後重新編譯 Mac。本輪延續已確認的 Windows 停止／Dropbox 同步狀態；main／HEAD 8d104ba，保留全部既有未提交差異，未發現 Git lock 或來源衝突。
+
+**定位與對照：** 舊交付在單獨 beforeunload 啟用時正常退出；加入附件取消、Console 焦點 Cmd+Q 後可重現殘留。再移除附件，僅保留 beforeunload／Console／Cmd+Q 亦能重現；相同情境不送 Cmd+Q 則完整退出。失敗輪沒有 COCOA_TERMINATE，後續按主窗關閉後已有全部 BROWSER_CLOSED、CefQuitMessageLoop 呼叫返回與 Views 主窗銷毀，但 CefRunMessageLoop／NSApplication loop 沒有返回。這將問題縮小到 Console 焦點下 Command-Q 進入 Chrome 處理路徑、未先走本程式原生結束入口；不再將附件或 beforeunload 單獨視為原因。
+
+**最終修改只有 src/platform/macos/main.mm 的 sendEvent 六行。** 在 CefScopedSendingEvent 範圍內，僅對 KeyDown、Command 且沒有 Control／Option／Shift，以及 charactersIgnoringModifiers 小寫為 q 的事件，先呼叫既有 mainMenu.performKeyEquivalent；原生選單確實處理時才返回，否則保留原 super.sendEvent。這讓原「結束 oaClient2」選單呼叫既有 terminate，繼續用唯一共用主窗關閉、logout 一次、立即隱藏、ACK 或三秒期限流程。未新增 exit／kill／強制停止 RunLoop 的產品 fallback，也未變更其他 Chrome／OA 快捷鍵、INI、UserSet、路徑或 CEF 版本。
+
+暫時的共用關閉診斷、Mac native window observer／stop／timer、附件 completion 參照調整都已撤回；附件參照調整未解決同一殘留，不留入產品。最終 src/app/app.cpp、app.h、src/platform/cef_platform.h、Mac file_dialog.mm 與本輪接手內容逐位元一致；Windows 專屬碼／交付未改。本次沒有需另一平台承接的共用產品差異，未在 Mac 建置 Windows。
+
+**修正後實測：**
+
+| 情境 | 結果 |
+| --- | --- |
+| build：beforeunload 啟用＋Console 焦點 Cmd+Q、無 ACK | COCOA_TERMINATE → logout 一次；主窗及 Console 立即隱藏，3032ms 到期後全部 Browser 關閉、SHUTDOWN_COMPLETE；主程序及 Helper 消失。 |
+| build：附件開啟／取消＋beforeunload 啟用＋Console 焦點 Cmd+Q、有 ACK | 原 Custom Files 選檔／Cancel 正常；ACK619ms 即完成關閉，未等三秒；有 SHUTDOWN_COMPLETE、全部退出。 |
+| 實際交付：附件開啟／取消＋beforeunload 啟用＋Console 焦點 Cmd+Q、無 ACK | 3043ms 期限後全部關閉與 SHUTDOWN_COMPLETE；最後 ps 核對沒有本程式主程序或任何 Helper。 |
+
+每輪只有一次 logout-start-1；beforeunload 依原背景關閉政策允許，不出現阻擋。第一輪修正版關閉中的 UI 工具重新啟用觸發 MAC_REOPEN_HANDLED background=1，仍隱藏且期限不延長。UI 工具於程式正常隱藏／退出後取 AX 的 timeout 不當作產品失敗，實際以紀錄、程序退出與 Helper 狀態交叉核對。
+
+**環境限制與排除：** 新 ad-hoc 簽章測試版曾在 SecItemCopyMatching／系統鑰匙圈等待，尚未建立 Browser，已與原退出殘留分開辨識。系統 SecurityAgent 的 UI 不允許工具操作，沒有操作授權或讀出／記錄／修改鑰匙圈內容。後續本機合成測試只透過啟動參數 --use-mock-keychain，沿用固定 SDK tests/shared/browser/client_app_browser.cc 同樣的官方測試方式，搭配 /private/tmp 隔離 Cocoa home 與 localhost；這個參數沒有編入程式、沒有寫進 INI／bundle／打包腳本，正式程式的鑰匙圈政策保持。未經系統鑰匙圈授權的正常啟動／正式 OA 登出仍待使用者驗收，不能以 mock 測試宣稱真實鑰匙圈已驗收。
+
+**建置與交付：** 最終 build-macos.sh arm64 Release／CTest1/1、136 checks／0 failures 通過；package-macos.sh 已更新 artifacts/macos-arm64/oaClient2.app，版本仍0.1.6。265項檔案／連結／mode與build一致、無斷鏈，10份Mach-O全arm64、codesign --verify --deep --strict通過。主執行檔 SHA256：b8715817e17036d7b05e830db48433232e6293c286a4390a9769f00a48ccd862。299份Windows來源／交付／Releases／prg、common及Mac個人INI／picture與接手一致；共用app／介面亦另外比對不變。SDK／下載包／build保留，未安裝／提交／推送／移Tag／發布，公開Mac ZIP仍M13。系統亮暗切換與其他原未驗收項目、U01未實作狀態保持。
+
+證據：artifacts/verification/macos-m24 的 baseline.patch／baseline-status.txt、build-fixed.log、core-tests.log、package.log、application-isolated.log、events.jsonl、cmdq-before-close.log、diagnostics來源副本、各輪runtime、results.json／delivery-results.json／bundle-manifest.json／protected-result.json；UI／AX在本輪Computer Use回傳，未另存PNG。隔離測試server及所有測試App／Helper最後停止。初期失敗輪僅對已核對的本輪殘留或鑰匙圈等待PID發SIGTERM，不將其列為正常退出；沒有將此做法寫入產品。約12:54～13:08定位與診斷／測試／環境排除，13:08～13:09最小修正與重編，其後修正版實測／交付／文件另列，不虛構精確實作累計。
+
+## 2026-10-30：W36 印表字型／FRX／Reptool 查證
+
+狀態：查證完成，產品修正及正式端到端驗證未執行。使用者指出選定印表字型後應由 Reptool.exe 設定 FRX；已核對舊 oaClient64、oaReptool 現行來源及 oaClient2，未修改舊專案或產品來源。
+
+舊鏈路為 cmd=ini 保存 UserSet.report_font → cmd=prt 呼叫 Reptool → Reptool 讀 INI，frx／fr3 範本中的 Arial Unicode MS 被替換成指定字型，寫 tmp- 範本後載入。oaClient2 已有通用偏好保存及報表啟動，沒有排除 report_font；確定缺口是 UTF-8 無 BOM 保存／移除原 BOM，與舊 Delphi TMemIniFile 無 BOM 時採 Windows ACP 的讀法不相容。
+
+隔離 probe 直接編譯現行 ini.cpp／Windows platform.cpp，真正 SaveUserSetting 保存「標楷體」：原有／沒有 BOM 兩例保存後均無 BOM；客戶端讀回正確，但本機 ACP950 的 Delphi21.0 TMemIniFile 讀錯、FRX 字串替換結果不符。UTF-8 有 BOM 控制正確，無 BOM 控制失敗，CP950控制先前正確。MSVC／Delphi probe 建置通過；第一次沙箱 CMake 路徑隔離失敗保留，正常本機暫存重跑成功。未重建產品／跑產品CTest／操作正式OA或Reptool，不能寫成報表實測通過。
+
+交付 INI 查核時沒有 report_font 且無 BOM，未改個人設定或匯入舊偏好；兩代交付 Reptool.exe SHA256 相同。另發現現行 Reptool 源碼以EXE旁／上一層定位 INI，沒有讀第二命令列參數，非標準 ReptoolConfigIni 相容性仍待確認。詳細來源行號、限制及最小修正建議見 [相容性文件 W36](docs/LEGACY-COMPATIBILITY.md)。
+
+下一步為修正 oaClient2 INI 輸出編碼相容性並驗證正式選單命令、保存／重啟、真正 FRX 預覽及列印；本輪依查證範圍尚未實作。文件同步 PROJECT-PLAN／HANDOFF／CHANGELOG；驗證素材在 artifacts/verification/windows-w36-report-font-audit。產品 EXE／Mac.app／prg／設定／SDK／build保留，未提交／推送／發布；其他未驗收與U01保持。
+
+## 2026-10-30：W36 修正及0.1.7 Windows交付完成
+
+使用者授權修正INI相容性與確認印表字型保存、編譯供測試，追加既有Config.ini自動修復並進版。Windows本機版本升為0.1.7；共用ini.cpp採UTF-8 BOM保存，LoadSettings啟動先修復既有無BOM的UTF-8檔，再沿用原設定。鍵值／註解不重設、相同內容不重寫，拒寫不解readonly或改ACL；CommitSettingsFile未改，未修改Reptool。CMake、共用標題／client_version、Windows START同步進版。
+
+MSVC Release／CTest1/1、160 checks／0 failures（原143＋17）通過。隔離CEF實機select選「標楷體」「新細明體」均透過原cmd=ini保存report_font及load-userset回呼；磁碟INI具BOM、其他合成設定保留。關閉重啟後選單／$usr／偏好Cookie／load-userset均還原新細明體。UI同份INI由舊Delphi21.0 TMemIniFile在ACP950正確讀取，FRX替換模擬結果正確；真正Reptool、正式OA網頁／FRX預覽及印表機未測，供使用者驗收。
+
+自動修復／新建、原有或沒有BOM、重啟mtime不變、視窗保存、中文／預設字型及拒寫原資料保護已測；原同步鎖fallback等亦通過。UI測試前期CEF Junction造成error126，改完整測試runtime後成功；套件路徑映射／select set_value無效的工具情形已另記，未改產品CEF／profile保護。
+
+已用package-windows.ps1 -ExecutableOnly更新artifacts/oaClient2/oaClient2.exe，build一致；SHA256 ebc31ebb1e8a56085b11c696b6149bf0e1300f420c4a4173197ede1f54899cc4。528份保護檔案不變，含正式INI、Reptool／prg、CEF、Mac來源及交付；正式INI保留現況，下次使用新版啟動自動修復，不注入合成偏好。兩輪正常關閉／SHUTDOWN_COMPLETE／全部程序退出，localhost server停止。
+
+Mac專屬碼／0.1.6.app不改，共用來源須macOS重編／實測，Mac平台自己的版本紀錄需於Mac同步；公開ZIP仍0.1.6。本輪未提交／推送／Tag／發布；SDK／下載包／build保留，U01及其他待驗收保持。詳細限制見[相容性文件](docs/LEGACY-COMPATIBILITY.md)W36修正段；證據artifacts/verification/windows-w36-ini-fix。約20:55～20:58實作／初建置、後續進版必要重建，21:02～21:05實機與工具處理，文件核對另計，不虛構精確累計。
+
+## 2026-11-03：M25 CPN 大寫 F 輸入查證（尚未修正）
+
+使用者回報 Mac 0.1.6 BSI020020 訂單明細 CPN 無法輸入大寫 F，並表示已註解網頁 my.hotkey.js 的 Shift+F。再次於目前開啟的正式 CPN 欄位測試，Shift+F 未插入文字、Shift+G 正常；已刪除測試 G，保留使用者原有 fff，沒有儲存／取消訂單、導頁或重啟 App。這次測的是半形 F；全形 Ｆ 未獨立測試。
+
+客戶端 src/common/keyboard.h 仍明確將 Shift+F 判為 IsWebsiteShortcut，src/app/app.cpp 的 OnPreKeyEvent 標記為快捷鍵，OnKeyEvent 回傳 true，會攔下正常文字輸入。前輪相同 0.1.6 二進位的純 HTML 隔離頁亦重現 F 只有 keydown／keyup、沒有 beforeinput／input，大寫 S 則正常，無須 OA 熱鍵程式即可重現。證據保留於 artifacts/verification/macos-m25。現行執行路徑為 artifacts/macos-arm64/oaClient2.app，主執行檔 SHA256 仍為 b8715817e17036d7b05e830db48433232e6293c286a4390a9769f00a48ccd862。
+
+本輪僅查證與記錄，未修改產品／my.hotkey.js、重編、安裝或發布；App 保持開啟。後續需修正客戶端 Shift+F 攔截並於 Mac 重編／實測；目前共用來源已含 W36／0.1.7，不能把重編結果誤稱為原 0.1.6。其他未驗收項目保持。
+
+## 2026-11-03：M25 取消客戶端 Shift+F 攔截
+
+依使用者明確要求，移除 src/common/keyboard.h 中 Shift+F 的唯一攔截條件；既有 OnPreKeyEvent／OnKeyEvent 因此不再將它當成快捷鍵處理。其他按鍵政策不變，未修改網頁 my.hotkey.js 或 Windows 專屬來源。既有 core_tests.cpp 的 Shift+F 預期改為一般文字輸入，保留原有未提交的 W36 檢查。
+
+以 xcrun clang++ 直接編譯現有共用＋Mac 平台核心測試，151 checks／0 failures，包含 Shift+F 不攔截及其餘快捷鍵、INI／Mac 保存保護；證據 artifacts/verification/macos-m25/shift-f-fix/core-tests.log。初次直接使用 PATH clang++ 未帶正確 SDK 而失敗，改用 xcrun 後成功。未執行完整 CEF App 建置／UI 修正版驗收：原 Library/Caches/oaClient2/deps 與 build/macos-arm64 目前不存在，Downloads／private tmp 亦未找到對應 CEF SDK。未下載／升級依賴。
+
+本次完成來源修改，現有 0.1.6 App 未更新或重啟，使用者目前開啟的 App 仍是修正前版本。後續完整重編需恢復原固定 CEF SDK；目前共用來源版本為 W36／0.1.7，須按實際來源版本記錄交付，Windows 同一共用修改的編譯／實機回歸待 Windows 環境執行。未安裝、提交、推送或發布。
+
+## 2026-11-03：M25 Mac 0.1.7 編譯與交付完成
+
+依使用者「移除後進版0.1.7編譯」授權，Mac main.mm 啟動版本同步0.1.7；CMake／共用標題與網頁client_version已為W36的0.1.7，直接沿用，不回退共用INI BOM／啟動修復。Shift+F已從唯一keyboard.h政策移除，其他快捷鍵保持，未修改OA網頁或Windows專屬碼。
+
+原本機CEF SDK／build缺失，重新下載同一固定CEF154.0.34 macosarm64官方套件；307056359 bytes、SHA256 2e4a60880addad09c85d9ea27f4df09cb803069e1709377576e9cf62169648fe與既有紀錄一致。使用Xcode工具鏈／SDK完成Release、CTest1/1、151 checks／0 failures、deep strict簽章與10份Mach-O全arm64核對；SDK／原壓縮檔／build均保留於原Library/Caches/oaClient2路徑。
+
+使用者已處理訂單並關閉舊App後，package-macos.sh更新artifacts/macos-arm64/oaClient2.app，265份檔案／連結／mode與build一致；bundle版本與實機標題均0.1.7，主執行檔SHA256 3b1494c142fb22ec82820feca63f5fd35b8ac671098bab18f0763dcacc0d77e4。294份受保護Windows來源／交付／prg／發布及個人Mac INI／picture雜湊不變。
+
+實際交付App以隔離Cocoa home及僅測試用--use-mock-keychain載入localhost純文字頁；trusted Shift+F的keydown／keypress／beforeinput(data=F)／input(value=F)／keyup完整出現，畫面顯示F。此參數未加入產品／個人設定；正式OA CPN、正式鑰匙圈及其他原待驗收項目仍留使用者驗收，不以合成頁代替。測試Cmd+Q正常走既有登出，ACK30ms、SHUTDOWN_COMPLETE與主程序退出，localhost server已停止；退出後AX查詢timeout不代表程序殘留。
+
+證據：artifacts/verification/macos-m25/build-0.1.7內build.log、ctest.log、package.log／package-results.json、events.jsonl／shift-f-results.json、runtime-application.log及protected-before.json。未安裝Applications、提交／推送、改Tag或發布；Windows須在Windows環境重編／回歸此共用Shift+F修改。前段未重編／App仍0.1.6為此次編譯授權前狀態。
+
+## 2026-11-03：W37 Windows取消Shift+F攔截並同版重編完成
+
+依使用者「重新編譯Windows版，移除Shift+F攔截，版本維持0.1.7，編譯好讓我測試」要求，直接沿用Mac M25已修改的唯一src/common/keyboard.h及core_tests.cpp，不重寫或再次修改產品來源。Shift+F現在不被IsWebsiteShortcut視為客戶端快捷鍵，一般文字輸入交回網頁；其他按鍵政策與W36的INI BOM／啟動修復保持。
+
+固定CEF154.0.34及既有MSVC x64 Release建置成功，CTest1/1、160 checks／0 failures，含Shift F remains normal text input檢查。使用者要求編譯後自行測試，本輪Windows UI／大寫F輸入、正式OA頁面及其他熱鍵實機未執行，不把Mac實測或核心政策檢查當成Windows UI驗收。
+
+package-windows.ps1 -ExecutableOnly只更新artifacts/oaClient2/oaClient2.exe；版本維持0.1.7，build／交付SHA256均為76d28963b6a585039a7992860f9e21f21d05e759f669c29d85cd763b117b6a32。567份受保護檔案與接手一致，涵蓋產品來源／測試／腳本、正式INI／CEF／Reptool／prg及Mac交付；未改個人資料、啟動或關閉App。接手main，保留既有未提交來源與文件，未發現Git lock或來源衝突副本。
+
+證據artifacts/verification/windows-w37-shift-f：baseline-status.txt、protected-before.json、build.log、core-tests.log、results.json。SDK／壓縮檔／build保留，未提交／推送／改Tag／發布；其他未驗收與U01未實作保持。下一步由使用者開啟本機EXE測試Shift+F／大寫F及正式OA，前段Windows待重編為本輪前狀態。
+## W38：列印預覽保留報表背景（2026-11-11）
+
+使用者回報IMG列印預覽與MRT預覽的標題色彩不同，並已開啟Windows App供檢查。已在現行0.1.7同一份Packing List重現：MRT與報表輸出Blob頁為黑底白字，輸出頁的Chromium完整列印預覽因「背景圖形」未勾選而變成白底淡字；手動勾選後立即恢復黑底白字。原附件Invoice與Packing List內容不同，只以同報表對照確認色彩原因，不修改報表標題／欄位或OA資料；未實際列印或傳送到印表機。
+
+共用src/app/app.cpp於任何瀏覽器建立前讀取printing.print_preview_sticky_settings，保留既有字典與appState其他欄位，只設定version=2及isCssBackgroundEnabled=true。每次啟動重新套用預設，配合原網站profile清理；原生預覽內仍可手動切換。政策失敗記錄原始CEF診斷、繁體中文回報並停止啟動。不改INI欄位、網站／MRT、Reptool或列印引擎，不注入網站CSS。
+
+Windows MSVC x64 Release／CTest1/1、160 checks／0 failures通過，版本維持0.1.7。build EXE SHA256：e5559db624def5e206de68c99a46ff0eca659f2c6fc9db5d67a6a364d3fc22ef。新增tests/pages/print-background.html供直接／Blob原生預覽回歸；修正版首次啟動、重啟及交付EXE更新尚待執行，已詢問使用者目前是否有未儲存工作，未關閉正式主窗。正式報表勾選背景的觀察是原版手動對照，不當成修正版已驗收。本輪建立的報表彈窗已關閉、原MRT頁保持開啟。
+
+建置內的正常權限CTest已完整通過；另一次受限工具環境直接重跑核心EXE停在外部協定檢查之後，已取消該重跑，不把它當成通過或覆蓋CTest結果。證據在artifacts/verification/windows-w38-print-background（build.log、ctest.log、app-before.cpp、baseline-status.txt與protected-before.json）；UI畫面由Computer Use回傳，未另存。保留接手時既有未提交差異；未提交／推送／進版／發布。Mac專屬碼與.app未改，共用政策須在macOS重編實測；SDK／下載包／build保留。
+## W38：使用者授權後完成更新與Windows實測（2026-11-11）
+
+使用者已回覆「可以關閉並重開」。已正常關閉原App，僅以package-windows.ps1 -ExecutableOnly替換交付EXE；build與artifacts/oaClient2/oaClient2.exe的SHA256皆為e5559db624def5e206de68c99a46ff0eca659f2c6fc9db5d67a6a364d3fc22ef，版本維持0.1.7，CEF／prg不重打包。
+
+使用實際交付EXE與localhost合成頁，首次原生列印預覽、Blob彈窗列印、正常退出後清除profile再重啟的首次預覽，均自動保留黑底白字、淺藍色底及條紋背景圖片；無需手動勾選。紀錄每次有PRINT_BACKGROUNDS_ENABLED，首次偏好appState亦核對version=2及isCssBackgroundEnabled=true。兩輪測試正常SHUTDOWN_COMPLETE，合成server已停止；未點列印或實際輸出檔案。正式OA／MRT最終報表與印表機仍由使用者驗收，不把合成頁當成正式報表已驗收。
+
+受限環境本機server無法供桌面程式連線，改以正常權限loopback server；最後工具直接啟動正式OA繼承套件重導向，既有PROFILE_PATH_REJECTED正確拒絕，未放寬資料清理。已關閉提示並改從使用者原開啟的檔案總管啟動。上述工具環境問題與列印色彩修正分別記錄。
+
+266份保護檔案最終與接手快照一致，含INI、CEF、prg、picture與Mac平台來源；測試過程正常關閉曾更新Window欄位，最後保留目前狀態，沒有回寫測前快照或保存合成URL。Mac.app未修改，Mac共用政策仍須目標平台重編／實測。證據新增runtime-first.log／runtime-restart.log／runtime-final.log、first-print-state.json、protected-result.json與results.json；未提交／推送／進版／發布，SDK／下載包／build保留。前段待重啟／未交付狀態由本段更新。
+
+最後已從既有檔案總管成功啟動修正版，正式OA首頁載入完成、顯示0.1.7及未登入，保留開啟供使用者測試；未操作登入。最終開啟以Computer Use畫面核對，runtime-formal.log僅保留先前工具直接啟動的路徑拒絕紀錄，不將其當成此次檔案總管成功啟動的紀錄。
+
+## W39：Windows進版0.1.8（2026-11-11）
+
+依使用者「進版」要求，將CMakeLists.txt版本、共用app.cpp主視窗標題及兩處網頁client_version、Windows main.cpp啟動版本同步為0.1.8。僅調整版本字串，保留W38列印背景預設、INI／UserSet及其他現行行為；Mac專屬來源／0.1.7.app未修改，共用版本與W38政策須回macOS重編回歸。
+
+Windows MSVC x64 Release／CTest1/1、160 checks／0 failures通過；package-windows.ps1 -ExecutableOnly僅替換artifacts/oaClient2/oaClient2.exe，build／交付SHA256一致：123f0884fa82b405cbb7fdbceebb6a8f3bedcf4df333ae86e542589b7a46d2f1。沿用本次已授權正常關閉／重啟；第一次拷貝時舊App仍在既有背景退出階段而檔案鎖定，等待退出後更新成功，沒有強制結束程序。
+
+527份受保護檔案與本輪接手一致，含正式INI、CEF、prg／picture、Mac平台來源與完整.app。沒有重跑完整W38預覽矩陣或正式報表／印表機，前輪0.1.7合成結果與其他待驗收範圍分開記錄。證據artifacts/verification/windows-w39-version-0.1.8：建置／CTest、版本修改前來源副本與保護清單。保留全部既有未提交修改；SDK／壓縮檔／build保留，未提交／推送／建立Tag／打包ZIP／發布。
+
+已從檔案總管重新開啟交付EXE，Computer Use確認正式OA視窗標題為「炬塔資訊系統 [用戶端版本 0.1.8]」，保留開啟供使用者操作；未執行登入。工具第一次因未擷取幾何而點擊失敗，重新擷取後已正常開啟。
+
+## 2026-11-11：M26 Mac 沿用 Windows W38／W39，交付 0.1.8
+
+使用者要求Mac與Windows相同修改及進版，並確認原「0.1.18」為0.1.8、Windows已停止編輯／建置／Git且Dropbox同步完成。接手main／HEAD 8d104ba，無Git lock或conflicted copy，保留全部既有未提交差異。本輪產品只將Mac main.mm啟動版本0.1.7同步0.1.8；CMake／共用標題與client_version、W38列印背景政策直接使用原共用來源，沒有複製、重寫或修改Windows專屬碼。Shift+F取消攔截與INI／UserSet保存保持現行契約。
+
+既有固定CEF154.0.34 arm64 SDK／壓縮檔／build均存在，直接增量編譯，未下載／升級或清除。Mac Release／CTest1/1、151 checks／0 failures、deep strict簽章及10份Mach-O全部arm64通過。package-macos.sh已更新artifacts/macos-arm64/oaClient2.app；bundle與實機主窗版本0.1.8，265份檔案／連結／mode與build一致，主執行檔SHA256 0265eb58d47598d6fffb7d8c05631a23df104369cc8fc6176e9cbb4ad1ca8f38。323份保護檔案雜湊不變，含共用來源／CMake／測試／腳本、Windows來源及交付／prg／發布、個人Mac INI／picture。
+
+實際交付App以隔離Cocoa home及僅測試用--use-mock-keychain，載入tests/pages/print-background.html的localhost頁。直接Ctrl+P、Blob彈窗右鍵列印及正常退出清除profile後再啟動的首次原生預覽，均自動保留黑底白字、淺藍底與條紋背景，未手動勾選背景。首輪Preferences的appState核對version=2及isCssBackgroundEnabled=true；兩輪START／SITE_DATA_CLEARED／PRINT_BACKGROUNDS_ENABLED均確認。Blob視窗Ctrl+P／Cmd+P未開預覽，改用原生右鍵列印完成，未修改或宣稱修正該視窗快捷鍵。沒有實際列印／存PDF，正式OA／MRT與印表機留使用者驗收。
+
+兩輪Cmd+Q正常登出ACK15ms／28ms、SHUTDOWN_COMPLETE，測試App及localhost server已停止。測試專用參數／網址未寫入產品或個人設定；正式鑰匙圈／注音及其他既有未驗收項目不擴大完成。證據在artifacts/verification/macos-m26-0.1.8：build.log、ctest.log、package.log、first-print-state.json、application.log、protected-before.json、results.json及runtime紀錄，UI畫面由Computer Use回傳。只更新本機交付，未安裝Applications、提交／推送、改Tag、打包公開ZIP或發布；Windows本機0.1.8保持。前段Mac仍0.1.7／W38待重編由本段更新。
+
+## 2026-11-12：G01 提交與推送授權
+
+使用者明確要求「commit, push」。本批納入截至Windows W39／Mac M26的0.1.8既有未提交來源、跨平台附件選檔、外部協定、亮色外觀、繁體中文錯誤、下載詢問、INI UTF-8 BOM／自動修復、Shift+F修正、列印背景預設，以及測試素材／建置腳本／交接文件。遠端沿用origin的既有GitHub repository及main，不建立新遠端、Tag或Release；App／EXE／SDK／建置產物、個人INI／picture／profile及本機驗證紀錄按既有忽略規則排除。
+
+提交前確認遠端main與本機基準8d104ba一致，37份待提交文字檔無二進位／解碼替代字元或掃描到的私密金鑰／token，git diff --check通過，Mac交付雜湊仍與M26驗證結果一致。本輪未改產品、重編或重跑實機功能；既有Windows160項、Mac151項與各自驗收限制以各工作紀錄為準，不宣稱正式OA／MRT／印表機全部驗收。此批依授權提交後推送origin/main，最終提交與遠端一致性以Git核對結果為準；未發布新版下載檔。

@@ -72,3 +72,31 @@ Mac 實機已確認歡迎頁標題，以及 OA 網站「良穎資訊系統」與
 依使用者舊版圖片及現行DFM，右側首頁／網址／MAC／瀏覽目錄／截圖／還原比例／縮小／放大寬度採23／23／40／67／38／61／23／23 DIP，合計298 DIP（原346）。高度仍28 DIP、左Console仍30 DIP；保留原字型、圖示、工具順序及命令。右側按鈕左右內部留白各2 DIP，完整顯示MAC、瀏覽目錄、截圖及還原比例，不以省略號／隱藏文字／縮小字型達成間距。
 
 使用同一份app.cpp，不新增平台工具列副本。Mac已編譯及實機核對完整文字；Windows專屬碼與交付未改，W26留待Windows編譯／實機回歸。Mac只更新交付、不安裝；SDK／壓縮檔／build保留。
+
+## M14～M17 最新本機交付（2026-10-13）
+
+本機artifacts/macos-arm64/oaClient2.app已套用W27～W29，版本仍0.1.6；移到連結不顯示Chrome左下角提示，登入不詢問保存密碼。指定F1／F2／F3／F4／F9、Option+W、Shift+F、Cmd或Ctrl+F／E／S／N先交網頁，停止指定Chrome fallback，原工具列與F8／F12／列印行為保留。不是停用OA自己快捷鍵；實體功能鍵／Fn與一般注音仍由使用者驗收。
+
+另修正Mac Cocoa delegate的弱參照生命週期，正常重新開啟啟用既有主窗，背景登出期間不顯示新分頁。Release／111項、原生／AJAX表單、兩種快捷鍵頁、UserSet／網站清理與最終ACK1418ms／期限3019ms／reopen關閉回歸通過，詳細範圍與失敗見[PROGRESS](../PROGRESS.md)。正式OA與列印／注音並未因此驗收。
+
+本輪未安裝或更新公開MacZIP，請測本機新.app；Releases仍是M13，沒有本輪功能。完整bundle265檔案／連結與build一致、10份arm64 Mach-O／ad-hoc deep strict核對。SDK／壓縮檔／build保留，Windows資料位置及交付不改。設定測試的CFFIXED_USER_HOME只屬/private/tmp合成環境；正常啟動仍用目前使用者Application Support，不是新增設定欄位或產品路徑配置。
+
+## 2026-10-30：M20～M23 Mac 補齊 W32～W35
+
+Mac 本機 arm64 0.1.6 已沿用共用外部協定／下載政策，Mac 入口補上共用亮色回呼與 Aqua，平台錯誤改為繁體中文及必要數字代碼；不修改系統外觀或 OA 主題。共用來源／Windows 專屬碼未再改，原有 UserSet／INI／附件與平台路徑保持。
+
+Release／CTest 1/1、136項、10份arm64及簽章通過；GET／POST／Blob／popup／右鍵下載、取消／兩目錄／中文及空白名稱／內容／重啟，以及 Ctrl+P 完整預覽另存 PDF 已實測。系統亮暗切換、暗色環境、正式 OA／一般注音／外部程式及所有原生錯誤分支未驗收；一次複合退出殘留列 M24 待定位，兩輪交付最小退出正常，不宣稱全部關閉情境通過。只更新本機 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；公開Mac仍M13、U01未實作。詳見 [本輪結果](../PROGRESS.md)。
+
+## 2026-10-30：M24 Mac Cmd+Q 背景殘留修正完成
+
+M24 已重現並修正：Console 有焦點時 Cmd+Q 未進入原生結束入口，之後關閉全部 Browser／Views 仍可能留下 CEF 主迴圈。Mac sendEvent 現在先讓既有原生選單處理精確的 Command+Q，呼叫原 terminate → 共用登出／隱藏／三秒流程；沒有改寫登出或強制結束程序。
+
+最終 arm64 Release／CTest 1/1、136 checks／0 failures、10 份 arm64 與 deep strict 簽章通過；Console 焦點 Cmd+Q、已啟用 beforeunload、附件取消組合的 ACK619ms／無ACK3032ms及實際交付3043ms期限後皆正常 SHUTDOWN_COMPLETE，主程序／Helper 全部退出。 產品只改Mac main.mm，共用來源／Windows及附件實作保持；暫時診斷已撤回。新簽章測試的鑰匙圈等待另行辨識，僅隔離localhost測試帶官方 --use-mock-keychain，正式產品未加入這個參數。只更新本機0.1.6 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；正式OA／真實鑰匙圈、系統亮暗切換及其他原未驗收範圍保持。詳見 [M24結果](../PROGRESS.md)。
+
+## 2026-11-03：M25 Mac 0.1.7
+
+客戶端Shift+F攔截已取消，本機artifacts/macos-arm64/oaClient2.app已重編為0.1.7，沿用共用W36的INI保存／自動修復。Release／CTest1/1、151項、10份arm64及deep strict簽章通過，純文字頁trusted Shift+F可輸入F；正式OA CPN與其他既有未驗收項目留使用者測試。固定CEF154.0.34 SDK／下載包／build已恢復並保留；只更新本機交付，未安裝／提交／推送／發布，Windows共用變更待目標平台回歸。詳見[進度](../PROGRESS.md)。
+
+## 2026-11-11：M26 Mac 0.1.8
+
+Mac本機交付已同步Windows0.1.8與W38「列印背景圖形預設開啟」，直接編譯唯一共用來源，Mac產品僅同步入口版本。Release／CTest1/1、151項、10份arm64及簽章通過；直接／Blob／清除profile重啟後原生預覽背景均保留。正式OA／MRT與印表機待使用者驗收；SDK／壓縮檔／build保留，未安裝／提交／推送／發布。詳見[進度](../PROGRESS.md)。

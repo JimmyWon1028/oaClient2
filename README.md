@@ -1,6 +1,22 @@
 # oaClient2
 
-更新：2026-10-13。Windows x64 與 Mac arm64 0.1.6 已建置交付，列印預覽／注音待使用者驗收。
+最新 Windows（2026-11-11，W39）：本機交付已進版 **0.1.8**，包含W38列印預覽背景圖形修正；Release／CTest1/1、160項通過。Mac本機仍0.1.7，須回macOS重編共用修改；公開ZIP未更新，正式報表驗收範圍見[進度](PROGRESS.md)。
+
+更新：2026-10-30。Windows 本機交付為 **0.1.7／W36**：INI 保存採 UTF-8 BOM，啟動時自動修復既有無 BOM 設定，印表字型 report_font 已完成合成選單保存／重啟及舊 Delphi 讀取驗證；Reptool 不變。Mac 本機交付仍為 0.1.6／M24，共用修改待 macOS 重編回歸。正式 OA 報表及其他功能的驗收範圍以 [PROGRESS.md](PROGRESS.md) 為準。
+
+## Windows 最近修改與 Mac 接續
+
+| 工作 | Windows 本機結果 | Mac 接續 |
+| --- | --- | --- |
+| W31：附件選檔合併格式 | 預設 Custom Files 合併網頁允許格式，另提供 All Files；原生選檔與關閉清理已測。 | M19 已完成相同附件需求且使用者確認；保留 NSOpenPanel，只回歸必要共用介面，不重做。 |
+| W32：外部協定規則 | 支援前綴＋open＋可選後綴，不分大小寫，包含 hcopen、hcopenprint、wjopen；只交 CEF 轉系統，不新增處理器檢查或註冊。 | M20 已沿用共用判斷並通過核心；真實外部啟動未測。 |
+| W33：固定亮色 | 標題列／工具列不跟隨系統主題；亮色初驗通過，系統亮暗切換未實測。 | M21 已啟用共用亮色回呼與 Cocoa Aqua；亮色初驗／重啟正常，系統亮暗切換未測。 |
+| W34：繁體中文錯誤提示 | Windows 及共用 INI／app 提示已翻譯，重複執行對話框實測正常；保留數字錯誤代碼。 | M22 已翻譯 Mac 自訂錯誤，系統診斷僅留紀錄，顯示中文與數字代碼；個別失敗分支見進度。 |
+| W35：匯出前詢問位置 | 下載前設定 download.prompt_for_download=true；GET 匯出已確認跳出「另存新檔」，實際存檔／取消等因 UI 工具限制未測完。 | M23 已沿用共用政策；GET／POST／Blob／新視窗／右鍵、指定路徑、取消、重啟及列印另存 PDF 已測。 |
+
+W32～W35 的 Windows Release／CTest 1/1、143 項通過，本機最新 EXE SHA256 為 `57d1a8d2426525f0ce567efe04809709898bb80e5ade6a4e2794e06970fb2290`。版本未進版，W31～W35 尚未提交／推送或發布，Mac 專屬碼及產物未在這幾輪 Windows 工作中更新；Mac 本輪實際補齊結果見 [PROGRESS](PROGRESS.md) M20～M24，不能以 Windows 結果代替 Mac 驗證。
+
+在 Mac 使用 [2026-10-30 接續提示詞（W32～W35）](docs/MAC-WINDOWS-2026-10-30-PROMPT.md)，先停止 Windows 操作並確認兩台 Dropbox 同步，再沿用同一份來源接續。W30 共用關閉保護列既有回歸；Windows 專屬 Ctrl+W 政策不移植為 Mac Cmd+W。
 
 ## 執行 Windows 版本
 
@@ -19,7 +35,7 @@
 
 將 `artifacts/macos-arm64/oaClient2.app` 拖曳至 Applications 後開啟，只支援 Apple Silicon arm64。首次啟動顯示本機歡迎頁，HomeUrl 空白；設定確認後才保存網址。在 `~/Library/Application Support/oaClient2/` 建立組態；Config.ini／picture／logs／profile／lock 均放該目錄，Framework／Helper／圖示全部在 bundle。沿用同一 app／common，沒有另建分岔來源。
 
-正式網站、Console、設定／縮放、截圖及兩輪合成網站清理／登出已測；列印預覽與注音由使用者測試。Windows W21～W26共用來源回歸已完成，W27隱藏連結狀態提示須回macOS重編／實測；本機 ad-hoc 簽章，正式簽署／公證與自動更新未實作。詳見 [Mac 操作](docs/MACOS-USAGE.md)與 [PROGRESS](PROGRESS.md)。
+Mac 本機 .app 已有 W27～W29、Cocoa delegate／背景 reopen 修正及 M18 打包時間；M19 附件選檔已建置並由使用者確認，當時 Release／CTest 1/1、116 項與 arm64 配套／簽章通過，版本仍 0.1.6。本機已補齊 W32～W35，Release／CTest1/1、136項及簽章通過；M24 已修正 Console 焦點 Cmd+Q 的背景殘留並完成複合回歸，系統亮暗切換未測。正式列印預覽／一般注音／OA 其他功能依各自驗收紀錄；公開 Mac ZIP 仍為 M13。本機為 ad-hoc 簽章，正式簽署／公證與自動更新未實作。詳見 [Mac 操作](docs/MACOS-USAGE.md)與 [PROGRESS](PROGRESS.md)。
 
 Mac 注音只驗證一般輸入與焦點；額外浮動組字窗是 Windows 專屬問題，依使用者確認不列入 Mac 測試／待驗收。
 
@@ -30,7 +46,8 @@ Mac 專屬程式在 macOS 開發、Windows 專屬程式在 Windows 開發，共�
 Windows 與 Mac 的組態位置不同，接續開發先讀[平台路徑對照](docs/PLATFORM-PATHS.md)；共用 INI／UserSet 流程不重寫。
 
 - [Windows 接續提示詞（可直接複製）](docs/WINDOWS-CODEX-PROMPT.md)
-- [Mac 接續提示詞（可直接複製）](docs/MAC-CODEX-PROMPT.md)
+- [最新 Mac 接續 Windows 修改提示詞（W32～W35，可直接複製）](docs/MAC-WINDOWS-2026-10-30-PROMPT.md)
+- [歷史 Mac 接續提示詞（W27～W29，Mac 已完成）](docs/MAC-WINDOWS-2026-10-13-PROMPT.md)
 - [共用程式碼與平台邊界規則](docs/SHARED-CODE-RULES.md)
 - [操作與設定](docs/WINDOWS-USAGE.md)
 - [環境、版本與建置](docs/ENVIRONMENT.md)
@@ -52,4 +69,18 @@ Git 為 main 分支，使用者已授權建立公開 repository [JimmyWon1028/oa
 
 ## 下載編譯版本
 
-從 [v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6) 下載 [Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip) 或 [Mac arm64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-macos-arm64.zip)，並下載對應.sha256校驗檔。兩平台皆不含個人Config.ini、快取、profile、截圖或紀錄；Windows包含EXE／cef／安全設定範例及現有精簡prg，Mac只包含完整.app。Windows同版ZIP已更新至使用者確認的W29快捷鍵修正，來源6f2833b已推送，包含W28密碼提示修正，版本維持0.1.6；Tag與Mac資產未變，Mac W27～W29仍待重編／實測。下載與最新校驗方式見[RELEASES](docs/RELEASES.md)，U01程式內線上更新尚未實作。
+從 [v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6) 下載 [Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip) 或 [Mac arm64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-macos-arm64.zip)，並下載對應 .sha256 校驗檔。兩平台皆不含個人 Config.ini、快取、profile、截圖或紀錄；Windows 包含 EXE／cef／安全設定範例及現有精簡 prg，Mac 只包含完整 .app。依本機發布紀錄，公開 Windows ZIP 已到使用者確認的 W30（來源 a56ec056），Mac ZIP 仍為 M13，版本 0.1.6、Tag 不移動；Windows 本機 W31～W35 及 Mac 本機 M14～M24 尚未更新到公開 ZIP。下載與校驗方式見 [RELEASES](docs/RELEASES.md)，U01 程式內線上更新尚未實作。
+
+## 2026-10-30：M24 Mac Cmd+Q 背景殘留修正完成
+
+M24 已重現並修正：Console 有焦點時 Cmd+Q 未進入原生結束入口，之後關閉全部 Browser／Views 仍可能留下 CEF 主迴圈。Mac sendEvent 現在先讓既有原生選單處理精確的 Command+Q，呼叫原 terminate → 共用登出／隱藏／三秒流程；沒有改寫登出或強制結束程序。
+
+最終 arm64 Release／CTest 1/1、136 checks／0 failures、10 份 arm64 與 deep strict 簽章通過；Console 焦點 Cmd+Q、已啟用 beforeunload、附件取消組合的 ACK619ms／無ACK3032ms及實際交付3043ms期限後皆正常 SHUTDOWN_COMPLETE，主程序／Helper 全部退出。 最新本機交付仍為0.1.6，未安裝或發布；正式OA／真實鑰匙圈與其他未驗收範圍見 [PROGRESS](PROGRESS.md)。
+
+## 2026-11-03：M25 Mac 0.1.7
+
+客戶端Shift+F攔截已取消，本機artifacts/macos-arm64/oaClient2.app已重編為0.1.7，沿用共用W36的INI保存／自動修復。Release／CTest1/1、151項、10份arm64及deep strict簽章通過，純文字頁trusted Shift+F可輸入F；正式OA CPN與其他既有未驗收項目留使用者測試。固定CEF154.0.34 SDK／下載包／build已恢復並保留；只更新本機交付，未安裝／提交／推送／發布，Windows共用變更待目標平台回歸。詳見[進度](PROGRESS.md)。
+
+## 2026-11-11：M26 Mac 0.1.8
+
+Mac本機交付已同步Windows0.1.8與W38「列印背景圖形預設開啟」，直接編譯唯一共用來源，Mac產品僅同步入口版本。Release／CTest1/1、151項、10份arm64及簽章通過；直接／Blob／清除profile重啟後原生預覽背景均保留。正式OA／MRT與印表機待使用者驗收；SDK／壓縮檔／build保留，未安裝／提交／推送／發布。詳見[進度](PROGRESS.md)。

@@ -23,6 +23,16 @@ namespace oa {
 namespace {
 char console_marker;
 NSString* Text(const std::string& value) { return [NSString stringWithUTF8String:value.c_str()]; }
+//2026.10.30 by codex, show localized context and numeric codes without exposing system-language diagnostics.
+std::string FileSystemError(const std::string& message, int code) {
+  return message + (code ? "（錯誤代碼：" + std::to_string(code) + "）" : "");
+}
+NSString* CocoaError(NSString* message, NSError* issue) {
+  if (!issue) return message;
+  NSLog(@"oaClient2: %@ domain=%@ code=%ld diagnostic=%@", message, issue.domain,
+    static_cast<long>(issue.code), issue.localizedDescription);
+  return [message stringByAppendingFormat:@"（錯誤代碼：%ld）", static_cast<long>(issue.code)];
+}
 NSURL* FileUrl(const std::filesystem::path& path) { return [NSURL fileURLWithPath:Text(PathUtf8(path))]; }
 NSWindow* NativeWindow(void* handle) {
   id object = (__bridge id)handle;
@@ -34,7 +44,7 @@ bool RejectLinks(const std::filesystem::path& root, std::string& error) {
   if (std::filesystem::is_symlink(std::filesystem::symlink_status(root, ec))) {
     error = "拒絕清理符號連結瀏覽器目錄。"; return false;
   }
-  if (ec) { error = "Cannot inspect profile: " + ec.message(); return false; }
+  if (ec) { error = FileSystemError("無法檢查瀏覽器資料目錄。", ec.value()); return false; }
   for (std::filesystem::recursive_directory_iterator it(root, ec), end; !ec && it != end; it.increment(ec)) {
     if (std::filesystem::is_symlink(it->symlink_status(ec))) {
       //2026.10.12 modify by codex, Chromium creates these root links; remove the links without following their targets.
@@ -44,7 +54,7 @@ bool RejectLinks(const std::filesystem::path& root, std::string& error) {
       error = "拒絕清理含符號連結的瀏覽器目錄。"; return false;
     }
   }
-  if (ec) { error = "Cannot inspect profile tree: " + ec.message(); return false; }
+  if (ec) { error = FileSystemError("無法檢查瀏覽器資料目錄內容。", ec.value()); return false; }
   return true;
 }
 }
@@ -58,21 +68,21 @@ bool GetAppPaths(AppPaths& paths, std::string& error) {
   if (![bundle.pathExtension isEqualToString:@"app"]) { error = "oaClient2 必須從 .app 啟動。"; return false; }
   paths.application = Utf8Path(bundle.UTF8String).parent_path();
   NSURL* support = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask].firstObject;
-  if (!support) { error = "Cannot locate Application Support."; return false; }
+  if (!support) { error = "無法取得 Application Support 目錄。"; return false; }
   paths.data = Utf8Path(support.path.UTF8String) / "oaClient2";
   std::error_code ec;
   std::filesystem::create_directories(paths.data, ec);
   if (ec || std::filesystem::is_symlink(paths.data) || std::filesystem::is_symlink(paths.data.parent_path())) {
-    error = "Cannot use oaClient2 local data directory."; return false;
+    error = FileSystemError("無法使用 oaClient2 專用資料目錄，請確認目錄權限且不是符號連結。", ec.value()); return false;
   }
   paths.data = std::filesystem::canonical(paths.data, ec);
-  if (ec) { error = "Cannot resolve local data directory."; return false; }
+  if (ec) { error = FileSystemError("無法解析 oaClient2 專用資料目錄。", ec.value()); return false; }
   paths.config = paths.data / "Config.ini";
   paths.profile = paths.data / "browser-profile";
   paths.log = paths.data / "logs" / "application.log";
   std::filesystem::create_directories(paths.log.parent_path(), ec);
   if (ec || std::filesystem::is_symlink(paths.log.parent_path())) {
-    error = "Cannot use oaClient2 log directory."; return false;
+    error = FileSystemError("無法使用 oaClient2 紀錄目錄，請確認目錄權限且不是符號連結。", ec.value()); return false;
   }
   return true;
 }
@@ -93,20 +103,20 @@ bool ClearBrowserProfile(const AppPaths& paths, std::string& error) {
   const auto root = std::filesystem::canonical(paths.data, ec);
   if (ec || !root.is_absolute() || std::filesystem::is_symlink(paths.data) ||
       paths.profile.lexically_normal() != (paths.data / "browser-profile").lexically_normal()) {
-    error = "Browser profile is not the dedicated oaClient2 profile."; return false;
+    error = FileSystemError("瀏覽器資料目錄不是 oaClient2 專用目錄，已拒絕清理。", ec.value()); return false;
   }
   const auto status = std::filesystem::symlink_status(paths.profile, ec);
   if (status.type() == std::filesystem::file_type::not_found) return true;
   if (ec || !std::filesystem::is_directory(status) || !RejectLinks(paths.profile, error)) {
-    if (error.empty()) error = "Cannot inspect browser profile.";
+    if (error.empty()) error = FileSystemError("無法檢查瀏覽器資料目錄。", ec.value());
     return false;
   }
   const auto target = std::filesystem::canonical(paths.profile, ec);
   if (ec || target.parent_path() != root || target.filename() != "browser-profile") {
-    error = "Browser profile resolved outside the dedicated app data directory."; return false;
+    error = FileSystemError("瀏覽器資料目錄位於 oaClient2 專用資料目錄之外，已拒絕清理。", ec.value()); return false;
   }
   std::filesystem::remove_all(target, ec);
-  if (ec) { error = "Cannot clear site data: " + ec.message(); return false; }
+  if (ec) { error = FileSystemError("無法清除網站資料。", ec.value()); return false; }
   return true;
 }
 
@@ -114,7 +124,7 @@ bool ClearBrowserProfile(const AppPaths& paths, std::string& error) {
 bool CommitSettingsFile(const std::filesystem::path& from, const std::filesystem::path& to, std::string& error) {
   struct stat source{}, original{};
   if (lstat(from.c_str(), &source) != 0 || !S_ISREG(source.st_mode)) {
-    error = "Cannot inspect Config.ini.tmp."; return false;
+    error = "無法檢查 Config.ini.tmp，請確認暫存檔存在且為一般檔案。"; return false;
   }
   if (lstat(to.c_str(), &original) == 0) {
     if (!S_ISREG(original.st_mode) || !(original.st_mode & 0222) || access(to.c_str(), W_OK) != 0 ||
@@ -122,40 +132,41 @@ bool CommitSettingsFile(const std::filesystem::path& from, const std::filesystem
       error = "Config.ini 拒絕寫入；保留原檔及暫存，不修改權限。"; return false;
     }
     if (copyfile(to.c_str(), from.c_str(), nullptr, COPYFILE_METADATA) != 0) {
-      error = "Cannot preserve Config.ini metadata."; return false;
+      error = FileSystemError("無法保留 Config.ini 檔案屬性。", errno); return false;
     }
   } else if (errno != ENOENT) {
-    error = "Cannot inspect Config.ini."; return false;
+    error = FileSystemError("無法檢查 Config.ini。", errno); return false;
   }
   const int file = open(from.c_str(), O_RDONLY | O_NOFOLLOW);
-  if (file < 0) { error = "Cannot flush Config.ini.tmp."; return false; }
+  if (file < 0) { error = FileSystemError("無法開啟 Config.ini.tmp 以完成同步寫入。", errno); return false; }
   const bool flushed = fsync(file) == 0;
+  const int flush_error = flushed ? 0 : errno;
   close(file);
   if (!flushed || rename(from.c_str(), to.c_str()) != 0) {
-    error = "Cannot replace Config.ini; temporary copy retained."; return false;
+    error = FileSystemError("無法替換 Config.ini；已保留暫存檔。", flushed ? errno : flush_error); return false;
   }
   return true;
 }
 
 bool OpenConfiguration(const std::filesystem::path& path, std::string& error) {
   NSURL* editor = [NSWorkspace.sharedWorkspace URLForApplicationWithBundleIdentifier:@"com.apple.TextEdit"];
-  if (!editor) { error = "Cannot locate TextEdit."; return false; }
+  if (!editor) { error = "找不到 TextEdit，無法開啟 Config.ini。"; return false; }
   [NSWorkspace.sharedWorkspace openURLs:@[FileUrl(path)] withApplicationAtURL:editor
     configuration:[NSWorkspaceOpenConfiguration configuration] completionHandler:^(NSRunningApplication*, NSError* failure) {
-      if (failure) ShowError("無法用 TextEdit 開啟 Config.ini。");
+      if (failure) ShowError(CocoaError(@"無法用 TextEdit 開啟 Config.ini。", failure).UTF8String);
     }];
   return true;
 }
 bool OpenDirectory(const std::filesystem::path& path, std::string& error) {
   if ([NSWorkspace.sharedWorkspace openURL:FileUrl(path)]) return true;
-  error = "Cannot open the application directory."; return false;
+  error = "無法開啟 Config.ini 所在目錄。"; return false;
 }
 
 //2026.10.12 modify by codex, keep the Chrome Console native window owned by CEF while docking it with Cocoa.
 bool AttachConsoleWindow(void* child, void* parent, std::string& error) {
   NSWindow* console = NativeWindow(child);
   NSWindow* owner = NativeWindow(parent);
-  if (!console || !owner || console == owner) { error = "Invalid Console window."; return false; }
+  if (!console || !owner || console == owner) { error = "無法附加 Console：主視窗或 Console 視窗無效。"; return false; }
   console.hasShadow = NO;
   objc_setAssociatedObject(console, &console_marker, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   console.collectionBehavior = NSWindowCollectionBehaviorFullScreenAuxiliary;
@@ -260,7 +271,7 @@ bool CaptureWindow(void* handle, const std::filesystem::path& directory,
     }
     [SCShareableContent getShareableContentExcludingDesktopWindows:YES onScreenWindowsOnly:YES
       completionHandler:^(SCShareableContent* content, NSError* failure) {
-        if (failure) { state->error = failure.localizedDescription; state->done = true; return; }
+        if (failure) { state->error = CocoaError(@"無法取得截圖視窗資訊，請確認 macOS 螢幕錄製權限。", failure); state->done = true; return; }
         NSMutableArray<SCWindow*>* targets = [NSMutableArray array];
         for (NSNumber* number in identifiers) {
           for (SCWindow* item in content.windows) if (item.windowID == number.unsignedIntValue) [targets addObject:item];
@@ -284,7 +295,7 @@ bool CaptureWindow(void* handle, const std::filesystem::path& directory,
           [SCScreenshotManager captureImageWithFilter:filter configuration:config completionHandler:^(CGImageRef image, NSError* issue) {
             @synchronized(images) {
               if (image) images[index] = [[NSImage alloc] initWithCGImage:image size:target.frame.size];
-              else state->error = issue.localizedDescription ?: @"截圖失敗。";
+              else state->error = CocoaError(@"無法擷取 oaClient2 視窗。", issue);
             }
             dispatch_group_leave(group);
           }];
@@ -316,14 +327,14 @@ bool CaptureWindow(void* handle, const std::filesystem::path& directory,
     }
     std::error_code ec;
     std::filesystem::create_directories(directory, ec);
-    if (ec) { error = "Cannot create picture directory: " + ec.message(); return false; }
+    if (ec) { error = FileSystemError("無法建立 picture 截圖目錄。", ec.value()); return false; }
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyyMMddHHmmss-SSS";
     output = directory / ("Snapshot" + std::string([formatter stringFromDate:NSDate.date].UTF8String) + ".jpg");
     NSBitmapImageRep* bitmap = [NSBitmapImageRep imageRepWithData:state->image.TIFFRepresentation];
     NSData* jpeg = [bitmap representationUsingType:NSBitmapImageFileTypeJPEG properties:@{NSImageCompressionFactor:@0.9}];
     if (jpeg && [jpeg writeToURL:FileUrl(output) atomically:YES]) return true;
-    error = "Cannot save JPG screenshot."; return false;
+    error = "無法儲存 JPG 截圖，請確認 picture 目錄可寫入。"; return false;
   }
   error = "視窗截圖目前需要 macOS 14 或更新版本的 ScreenCaptureKit。";
   return false;

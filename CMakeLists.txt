@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(oaClient2 VERSION 0.1.6 LANGUAGES C CXX)
+project(oaClient2 VERSION 0.1.8 LANGUAGES C CXX)
 
 if(APPLE)
   if(NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
@@ -51,6 +51,7 @@ if(WIN32)
   add_executable(${CEF_TARGET} WIN32
     ${OA_COMMON_SOURCES}
     src/platform/windows/cef_platform.cpp
+    src/platform/windows/file_dialog.cpp
     src/platform/windows/platform.cpp
     src/platform/windows/main.cpp
     src/platform/windows/app.rc

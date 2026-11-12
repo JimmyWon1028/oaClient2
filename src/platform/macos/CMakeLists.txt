@@ -6,12 +6,14 @@ set(VERSION_SHORT "${PROJECT_VERSION}")
 file(GLOB OA_IMAGES "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.png")
 set_source_files_properties(${OA_IMAGES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 add_executable(${CEF_TARGET} MACOSX_BUNDLE ${OA_COMMON_SOURCES} ${OA_IMAGES}
-  src/platform/macos/main.mm src/platform/macos/platform.mm src/platform/macos/cef_platform.cpp)
+  src/platform/macos/main.mm src/platform/macos/platform.mm src/platform/macos/cef_platform.cpp
+  src/platform/macos/file_dialog.mm)
 SET_EXECUTABLE_TARGET_PROPERTIES(${CEF_TARGET})
 target_compile_options(${CEF_TARGET} PRIVATE "$<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc;-fno-rtti;-fno-exceptions>")
 set_target_properties(${CEF_TARGET} PROPERTIES OBJCXX_STANDARD 20 OBJCXX_STANDARD_REQUIRED YES)
 target_include_directories(${CEF_TARGET} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(${CEF_TARGET} PRIVATE libcef_dll_wrapper ${CEF_STANDARD_LIBS} "-framework ScreenCaptureKit")
+target_link_libraries(${CEF_TARGET} PRIVATE libcef_dll_wrapper ${CEF_STANDARD_LIBS}
+  "-framework ScreenCaptureKit" "-framework UniformTypeIdentifiers")
 add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
 set_target_properties(${CEF_TARGET} PROPERTIES
   MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/src/platform/macos/Info.plist.in")

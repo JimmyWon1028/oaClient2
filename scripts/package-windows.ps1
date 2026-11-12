@@ -1,6 +1,7 @@
 param(
   [string]$BuildRoot = (Join-Path $env:LOCALAPPDATA 'oaClient2/build/windows-x64'),
-  [ValidateSet('Debug', 'Release')][string]$Configuration = 'Release'
+  [ValidateSet('Debug', 'Release')][string]$Configuration = 'Release',
+  [switch]$ExecutableOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,6 +15,11 @@ if (-not (Test-Path -LiteralPath (Join-Path $taskSource 'oaClient2.exe')) -or
 }
 New-Item -ItemType Directory -Path $taskDestination -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $taskSource 'oaClient2.exe') -Destination $taskDestination -Force
+#2026.10.16 by codex, keep unchanged CEF and personal delivery files untouched for application-only updates.
+if ($ExecutableOnly) {
+  Write-Output "Windows EXE delivery: $(Join-Path $taskDestination 'oaClient2.exe')"
+  return
+}
 Copy-Item -LiteralPath (Join-Path $taskSource 'cef') -Destination $taskDestination -Recurse -Force
 # The user maintains delivery/prg; do not restore files from the source archive.
 # Remove only application binaries from the superseded bootstrap/DLL layout.

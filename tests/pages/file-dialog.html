@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>oaClient2 選檔篩選測試</title>
+<style>
+  body { font: 20px sans-serif; margin: 32px; }
+  label { display: block; margin: 24px 0; }
+  output { display: block; white-space: pre-wrap; margin-top: 24px; }
+</style>
+<h1>選檔篩選測試（僅本機，不上傳）</h1>
+<label>多格式／多選 <input id="mixed" type="file" accept=".jpg,.png,.pdf,.xls,.xlsx" multiple></label>
+<label>MIME／多選 <input id="mime" type="file" accept="image/*,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" multiple></label>
+<label>僅 PNG／單選 <input id="single" type="file" accept=".png"></label>
+<label>無格式限制 <input id="any" type="file" multiple></label>
+<label>選擇目錄 <input id="folder" type="file" webkitdirectory></label>
+<button id="owner-close" type="button">測試選檔期間關閉其父視窗</button>
+<button id="app-close" type="button">測試選檔期間關閉主視窗</button>
+<output id="result">尚未選檔</output>
+<script>
+  //2026.10.16 by codex, exercise pending picker cancellation in a disposable script-owned window.
+  document.querySelector('#owner-close').addEventListener('click', () => {
+    const popup = window.open('', 'file-dialog-owner-test', 'width=720,height=500');
+    if (!popup) return;
+    popup.document.title = '選檔父視窗關閉測試';
+    const input = popup.document.createElement('input');
+    input.type = 'file';
+    input.accept = '.png,.pdf';
+    input.addEventListener('click', () => popup.setTimeout(() => popup.close(), 3000));
+    popup.document.body.append('點選後 3 秒關閉此測試視窗：', input);
+  });
+  //2026.10.16 by codex, request normal browser closure while a picker callback is pending.
+  document.querySelector('#app-close').addEventListener('click', () => {
+    setTimeout(() => window.close(), 3000);
+    document.querySelector('#mixed').click();
+  });
+  //2026.10.16 by codex, report local file names without reading or transmitting their contents.
+  document.addEventListener('change', event => {
+    if (event.target.type !== 'file') return;
+    document.querySelector('#result').textContent = event.target.id + ': ' +
+      [...event.target.files].map(file => file.name).join(', ');
+  });
+</script>
+</html>

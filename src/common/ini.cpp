@@ -48,7 +48,7 @@ bool IniFile::Load(const std::filesystem::path& path, std::string& error) {
   lines_.clear();
   std::ifstream input(path, std::ios::binary);
   if (!input) {
-    error = "Cannot read Config.ini.";
+    error = "無法讀取設定檔 Config.ini。";
     return false;
   }
   std::string line;
@@ -56,20 +56,21 @@ bool IniFile::Load(const std::filesystem::path& path, std::string& error) {
     if (lines_.empty() && line.starts_with("\xef\xbb\xbf")) line.erase(0, 3);
     if (!line.empty() && line.back() == '\r') line.pop_back();
     if (line.find('\0') != std::string::npos) {
-      error = "Config.ini must be UTF-8, not UTF-16. Save it as UTF-8.";
+      error = "設定檔 Config.ini 不支援 UTF-16 編碼，請另存為 UTF-8。";
       return false;
     }
     lines_.push_back(line);
   }
   if (input.bad()) {
-    error = "Error while reading Config.ini.";
+    error = "讀取設定檔 Config.ini 時發生錯誤。";
     return false;
   }
   return true;
 }
 
 bool IniFile::Save(const std::filesystem::path& path, std::string& error) const {
-  std::string contents;
+  //2026.10.30 by codex, let legacy Reptool detect UTF-8 instead of decoding Chinese preferences as ANSI.
+  std::string contents = "\xef\xbb\xbf";
   for (const auto& line : lines_) contents += line + '\n';
   // Close this read handle before committing; CRT readers do not share deletion.
   {
@@ -83,10 +84,10 @@ bool IniFile::Save(const std::filesystem::path& path, std::string& error) const 
   temporary += ".tmp";
   {
     std::ofstream output(temporary, std::ios::binary | std::ios::trunc);
-    if (!output) { error = "Cannot write Config.ini.tmp."; return false; }
+    if (!output) { error = "無法寫入設定暫存檔 Config.ini.tmp。"; return false; }
     output.write(contents.data(), static_cast<std::streamsize>(contents.size()));
     output.flush();
-    if (!output) { error = "Cannot finish writing Config.ini.tmp."; return false; }
+    if (!output) { error = "無法完成設定暫存檔 Config.ini.tmp 的寫入。"; return false; }
   }
   return CommitSettingsFile(temporary, path, error);
 }
@@ -145,7 +146,7 @@ bool LoadSettings(const std::filesystem::path& path, Settings& settings, std::st
   IniFile ini;
   std::error_code ec;
   if (!std::filesystem::exists(path, ec)) {
-    if (ec) { error = "Cannot inspect the settings file: " + ec.message(); return false; }
+    if (ec) { error = "無法檢查設定檔 Config.ini，錯誤代碼：" + std::to_string(ec.value()); return false; }
     ini.Set("SysSet", "HomeUrl", settings.home_url);
     ini.Set("SysSet", "HomePage", "");
     ini.Set("SysSet", "ClearCache", "Y");
@@ -157,8 +158,9 @@ bool LoadSettings(const std::filesystem::path& path, Settings& settings, std::st
     ini.Set("Window", "Maximized", "N");
     ini.Set("UserSet", "ZoomPercent", "100");
     if (!ini.Save(path, error)) return false;
-  } else if (!ini.Load(path, error)) {
-    return false;
+  } else {
+    //2026.10.30 by codex, repair existing UTF-8 INIs before use without changing settings or bypassing write protection.
+    if (!ini.Load(path, error) || !ini.Save(path, error)) return false;
   }
   settings.home_url = ini.Get("SysSet", "HomeUrl", settings.home_url);
   //2026.10.12 modify by codex, preserve an explicitly allowed empty Mac URL while retaining Windows fallback.
@@ -239,7 +241,7 @@ bool SaveUserSetting(const std::filesystem::path& path, const std::string& key,
   if (Trim(key).empty() || key.front() == ';' || key.front() == '#' ||
       key.find_first_of("[]=\r\n\0", 0, 6) != std::string::npos ||
       value.find_first_of("\r\n\0", 0, 3) != std::string::npos) {
-    error = "The user setting cannot be represented as a single INI entry.";
+    error = "使用者偏好的名稱或內容含有不支援的字元，無法儲存為單筆 INI 設定。";
     return false;
   }
   IniFile ini;
@@ -278,8 +280,9 @@ std::string EncodeCookieValue(const std::string& value) {
 
 bool IsLegacyOpenProtocol(const std::string& url) {
   const auto colon = url.find(':');
-  if (colon == std::string::npos || colon <= 4) return false;
-  return Lower(url.substr(0, colon)).ends_with("open");
+  //2026.10.20 by codex, forward schemes with a prefix before open and an optional suffix without OS probes.
+  if (colon == std::string::npos) return false;
+  return Lower(url.substr(0, colon)).find("open", 1) != std::string::npos;
 }
 
 std::filesystem::path ResolveApplicationPath(const std::filesystem::path& application,

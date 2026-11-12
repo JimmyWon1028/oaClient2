@@ -28,9 +28,12 @@ namespace {
 
 enum Command { kConsole = 10, kHome, kServer, kMac, kDirectory, kSnapshot, kResetZoom, kZoomOut, kZoomIn };
 
+constexpr cef_color_t kToolbarBackground = 0xFFF0F0F0;
+constexpr cef_color_t kToolbarForeground = 0xFF222222;
+
 //2026.10.13 modify by codex, match the legacy website title and display the actual client version.
 std::string ApplicationWindowTitle(const std::string& website_title = "") {
-  return (website_title.empty() ? "oaClient2" : website_title) + std::string(" [用戶端版本 0.1.6]");
+  return (website_title.empty() ? "oaClient2" : website_title) + std::string(" [用戶端版本 0.1.8]");
 }
 
 class CompletionCallback : public CefCompletionCallback {
@@ -102,10 +105,15 @@ void SetApplicationIcons(CefRefPtr<CefWindow> window, const AppPaths& paths) {
 
 class HeightDelegate : public CefPanelDelegate {
  public:
-  explicit HeightDelegate(int height) : height_(height) {}
+  explicit HeightDelegate(int height, bool fixed_background = false)
+    : height_(height), fixed_background_(fixed_background) {}
   CefSize GetPreferredSize(CefRefPtr<CefView>) override { return CefSize(1, height_); }
+  void OnThemeChanged(CefRefPtr<CefView> view) override {
+    if (fixed_background_) view->SetBackgroundColor(kToolbarBackground);
+  }
  private:
   int height_;
+  bool fixed_background_;
   IMPLEMENT_REFCOUNTING(HeightDelegate);
 };
 
@@ -335,6 +343,14 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
 
   cef_runtime_style_t GetWindowRuntimeStyle() override { return CEF_RUNTIME_STYLE_CHROME; }
 
+  //2026.10.20 by codex, restore explicit toolbar colors after CEF resets per-view theme colors.
+  void OnThemeChanged(CefRefPtr<CefView> view) override {
+    if (!context_->fixed_light_window_appearance || view->GetID() < kConsole || view->GetID() > kZoomIn) return;
+    view->SetBackgroundColor(kToolbarBackground);
+    auto button = view->AsButton();
+    if (button && button->AsLabelButton()) button->AsLabelButton()->SetEnabledTextColors(kToolbarForeground);
+  }
+
   bool CanClose(CefRefPtr<CefWindow> window) override {
     auto browser = view_ ? view_->GetBrowser() : nullptr;
     if (!popup_ && browser && !client_->PrepareWindowClose(browser, window, dock_->window)) return false;
@@ -417,8 +433,8 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
   }
 
   void CreateToolbar(CefRefPtr<CefWindow> window) {
-    toolbar_ = CefPanel::CreatePanel(new HeightDelegate(28));
-    toolbar_->SetBackgroundColor(0xFFF0F0F0);
+    toolbar_ = CefPanel::CreatePanel(new HeightDelegate(28, context_->fixed_light_window_appearance));
+    toolbar_->SetBackgroundColor(kToolbarBackground);
     CefBoxLayoutSettings settings;
     settings.horizontal = true;
     settings.cross_axis_alignment = CEF_AXIS_ALIGNMENT_CENTER;
@@ -433,8 +449,8 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
       if (id != kConsole) button->SetInsets(CefInsets(0, 2, 0, 2));
       button->SetMinimumSize(CefSize(width, 28));
       button->SetMaximumSize(CefSize(width, 28));
-      button->SetBackgroundColor(0xFFF0F0F0);
-      button->SetEnabledTextColors(0xFF222222);
+      button->SetBackgroundColor(kToolbarBackground);
+      button->SetEnabledTextColors(kToolbarForeground);
       std::string icon;
       if (id == kConsole) icon = "console";
       else if (id == kHome) icon = "home";
@@ -530,7 +546,7 @@ void BrowserClient::RestoreUserSettings(CefRefPtr<CefBrowser> browser) {
   if (ini.Load(context_->paths.config, error)) {
     browser->GetMainFrame()->ExecuteJavaScript(UserSettingsScript(ini), "", 0);
     browser->GetMainFrame()->ExecuteJavaScript(
-      "var $g=$g||{};$g.win_client=true;$g.client_version='oaClient2-0.1.6';", "", 0);
+      "var $g=$g||{};$g.win_client=true;$g.client_version='oaClient2-0.1.8';", "", 0);
   } else AppendLog(context_->paths, "USER_SETTINGS_READ_FAILED");
 }
 
@@ -698,6 +714,8 @@ void BrowserClient::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 void BrowserClient::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
+  //2026.10.16 by codex, cancel native pickers before their browser is released.
+  CancelPlatformFileDialogs(browser->GetIdentifier());
   CEF_REQUIRE_UI_THREAD();
   if (closing_browser_ && closing_browser_->IsSame(browser)) {
     ++close_generation_;
@@ -791,7 +809,7 @@ bool BrowserClient::OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_seve
     if (!browser->IsPopup()) site_ready_ = true;
     RestoreUserSettings(browser);
     browser->GetMainFrame()->ExecuteJavaScript(
-      "var $g=$g||{}; $g.win_client=true; $g.client_version='oaClient2-0.1.6';", "", 0);
+      "var $g=$g||{}; $g.win_client=true; $g.client_version='oaClient2-0.1.8';", "", 0);
   } else if (text.starts_with("apiUrl")) {
     IniFile ini;
     std::string error;
@@ -825,17 +843,65 @@ void App::OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) {
   ConfigureChildProcess(command_line, context_->paths);
 }
 
+//2026.10.20 by codex, pin the native window theme before Chromium initializes its UI.
+void App::OnBeforeCommandLineProcessing(const CefString& process_type,
+    CefRefPtr<CefCommandLine> command_line) {
+  if (!context_->fixed_light_window_appearance || !process_type.empty()) return;
+  command_line->RemoveSwitch("force-dark-mode");
+  command_line->AppendSwitch("force-light-mode");
+}
+
 void App::OnContextInitialized() {
   CEF_REQUIRE_UI_THREAD();
   //2026.10.13 modify by codex, disable browser password saving and automatic sign-in before opening any page.
   auto request_context = CefRequestContext::GetGlobalContext();
+  if (context_->fixed_light_window_appearance) {
+    request_context->SetChromeColorScheme(CEF_COLOR_VARIANT_LIGHT, 0);
+    AppendLog(context_->paths, "WINDOW_APPEARANCE_FIXED_LIGHT");
+  }
+  //2026.11.11 by codex, retain report background colors in native print preview after profile cleanup.
+  const char* print_preference = "printing.print_preview_sticky_settings";
+  auto print_settings = request_context->GetPreference(print_preference);
+  if (!print_settings || print_settings->GetType() != VTYPE_DICTIONARY) {
+    print_settings = CefValue::Create();
+    print_settings->SetDictionary(CefDictionaryValue::Create());
+  }
+  auto print_dictionary = print_settings->GetDictionary();
+  auto print_state = CefParseJSON(print_dictionary->GetString("appState"), JSON_PARSER_RFC);
+  if (!print_state || print_state->GetType() != VTYPE_DICTIONARY) {
+    print_state = CefValue::Create();
+    print_state->SetDictionary(CefDictionaryValue::Create());
+  }
+  print_state->GetDictionary()->SetInt("version", 2);
+  print_state->GetDictionary()->SetBool("isCssBackgroundEnabled", true);
+  print_dictionary->SetString("appState", CefWriteJSON(print_state, JSON_WRITER_DEFAULT));
+  CefString print_error;
+  if (!request_context->SetPreference(print_preference, print_settings, print_error)) {
+    AppendLog(context_->paths, "PRINT_BACKGROUND_POLICY_FAILED error=" + print_error.ToString());
+    ShowError("無法啟用列印背景圖形，程式將停止啟動。請查看程式紀錄以確認原因。");
+    CefQuitMessageLoop();
+    return;
+  }
+  AppendLog(context_->paths, "PRINT_BACKGROUNDS_ENABLED");
+  //2026.10.29 by codex, require the native Save As dialog for every browser download.
+  auto download_prompt = CefValue::Create();
+  download_prompt->SetBool(true);
+  CefString download_error;
+  if (!request_context->SetPreference("download.prompt_for_download", download_prompt, download_error)) {
+    AppendLog(context_->paths, "DOWNLOAD_PROMPT_POLICY_FAILED error=" + download_error.ToString());
+    ShowError("無法啟用下載前詢問儲存位置，程式將停止啟動。請查看程式紀錄以確認原因。");
+    CefQuitMessageLoop();
+    return;
+  }
+  AppendLog(context_->paths, "DOWNLOAD_PROMPT_REQUIRED");
   auto disabled = CefValue::Create();
   disabled->SetBool(false);
   for (const auto* preference : {"credentials_enable_service", "credentials_enable_autosignin"}) {
     CefString error;
     if (!request_context->SetPreference(preference, disabled, error)) {
-      AppendLog(context_->paths, "PASSWORD_POLICY_FAILED preference=" + std::string(preference));
-      ShowError("Cannot disable browser password saving: " + error.ToString());
+      AppendLog(context_->paths, "PASSWORD_POLICY_FAILED preference=" + std::string(preference) +
+        " error=" + error.ToString());
+      ShowError("無法停用瀏覽器的密碼儲存或自動登入功能，程式將停止啟動。請查看程式紀錄以確認原因。");
       CefQuitMessageLoop();
       return;
     }

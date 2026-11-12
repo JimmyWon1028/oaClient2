@@ -16,4 +16,6 @@ fi
 mkdir -p "$task_delivery/oaClient2.app"
 /usr/bin/rsync -a --delete "$task_app/" "$task_delivery/oaClient2.app/"
 /usr/bin/codesign --verify --deep --strict "$task_delivery/oaClient2.app"
+#2026.10.13 modify by codex, show the current system packaging time on the delivery app in Finder.
+/usr/bin/touch -m "$task_delivery/oaClient2.app"
 echo "Packaged: $task_delivery/oaClient2.app"

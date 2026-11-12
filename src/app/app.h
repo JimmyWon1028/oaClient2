@@ -12,6 +12,7 @@
 #include "common/ini.h"
 #include "common/logout.h"
 #include "platform/platform.h"
+#include "platform/cef_platform.h"
 
 namespace oa {
 
@@ -20,6 +21,8 @@ struct AppContext {
   AppPaths paths;
   //2026.10.12 modify by codex, let each platform opt in after implementing and validating its zoom UI policy.
   bool hide_zoom_bubble = false;
+  //2026.10.20 by codex, let each platform opt into a system-independent light window appearance.
+  bool fixed_light_window_appearance = false;
   //2026.10.13 modify by codex, let the Windows entry opt in to suppressing Chrome tab close.
   bool disable_chrome_ctrl_w = false;
   //2026.10.12 modify by codex, keep Windows shutdown unchanged until its platform adopts the new policy.
@@ -45,6 +48,8 @@ class BrowserClient : public CefClient,
   CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() override { return this; }
   CefRefPtr<CefRequestHandler> GetRequestHandler() override { return this; }
   CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() override { return this; }
+  //2026.10.16 by codex, let the platform preserve the website's combined upload filter.
+  CefRefPtr<CefDialogHandler> GetDialogHandler() override { return PlatformFileDialogHandler(); }
   bool OnBeforeUnloadDialog(CefRefPtr<CefBrowser> browser, const CefString& message,
                            bool is_reload, CefRefPtr<CefJSDialogCallback> callback) override;
   CefRefPtr<CefResourceRequestHandler> GetResourceRequestHandler(CefRefPtr<CefBrowser>,
@@ -91,6 +96,8 @@ class App : public CefApp, public CefBrowserProcessHandler {
  public:
   explicit App(std::shared_ptr<AppContext> context) : context_(std::move(context)) {}
   CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() override { return this; }
+  void OnBeforeCommandLineProcessing(const CefString& process_type,
+      CefRefPtr<CefCommandLine> command_line) override;
   void OnContextInitialized() override;
   void OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) override;
   CefRefPtr<CefClient> GetDefaultClient() override { return client_; }

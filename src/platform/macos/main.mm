@@ -22,6 +22,12 @@
 - (void)setContext:(std::shared_ptr<oa::AppContext>)context { context_ = std::move(context); }
 - (void)sendEvent:(NSEvent*)event {
   CefScopedSendingEvent scope;
+  //2026.10.30 by codex, route Command-Q through the app menu before Chrome DevTools consumes it.
+  const auto modifiers = event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl |
+    NSEventModifierFlagOption | NSEventModifierFlagShift);
+  if (event.type == NSEventTypeKeyDown && modifiers == NSEventModifierFlagCommand &&
+      [event.charactersIgnoringModifiers.lowercaseString isEqualToString:@"q"] &&
+      [self.mainMenu performKeyEquivalent:event]) return;
   [super sendEvent:event];
 }
 - (void)terminate:(id)sender {
@@ -30,13 +36,21 @@
 }
 @end
 
-@interface OaApplicationDelegate : NSObject <NSApplicationDelegate>
+@interface OaApplicationDelegate : NSObject <NSApplicationDelegate> {
+  std::shared_ptr<oa::AppContext> context_;
+}
+- (void)setContext:(std::shared_ptr<oa::AppContext>)context;
 @end
 @implementation OaApplicationDelegate
+- (void)setContext:(std::shared_ptr<oa::AppContext>)context { context_ = std::move(context); }
 - (BOOL)applicationSupportsSecureRestorableState:(NSApplication*)app { return YES; }
 - (BOOL)applicationShouldHandleReopen:(NSApplication*)app hasVisibleWindows:(BOOL)visible {
-  for (NSWindow* window in app.windows) {
-    if (window.parentWindow == nil && window.isVisible) [window makeKeyAndOrderFront:nil];
+  //2026.10.13 modify by codex, only reactivate the shared main window and keep background logout hidden.
+  if (!context_) return NO;
+  oa::AppendLog(context_->paths, "MAC_REOPEN_HANDLED background=" + std::to_string(context_->closing_in_background));
+  if (context_->main_window && !context_->closing_in_background) {
+    context_->main_window->Show();
+    context_->main_window->Activate();
   }
   return NO;
 }
@@ -47,6 +61,8 @@ class MacApp : public oa::App {
  public:
   explicit MacApp(std::shared_ptr<oa::AppContext> context) : oa::App(context), context_(context) {}
   void OnBeforeCommandLineProcessing(const CefString& type, CefRefPtr<CefCommandLine> command) override {
+    //2026.10.30 by codex, retain shared appearance policy before adding the Mac startup switch.
+    oa::App::OnBeforeCommandLineProcessing(type, command);
     //2026.10.12 modify by codex, the shared Views app owns startup instead of a default Chrome window.
     if (type.empty()) command->AppendSwitch("no-startup-window");
   }
@@ -102,6 +118,9 @@ int main(int argc, char* argv[]) {
     context->hide_zoom_bubble = true;
     //2026.10.12 modify by codex, hide during logout and exit on acknowledgement or the three-second deadline.
     context->background_logout_close = true;
+    //2026.10.30 by codex, keep Chrome and Cocoa window chrome light without changing the system theme.
+    context->fixed_light_window_appearance = true;
+    application.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     std::string error;
     if (!oa::GetAppPaths(context->paths, error)) { oa::ShowError(error); return 1; }
     const auto lock_path = context->paths.data / "instance.lock";
@@ -121,7 +140,7 @@ int main(int argc, char* argv[]) {
     CefRefPtr<CefCommandLine> command = CefCommandLine::CreateCommandLine();
     command->InitFromArgv(argc, argv);
     if (command->HasSwitch("url")) context->settings.home_url = command->GetSwitchValue("url").ToString();
-    oa::AppendLog(context->paths, "START version=0.1.6 platform=macos-arm64");
+    oa::AppendLog(context->paths, "START version=0.1.8 platform=macos-arm64");
     if (context->settings.clear_site_data && !oa::ClearBrowserProfile(context->paths, error)) {
       oa::ShowError(error); close(lock); return 1;
     }
@@ -136,7 +155,9 @@ int main(int argc, char* argv[]) {
     //2026.10.12 modify by codex, keep both Mac logs in the Application Support logs directory.
     CefString(&settings.log_file) = oa::PathUtf8(context->paths.log.parent_path() / "cef.log");
     [application setContext:context];
-    OaApplicationDelegate* delegate = [[OaApplicationDelegate alloc] init];
+    //2026.10.13 modify by codex, NSApplication has a weak delegate; retain it throughout the CEF message loop.
+    __attribute__((objc_precise_lifetime)) OaApplicationDelegate* delegate = [[OaApplicationDelegate alloc] init];
+    [delegate setContext:context];
     CefRefPtr<oa::App> app = new MacApp(context);
     int result = 1;
     if (CefInitialize(args, settings, app, nullptr)) {
@@ -153,6 +174,7 @@ int main(int argc, char* argv[]) {
       oa::AppendLog(context->paths, "INITIALIZE_EXIT code=" + std::to_string(result));
     }
     [application setContext:nullptr];
+    [delegate setContext:nullptr];
     application.delegate = nil;
     flock(lock, LOCK_UN);
     close(lock);

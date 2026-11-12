@@ -3,11 +3,40 @@
 #include <fstream>
 #include "common/ini.h"
 #include "platform/platform.h"
+#include "platform/windows/file_dialog_filter.h"
 
 //2026.10.12 modify by codex, retain Windows-only checks outside the shared test source.
 void RunPlatformTests(const std::filesystem::path& root, const std::filesystem::path& config,
     oa::IniFile& ini, std::string& error, void (*Check)(bool, const char*)) {
   std::error_code ec;
+  //2026.10.30 by codex, do not silently skip startup encoding repair or remove read-only protection.
+  const auto readonly_config = root / "ReadonlyLegacy.ini";
+  const std::string readonly_contents = "[UserSet]\nreport_font=標楷體\n";
+  { std::ofstream output(readonly_config, std::ios::binary); output << readonly_contents; }
+  const auto readonly_attributes = GetFileAttributesW(readonly_config.c_str());
+  SetFileAttributesW(readonly_config.c_str(), readonly_attributes | FILE_ATTRIBUTE_READONLY);
+  oa::Settings readonly_settings;
+  Check(!oa::LoadSettings(readonly_config, readonly_settings, error),
+    "startup reports a write-denied legacy encoding repair");
+  {
+    std::ifstream input(readonly_config, std::ios::binary);
+    const std::string remaining((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    Check(remaining == readonly_contents &&
+      (GetFileAttributesW(readonly_config.c_str()) & FILE_ATTRIBUTE_READONLY) != 0,
+      "failed startup repair preserves original bytes and read-only protection");
+  }
+  SetFileAttributesW(readonly_config.c_str(), readonly_attributes);
+  //2026.10.16 by codex, verify complete expansions and fail closed for unknown or wildcard filters.
+  Check(oa::CombinedFilePattern(5, {L".jpg", L".png", L".pdf", L".xls", L".xlsx"}) ==
+    L"*.jpg;*.png;*.pdf;*.xls;*.xlsx", "file dialog combines every accepted extension");
+  Check(oa::CombinedFilePattern(3, {L".png;.jpg;.png", L".pdf", L".xlsx"}) ==
+    L"*.png;*.jpg;*.pdf;*.xlsx", "file dialog combines MIME expansion and deduplicates");
+  Check(oa::CombinedFilePattern(1, {L".png"}) == L"*.png", "PNG input retains its own restriction");
+  Check(oa::CombinedFilePattern(0, {}).empty(), "unrestricted input stays with CEF");
+  Check(oa::CombinedFilePattern(2, {L".png"}).empty(), "incomplete expansion defers to CEF");
+  Check(oa::CombinedFilePattern(2, {L".png", L""}).empty(), "unknown MIME cannot broaden custom files");
+  Check(oa::CombinedFilePattern(1, {L".png;*.*"}).empty(), "wildcards cannot silently broaden custom files");
+  Check(oa::CombinedFilePattern(1, {L".png;"}).empty(), "empty expanded suffix cannot broaden custom files");
   //2026.10.13 modify by codex, verify the Windows entry policy preserves blank and existing server settings.
   oa::Settings startup;
   startup.home_url.clear();

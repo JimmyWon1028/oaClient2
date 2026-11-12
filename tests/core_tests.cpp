@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include "common/ini.h"
 #include "common/logout.h"
 #include "common/keyboard.h"
@@ -19,6 +20,11 @@ void Check(bool condition, const char* label) {
   std::cout << (condition ? "PASS " : "FAIL ") << label << '\n';
   if (!condition) ++failures;
 }
+
+std::string FileBytes(const std::filesystem::path& path) {
+  std::ifstream input(path, std::ios::binary);
+  return {std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
+}
 }
 
 int main() {
@@ -33,7 +39,8 @@ int main() {
     Check(!oa::IsWebsiteShortcut(key, true, true, false, false), "Ctrl Shift variant remains unchanged");
   }
   Check(oa::IsWebsiteShortcut('W', false, false, true, false), "Alt W belongs to website");
-  Check(oa::IsWebsiteShortcut('F', true, false, false, false), "Shift F belongs to website");
+  //2026.11.03 by codex, preserve uppercase F text input instead of consuming it as a shortcut.
+  Check(!oa::IsWebsiteShortcut('F', true, false, false, false), "Shift F remains normal text input");
   Check(!oa::IsWebsiteShortcut('W', false, true, false, false), "Ctrl W remains unchanged");
   //2026.10.13 modify by codex, reserve only Windows Ctrl W and preserve all other close chords.
   Check(oa::IsWebsiteShortcut('W', false, true, false, false, true), "Windows Ctrl W belongs to website");
@@ -62,6 +69,45 @@ int main() {
   Check(settings.clear_site_data, "clear all website data defaults to enabled");
   Check(settings.home_url == "https://oa.lysm.com.tw/", "default OA URL");
   Check(settings.zoom_percent == 100, "default zoom is 100 percent");
+  //2026.10.30 by codex, cover migration and the real report-font command contract consumed by legacy Reptool.
+  Check(FileBytes(config).starts_with("\xef\xbb\xbf"), "new INI identifies UTF-8 to legacy Reptool");
+  for (bool initial_bom : {false, true}) {
+    const auto legacy_config = root / (initial_bom ? "LegacyBom.ini" : "LegacyNoBom.ini");
+    const std::string original = "; preserve comment\n[SysSet]\nHomeUrl=example.test\n"
+      "[UserSet]\nreport_font=新細明體\nuserid=SYNTHETIC\n[Custom]\nNote=a=b|c\n";
+    {
+      std::ofstream output(legacy_config, std::ios::binary);
+      if (initial_bom) output << "\xef\xbb\xbf";
+      output << original;
+    }
+    oa::Settings legacy_settings;
+    Check(oa::LoadSettings(legacy_config, legacy_settings, error) &&
+      FileBytes(legacy_config) == "\xef\xbb\xbf" + original,
+      "startup repairs missing BOM and preserves existing values and comments");
+    const auto stable_time = std::filesystem::last_write_time(legacy_config) - std::chrono::hours(1);
+    std::filesystem::last_write_time(legacy_config, stable_time);
+    Check(oa::LoadSettings(legacy_config, legacy_settings, error) &&
+      std::filesystem::last_write_time(legacy_config) == stable_time,
+      "repeated startup does not rewrite a repaired INI");
+    const std::string font_command = "cmd=ini|key=report_font|val=標楷體";
+    Check(oa::SaveUserSetting(legacy_config, oa::GetCommandField(font_command, "key"),
+      oa::GetCommandField(font_command, "val"), error), "selected report_font command saves");
+    oa::IniFile font_ini;
+    Check(font_ini.Load(legacy_config, error) && font_ini.Get("UserSet", "report_font") == "標楷體" &&
+      font_ini.Get("UserSet", "userid") == "SYNTHETIC" && font_ini.Get("Custom", "Note") == "a=b|c",
+      "report font reload preserves Chinese text and unrelated preferences");
+    Check(oa::SaveWindowSettings(legacy_config, 1, 2, 1200, 850, true, error) &&
+      FileBytes(legacy_config).starts_with("\xef\xbb\xbf") &&
+      oa::LoadSettings(legacy_config, legacy_settings, error) && font_ini.Load(legacy_config, error) &&
+      font_ini.Get("UserSet", "report_font") == "標楷體",
+      "window save and fresh startup retain BOM and report font");
+    Check(oa::SerializedUserSettings(font_ini).find("report_font=標楷體") != std::string::npos &&
+      oa::UserSettingsScript(font_ini).find("$usr['report_font']='標楷體';") != std::string::npos,
+      "report font returns through load-userset and page restore");
+    Check(oa::SaveUserSetting(legacy_config, "report_font", "預設", error) &&
+      font_ini.Load(legacy_config, error) && font_ini.Get("UserSet", "report_font") == "預設",
+      "default report font sentinel retains its Chinese spelling");
+  }
   {
     std::ofstream output(config, std::ios::binary);
     output << "\xef\xbb\xbf; keep this comment\r\n[sysset]\r\nHomeUrl=example.test\r\n"
@@ -112,12 +158,17 @@ int main() {
     ini.Get("SysSet", "HomeUrl") == "example.test" && ini.GetInt("UserSet", "ZoomPercent", 0) == 125,
     "saving preferences preserves other sections and zoom");
   Check(oa::EncodeCookieValue("測試;= %") == "%E6%B8%AC%E8%A9%A6%3B%3D%20%25", "preference cookies use UTF-8 percent encoding");
-  Check(oa::IsLegacyOpenProtocol("hcopen:///C:/file%20name.xlsx") &&
-    oa::IsLegacyOpenProtocol("HCOPEN:///file") && oa::IsLegacyOpenProtocol("otheropen:///file"),
-    "legacy open-suffix protocols accepted case insensitively");
-  Check(!oa::IsLegacyOpenProtocol("open:///file") && !oa::IsLegacyOpenProtocol("https://host/hcopen") &&
-    !oa::IsLegacyOpenProtocol("hcopen") && !oa::IsLegacyOpenProtocol("mailto:user@example.test"),
-    "other protocols follow legacy refusal rule");
+  //2026.10.20 by codex, cover arbitrary prefixes before open and optional suffixes without OS registration.
+  for (const char* url : {"hcopen:///", "hcopen:///C:/file%20name.xlsx", "HCOPEN:///file",
+      "hcopenprint:///C:/file%20name.pdf", "HcOpenPrint:///file", "hcopenexport:///file",
+      "wjopen:///", "WjOpEnPrInT:///file", "otheropen:///file", "printopen:///file",
+      "xhcopenprint:///file", "aopenb:///file"}) {
+    Check(oa::IsLegacyOpenProtocol(url), "prefixed open schemes accept optional suffixes case insensitively");
+  }
+  for (const char* url : {"open:///file", "openprint:///file", ":///hcopen", "hcprint:///open",
+      "https://host/hcopenprint:///file", "hcopen", "hcopenprint", "wjopen", "mailto:user@example.test", ""}) {
+    Check(!oa::IsLegacyOpenProtocol(url), "unrelated or missing schemes are not forwarded");
+  }
   Check(oa::ResolveApplicationPath(root, "prg/Reptool.exe") == root / "prg" / "Reptool.exe" &&
     oa::ResolveApplicationPath(root, oa::PathUtf8(config)) == config, "Reptool paths resolve against application directory");
   using Action = oa::LogoutFlow::Action;

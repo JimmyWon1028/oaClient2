@@ -209,3 +209,78 @@ Windows MSVC Release／CTest1/1、110 checks／0 failures（原74＋36項政策�
 ## W29／R02：驗收後0.1.6同版發布完成（2026-10-13）
 
 使用者回覆「可以了」並要求同版重新上傳，Windows W29快捷鍵已記錄使用者驗收；來源6f2833b已推送，同名ZIP／.sha256已替換，版本維持0.1.6，Tag／Mac兩資產不變。新ZIP SHA256 849a2678ec237a98277ed8dfb1d130d630e165a338b91507ed83aa64166a8046，公開下載兩檔及240檔CRC／SHA256通過；資料排除、精簡prg與SDK保留規則維持。詳細來源／驗收範圍與下載見[RELEASES](docs/RELEASES.md)，Mac W27～W29及其他待驗收、U01不擴大完成；發布結果文件另行提交。
+
+## M14～M17：Mac 沿用 W27～W29 與重新開啟修正（2026-10-13）
+
+Mac本機完整.app已沿用唯一common／app套用W27～W29，Release／CTest1/1、111項與合成實機回歸通過，版本仍0.1.6。M17唯一產品修改在Mac main.mm：明確保留weak Cocoa delegate的強生命週期，既有reopen只啟用共用主窗、背景關閉不顯示；最終Finder背景reopen兩次、ACK1418ms／期限3019ms與全部退出通過。Windows專屬碼／交付／ZIP／prg不改，共用源未複製或修改。
+
+本輪僅更新artifacts/macos-arm64/oaClient2.app，未安裝、commit／push／移Tag或更新Mac公開ZIP；Releases仍為M13，前段Mac待回歸為此次接續前歷史。正式列印／一般注音／實體Fn與OA功能留使用者驗收，細項及早期失敗以[進度](PROGRESS.md)為準，U01仍未實作。本機SDK／下載包／build保留，個人設定不注入合成資料或回寫快照。
+
+## W32：外部協定前綴＋open＋可選後綴（2026-10-20）
+
+使用者最終指定 `[其他字樣]+open+[其他字樣]:///`，包含hcopen、hcopenprint、wjopen，不分大小寫；open前至少有字樣、後方可空，取代前述「只以open結尾」規則及中途未交付的hcopen限定方案。只沿用CEF allow_os_execution交給系統；依使用者要求不檢查Windows登錄／外部程式、不自行註冊或解析執行URI。唯一common/ini.cpp及共用核心測試已修改，Windows Release／CTest1/1、143項通過，本機0.1.6 EXE已更新；實際外部命令由使用者測試。Mac碼／產物未改，需在macOS重編回歸；未提交／推送／發布，其他未驗收及U01保持。詳見[進度](PROGRESS.md)W32。
+
+## W33：上下區域不隨系統主題變色（2026-10-20）
+
+使用者明確要求上方標題列與下方工具列不跟隨Windows系統主題；Windows入口啟用共用fixed_light_window_appearance，CEF原生／Chrome固定亮色，主題回呼重套工具列既有淺灰底及深色字。AppContext旗標預設false，Mac入口／產物未改，共用介面需macOS重編回歸，不以Windows交付宣稱Mac已套用。Windows Release／CTest1/1、143項及亮色視窗初驗通過，本機0.1.6 EXE已更新；Windows系統亮暗切換實測尚未執行，未變更系統設定。設定／CEF／prg／Mac交付與SDK保留，未提交／推送／發布；詳見[進度](PROGRESS.md)W33。
+
+## W34：錯誤提示統一繁體中文（2026-10-28）
+
+使用者要求所有顯示的錯誤訊息使用繁體中文。Windows 與唯一共用 INI／app 的自訂錯誤提示已翻譯，系統錯誤保留數字代碼，可能為英文的原始診斷只放紀錄；圖片中的重複啟動提示已實機確認。Release／CTest1/1、143項通過，本機0.1.6 EXE已更新，未提交／推送／發布。Mac專屬錯誤提示及系統localizedDescription須在macOS接續修改、編譯及實測，共用訊息沿用原來源，不另複製翻譯流程；Mac產物未改。完整範圍及證據見[進度](PROGRESS.md)W34。
+
+## W35：匯出／下載必須詢問儲存位置（2026-10-29）
+
+使用者要求匯出或另存一律跳出「另存新檔」指定路徑。共用 app.cpp 於建立瀏覽器前設定 download.prompt_for_download=true，沿用 Chromium 原生對話框與建議檔名；政策失敗用繁體中文回報並停止啟動，不退回直接儲存。Windows已編譯／143項及合成GET對話框跳出驗證、本機0.1.6 EXE已更新，選路徑後存檔／取消等因UI工具限制尚未實測。Mac須macOS重編回歸，專屬碼／產物未改；未提交／發布，詳見[進度](PROGRESS.md)W35。
+
+## D04：Windows W32～W35 修改彙整與 Mac 接續提示（2026-10-30）
+
+依使用者要求，Windows 已做的修改同步記錄於本文件與 [README](README.md)，並新增 [Mac 接續 Windows 修改提示詞](docs/MAC-WINDOWS-2026-10-30-PROMPT.md)，可在 Mac 直接複製使用。本次只更新文件，尚未在 macOS 實作、編譯或更新交付。
+
+- W32：外部協定採前綴＋open＋可選後綴，不分大小寫；Mac 沿用唯一共用判斷與 CEF 系統轉交，不新增處理器檢查或註冊。
+- W33：標題列及工具列固定亮色；Mac 須在 macOS 入口啟用既有 fixed_light_window_appearance，必要 Cocoa 差異留平台層，實測亮暗環境，不能把 Windows 初驗當成完整切換驗收。
+- W34：應用程式錯誤提示繁體中文化；共用訊息已有翻譯，Mac 接續翻譯平台英文與系統錯誤顯示路徑，保留數字代碼及原始診斷紀錄。
+- W35：匯出／下載每次跳出原生「另存新檔」指定路徑；Mac 沿用共用 download.prompt_for_download=true，再測實際儲存、取消與各匯出來源。Windows 只驗證 GET 對話框跳出，其他未測項目不擴大完成。
+
+W31 是 Windows 對應附件修正，Mac M19 已有相同需求且使用者確認，只作必要共用介面回歸；W30 共用關閉保護保留，Windows 專屬 Ctrl+W 不移植為 Mac Cmd+W。Mac 不重做 W27～W29 或首次移植，不複製共用流程。
+
+本機最新 Windows 為 W35／0.1.6，EXE SHA256 57d1a8d2426525f0ce567efe04809709898bb80e5ade6a4e2794e06970fb2290；W32～W35 Release／143項已通過，Mac 仍須目標平台編譯實測。依現有發布紀錄，公開 ZIP 為 Windows W30／Mac M13，本機後續修改尚未發布。切換前停止 Windows 操作並確認 Dropbox 同步，保留未提交來源／SDK／build／個人資料；不自行提交、推送、移 Tag、安裝或發布。詳細限制與步驟以提示詞及 [進度](PROGRESS.md) 為準。
+
+## 2026-10-30：M20～M23 Mac 補齊 W32～W35
+
+Mac 本機 arm64 0.1.6 已沿用共用外部協定／下載政策，Mac 入口補上共用亮色回呼與 Aqua，平台錯誤改為繁體中文及必要數字代碼；不修改系統外觀或 OA 主題。共用來源／Windows 專屬碼未再改，原有 UserSet／INI／附件與平台路徑保持。
+
+Release／CTest 1/1、136項、10份arm64及簽章通過；GET／POST／Blob／popup／右鍵下載、取消／兩目錄／中文及空白名稱／內容／重啟，以及 Ctrl+P 完整預覽另存 PDF 已實測。系統亮暗切換、暗色環境、正式 OA／一般注音／外部程式及所有原生錯誤分支未驗收；一次複合退出殘留列 M24 待定位，兩輪交付最小退出正常，不宣稱全部關閉情境通過。只更新本機 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；公開Mac仍M13、U01未實作。詳見 [本輪結果](PROGRESS.md)。
+
+## 2026-10-30：M24 Mac Cmd+Q 背景殘留修正完成
+
+M24 已重現並修正：Console 有焦點時 Cmd+Q 未進入原生結束入口，之後關閉全部 Browser／Views 仍可能留下 CEF 主迴圈。Mac sendEvent 現在先讓既有原生選單處理精確的 Command+Q，呼叫原 terminate → 共用登出／隱藏／三秒流程；沒有改寫登出或強制結束程序。
+
+最終 arm64 Release／CTest 1/1、136 checks／0 failures、10 份 arm64 與 deep strict 簽章通過；Console 焦點 Cmd+Q、已啟用 beforeunload、附件取消組合的 ACK619ms／無ACK3032ms及實際交付3043ms期限後皆正常 SHUTDOWN_COMPLETE，主程序／Helper 全部退出。 產品只改Mac main.mm，共用來源／Windows及附件實作保持；暫時診斷已撤回。新簽章測試的鑰匙圈等待另行辨識，僅隔離localhost測試帶官方 --use-mock-keychain，正式產品未加入這個參數。只更新本機0.1.6 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；正式OA／真實鑰匙圈、系統亮暗切換及其他原未驗收範圍保持。詳見 [M24結果](PROGRESS.md)。
+
+## W36：0.1.7 INI編碼、既有設定自動修復及印表字型（2026-10-30）
+
+使用者明確授權修正oaClient2的INI編碼相容問題、確認選定印表字型後report_font保存、編譯供測試，追加已產生的Config.ini須自動修復並進版。Windows本機交付現為0.1.7；INI唯一保存採UTF-8 BOM，啟動LoadSettings先沿同一Save修復既有無BOM的UTF-8檔，原鍵值／註解保留、相同內容不重寫；真正拒寫明確回報，不解readonly、不改ACL，不匯入舊個人設定。
+
+Reptool來源／EXE及呼叫契約不修改；report_font仍走通用UserSet。Windows Release／CTest1/1、160項與合成select保存／load-userset／重啟Cookie及$usr回填、舊Delphi讀取同一UI保存檔通過，正式OA／FRX預覽列印留使用者驗收。交付只更新EXE，正式INI下次啟動自動修復，不回填合成資料；prg／CEF／Mac交付保持。Mac共用改動待macOS重編回歸，Mac入口版本紀錄在Mac同步；本輪.app仍0.1.6。未提交／推送／Tag／發布，SDK與build保留；詳見[進度](PROGRESS.md)W36。
+
+## 2026-11-03：M25 Mac 0.1.7
+
+客戶端Shift+F攔截已取消，本機artifacts/macos-arm64/oaClient2.app已重編為0.1.7，沿用共用W36的INI保存／自動修復。Release／CTest1/1、151項、10份arm64及deep strict簽章通過，純文字頁trusted Shift+F可輸入F；正式OA CPN與其他既有未驗收項目留使用者測試。固定CEF154.0.34 SDK／下載包／build已恢復並保留；只更新本機交付，未安裝／提交／推送／發布，Windows共用變更待目標平台回歸。詳見[進度](PROGRESS.md)。
+
+## W37：Windows 0.1.7取消Shift+F攔截（2026-11-03）
+
+已依使用者要求沿用M25共用來源，重新編譯並更新Windows本機EXE，版本維持0.1.7。MSVC Release／CTest1/1、160項通過；Windows實際Shift+F／大寫F及正式OA由使用者測試，本輪未操作App。沒有再次修改產品來源、INI／Reptool／CEF／prg或Mac產物，SDK／build保留，未提交／推送／發布。前段Windows待重編為本輪前歷史，詳見[進度](PROGRESS.md)W37。
+
+
+## W38：列印背景圖形預設開啟（2026-11-11）
+
+Windows本機0.1.7已修正MRT輸出頁列印時背景消失／白字變淡：唯一app.cpp在瀏覽器建立前設定Chromium列印偏好isCssBackgroundEnabled=true，每次啟動套用，保留原生完整預覽與使用者手動切換。MSVC Release／CTest1/1、160項，以及交付EXE直接／Blob／清除profile重啟的合成預覽實測通過；已更新artifacts/oaClient2/oaClient2.exe並從檔案總管重開正式OA停在未登入首頁供使用者驗收。正式MRT／印表機未驗收，Mac.app未改、須在macOS重編實測。版本不變、未提交／推送／發布，INI／CEF／prg與SDK保留。詳見[進度](PROGRESS.md)W38。
+
+
+## W39：Windows0.1.8（2026-11-11）
+
+依使用者要求進版0.1.8，CMake／共用視窗與client_version／Windows啟動版本同步，保留W38列印背景修正。Release／CTest1/1、160項通過並僅更新本機EXE；527份INI／CEF／prg／picture／Mac來源與.app等保護檔案一致。Mac.app仍0.1.7，須macOS接續重編回歸；未提交／推送／發布，SDK及build保留。詳見[進度](PROGRESS.md)W39。
+
+## 2026-11-11：M26 Mac 0.1.8
+
+Mac本機交付已同步Windows0.1.8與W38「列印背景圖形預設開啟」，直接編譯唯一共用來源，Mac產品僅同步入口版本。Release／CTest1/1、151項、10份arm64及簽章通過；直接／Blob／清除profile重啟後原生預覽背景均保留。正式OA／MRT與印表機待使用者驗收；SDK／壓縮檔／build保留，未安裝／提交／推送／發布。詳見[進度](PROGRESS.md)。

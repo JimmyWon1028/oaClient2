@@ -1,6 +1,6 @@
 # oaClient2
 
-最新公開版本（2026-11-12）：**0.1.8**，[GitHub Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)提供Windows x64與Mac arm64 ZIP／SHA256。兩平台已包含列印背景預設、Shift+F及現行共用修正；公開下載校驗通過，正式報表及其他待驗收範圍見[進度](PROGRESS.md)。以下保留早期狀態，以最新發布及各工作紀錄為準。
+最新正式版本（2026-11-12，Latest）：**0.1.8**，[GitHub Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)提供Windows x64與Mac arm64 ZIP／SHA256。兩平台已包含列印背景預設、Shift+F及現行共用修正；公開下載校驗通過，正式報表及其他待驗收範圍見[進度](PROGRESS.md)。以下保留早期狀態，以最新發布及各工作紀錄為準。
 
 最新 Windows（2026-11-11，W39）：本機交付已進版 **0.1.8**，包含W38列印預覽背景圖形修正；Release／CTest1/1、160項通過。Mac本機仍0.1.7，須回macOS重編共用修改；公開ZIP未更新，正式報表驗收範圍見[進度](PROGRESS.md)。
 

@@ -2,7 +2,7 @@
 
 ## R03 最新下載：v0.1.8（2026-11-12）
 
-[oaClient2 0.1.8 測試版](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)已公開，來源與Tag固定a3de8b3f8cfd046912bfef19ae7dbf0865df3f6e。Windows W39／Mac M26的同一已測交付檔直接打包，沒有重新編譯；共用功能、變更與未驗收範圍見[進度](../PROGRESS.md)。下方0.1.6段落是歷史發布紀錄，舊資產與Tag保留。
+[oaClient2 0.1.8 正式版／Latest](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)已公開，來源與Tag固定a3de8b3f8cfd046912bfef19ae7dbf0865df3f6e。Windows W39／Mac M26的同一已測交付檔直接打包，沒有重新編譯；共用功能、變更與未驗收範圍見[進度](../PROGRESS.md)。下方0.1.6段落是歷史發布紀錄，舊資產與Tag保留。
 
 | 平台 | ZIP／SHA256校驗檔 | Bytes | ZIP SHA256 |
 | --- | --- | ---: | --- |
@@ -132,3 +132,7 @@ Windows Ctrl+W修正已由使用者回覆「可以了」驗收，來源a56ec0568
 ZIP仍只含EXE、安全範例、CEF234及現用prg4；不含個人INI／picture／logs／profile／cache／tpl／SDK／build，不補回工具。本機artifacts/releases同名兩檔已同步，W29歷史副本保留。Mac兩資產ID／大小／digest及固定Tag67e29679→0fe6f35不變，507份Mac平台／產物與CEF／prg等保護檔案雜湊一致。Mac M14～M18及D04既有未提交差異保留於工作目錄，未混入Windows提交；SDK／下載包／build保留。U01未實作。
 
 證據artifacts/verification/releases-windows-w30/results.json／package.json／release-public.json及public-download；發布結果文件另行提交推送，最新main以Git核對。前段W30待驗收／未發布及W29公開雜湊為本次驗收／發布前歷史。
+
+## 2026-11-12：R03 改為正式 Release／Latest
+
+使用者明確要求將v0.1.8改為正式Release，已取消GitHub prerelease標記並設為Latest，更新發行標題與說明首行為正式版。GitHub releases/latest端點確認tag=v0.1.8、draft=false、prerelease=false，Release ID仍442477933；四資產名稱／大小／SHA256 digest與變更前一致，未重編／重打包／重傳、未移動來源Tag或修改其他版本。各功能驗收限制保持，不因正式Release標記擴大驗收。證據artifacts/verification/releases-v0.1.8/before-stable.json、release-notes-stable.md、release-stable.json。前段測試版形式是本次更正前狀態，下載連結不變。

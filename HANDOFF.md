@@ -1,6 +1,6 @@
 # oaClient2 接續交接
 
-最新公開發布 R03（2026-11-12）：[v0.1.8測試版](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)已提供Windows x64／Mac arm64 ZIP及SHA256，公開下載校驗通過。Tag固定a3de8b3，v0.1.6保持，詳見末段及[Release文件](docs/RELEASES.md)。
+最新公開發布 R03（2026-11-12）：[v0.1.8正式版／Latest](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)已提供Windows x64／Mac arm64 ZIP及SHA256，公開下載校驗通過。Tag固定a3de8b3，v0.1.6保持，詳見末段及[Release文件](docs/RELEASES.md)。
 
 最新 Mac M26（2026-11-11）：已沿用Windows W38列印背景預設並更新本機arm64 0.1.8 App。Release／151項／簽章及直接、Blob、重啟原生預覽實測通過，正式OA／印表機待驗收，未安裝／發布。詳見末段。
 
@@ -594,3 +594,7 @@ Windows ZIP 189895114 bytes，SHA256 335c30631616fa0cac24d7da878d08643ee02c4b705
 四個公開資產的GitHub大小／digest與本機一致；未帶登入憑證從公開URL重新下載ZIP／校驗檔，全部逐位元相同，兩ZIP CRC及Windows240檔SHA256通過。既有v0.1.6 Release／4資產ID、大小、digest及固定Tag67e29679→0fe6f35保持不變，522份交付／個人設定保護檔雜湊不變。草稿Tag API查詢曾回傳404，該步完整遠端雜湊核對實際在公開後補做通過，不能把它寫成發布前已完成。
 
 本次Release ID 442477933，資產ID／下載URL／校驗及保護結果見artifacts/verification/releases-v0.1.8/results.json；本機ZIP保留artifacts/releases/v0.1.8，SDK／原壓縮檔／build保留。舊Release與Tag不移動，發布結果文件另行提交推送、v0.1.8仍指向實際App來源a3de8b3；U01程式內線上更新未實作。前段「未發布／公開仍0.1.6」為本次授權前歷史。
+
+## 2026-11-12：R03 改為正式 Release／Latest
+
+使用者明確要求將v0.1.8改為正式Release，已取消GitHub prerelease標記並設為Latest，更新發行標題與說明首行為正式版。GitHub releases/latest端點確認tag=v0.1.8、draft=false、prerelease=false，Release ID仍442477933；四資產名稱／大小／SHA256 digest與變更前一致，未重編／重打包／重傳、未移動來源Tag或修改其他版本。各功能驗收限制保持，不因正式Release標記擴大驗收。證據artifacts/verification/releases-v0.1.8/before-stable.json、release-notes-stable.md、release-stable.json。前段測試版形式是本次更正前狀態，下載連結不變。

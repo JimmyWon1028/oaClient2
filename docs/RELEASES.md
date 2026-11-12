@@ -1,5 +1,19 @@
 # 編譯版本下載與Release紀錄
 
+## R03 最新下載：v0.1.8（2026-11-12）
+
+[oaClient2 0.1.8 測試版](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)已公開，來源與Tag固定a3de8b3f8cfd046912bfef19ae7dbf0865df3f6e。Windows W39／Mac M26的同一已測交付檔直接打包，沒有重新編譯；共用功能、變更與未驗收範圍見[進度](../PROGRESS.md)。下方0.1.6段落是歷史發布紀錄，舊資產與Tag保留。
+
+| 平台 | ZIP／SHA256校驗檔 | Bytes | ZIP SHA256 |
+| --- | --- | ---: | --- |
+| Windows x64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.8/oaClient2-0.1.8-windows-x64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.8/oaClient2-0.1.8-windows-x64.zip.sha256) | 189895114 | `335c30631616fa0cac24d7da878d08643ee02c4b705f841a7a1e321198ce8199` |
+| Mac arm64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.8/oaClient2-0.1.8-macos-arm64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.8/oaClient2-0.1.8-macos-arm64.zip.sha256) | 144472509 | `2f5b406cc3acf542c994c5fcb817facec480a73da911ab44874f9594da41f2b8` |
+
+Windows仍以安全清單封裝240檔：主程式、安全Config.example.ini、CEF234及現用prg4；未補回其他工具。Mac ZIP只有完整.app，解壓265份檔案／連結／mode與交付一致、10份arm64與deep strict簽章通過。兩平台均排除個人Config.ini、登入／網站資料、picture、logs、cache、tpl與SDK／build。Mac為ad-hoc簽章、未完成Developer ID／公證；更新前正常關閉，Windows保留自己的設定／截圖／工具／範本，Mac替換完整.app並保留Application Support/oaClient2。
+
+四資產GitHub大小／digest與本機一致，公開URL無登入下載全部一致，ZIP CRC與Windows逐檔SHA256通過；v0.1.6的Release／資產與Tag未改。Windows160項、Mac151項及各自列印背景合成回歸沿用既有證據，正式OA／MRT與印表機留使用者驗收；Mac Blob視窗以右鍵列印完成預覽，Ctrl+P／Cmd+P未驗證通過。本次草稿Tag查詢404，完整遠端雜湊核對在公開後補做通過。詳細ID／本機證據與實際發布過程見[進度](../PROGRESS.md)R03；U01仍未實作。
+
+
 2026-10-13。工作ID：R01（Mac首次公開下載）、R02（Windows後續補齊）。
 
 Repository：[JimmyWon1028/oaClient2](https://github.com/JimmyWon1028/oaClient2)。下載入口：[Releases](https://github.com/JimmyWon1028/oaClient2/releases)。編譯產物透過Release資產提供，SDK／build／個人資料不放Git。

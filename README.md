@@ -1,5 +1,7 @@
 # oaClient2
 
+最新公開版本（2026-11-12）：**0.1.8**，[GitHub Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)提供Windows x64與Mac arm64 ZIP／SHA256。兩平台已包含列印背景預設、Shift+F及現行共用修正；公開下載校驗通過，正式報表及其他待驗收範圍見[進度](PROGRESS.md)。以下保留早期狀態，以最新發布及各工作紀錄為準。
+
 最新 Windows（2026-11-11，W39）：本機交付已進版 **0.1.8**，包含W38列印預覽背景圖形修正；Release／CTest1/1、160項通過。Mac本機仍0.1.7，須回macOS重編共用修改；公開ZIP未更新，正式報表驗收範圍見[進度](PROGRESS.md)。
 
 更新：2026-10-30。Windows 本機交付為 **0.1.7／W36**：INI 保存採 UTF-8 BOM，啟動時自動修復既有無 BOM 設定，印表字型 report_font 已完成合成選單保存／重啟及舊 Delphi 讀取驗證；Reptool 不變。Mac 本機交付仍為 0.1.6／M24，共用修改待 macOS 重編回歸。正式 OA 報表及其他功能的驗收範圍以 [PROGRESS.md](PROGRESS.md) 為準。
@@ -69,7 +71,7 @@ Git 為 main 分支，使用者已授權建立公開 repository [JimmyWon1028/oa
 
 ## 下載編譯版本
 
-從 [v0.1.6 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.6) 下載 [Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-windows-x64.zip) 或 [Mac arm64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.6/oaClient2-0.1.6-macos-arm64.zip)，並下載對應 .sha256 校驗檔。兩平台皆不含個人 Config.ini、快取、profile、截圖或紀錄；Windows 包含 EXE／cef／安全設定範例及現有精簡 prg，Mac 只包含完整 .app。依本機發布紀錄，公開 Windows ZIP 已到使用者確認的 W30（來源 a56ec056），Mac ZIP 仍為 M13，版本 0.1.6、Tag 不移動；Windows 本機 W31～W35 及 Mac 本機 M14～M24 尚未更新到公開 ZIP。下載與校驗方式見 [RELEASES](docs/RELEASES.md)，U01 程式內線上更新尚未實作。
+從 [v0.1.8 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8) 下載 [Windows x64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.8/oaClient2-0.1.8-windows-x64.zip) 或 [Mac arm64 ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.8/oaClient2-0.1.8-macos-arm64.zip)，並下載各自的 .sha256 校驗檔。兩平台不含個人 Config.ini、網站資料、快取、截圖或紀錄；Windows包含EXE／cef／安全設定範例與現用精簡prg，Mac只有完整.app。來源Tag固定a3de8b3，既有v0.1.6保留。下載與校驗方式見 [RELEASES](docs/RELEASES.md)，U01程式內線上更新尚未實作。
 
 ## 2026-10-30：M24 Mac Cmd+Q 背景殘留修正完成
 

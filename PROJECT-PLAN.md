@@ -592,3 +592,13 @@ Windows MSVC x64 Release／CTest1/1、160 checks／0 failures通過；package-wi
 使用者明確要求「commit, push」。本批納入截至Windows W39／Mac M26的0.1.8既有未提交來源、跨平台附件選檔、外部協定、亮色外觀、繁體中文錯誤、下載詢問、INI UTF-8 BOM／自動修復、Shift+F修正、列印背景預設，以及測試素材／建置腳本／交接文件。遠端沿用origin的既有GitHub repository及main，不建立新遠端、Tag或Release；App／EXE／SDK／建置產物、個人INI／picture／profile及本機驗證紀錄按既有忽略規則排除。
 
 提交前確認遠端main與本機基準8d104ba一致，37份待提交文字檔無二進位／解碼替代字元或掃描到的私密金鑰／token，git diff --check通過，Mac交付雜湊仍與M26驗證結果一致。本輪未改產品、重編或重跑實機功能；既有Windows160項、Mac151項與各自驗收限制以各工作紀錄為準，不宣稱正式OA／MRT／印表機全部驗收。此批依授權提交後推送origin/main，最終提交與遠端一致性以Git核對結果為準；未發布新版下載檔。
+
+## 2026-11-12：R03 公開發布 v0.1.8（Windows／Mac）
+
+使用者明確要求publish release，沿用既有測試版形式，新增[oaClient2 v0.1.8 Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)，提供Windows x64／Mac Apple Silicon arm64 ZIP及各自.sha256，共4個資產。來源與v0.1.8 Tag固定a3de8b3f8cfd046912bfef19ae7dbf0865df3f6e；前輪G01已實際commit／push並核對遠端一致。本輪直接打包既有各平台已建置的0.1.8交付檔，不重編、不擴大正式OA／MRT／印表機等驗收，也不安裝App。
+
+Windows ZIP 189895114 bytes，SHA256 335c30631616fa0cac24d7da878d08643ee02c4b705f841a7a1e321198ce8199；240檔為EXE、安全範例、CEF234及現用精簡prg4，不補回其他工具。Mac ZIP 144472509 bytes，SHA256 2f5b406cc3acf542c994c5fcb817facec480a73da911ab44874f9594da41f2b8；只有完整.app，解壓265份檔案／連結／mode與交付一致、10份arm64 Mach-O及deep strict簽章通過。兩平台排除個人INI／網站登入與儲存／picture／logs／快取／tpl／SDK／build，Mac未做Developer ID簽署或公證。沿用Windows160項及Mac151項與原生預覽實測，詳細限制保留各工作紀錄及Release說明。
+
+四個公開資產的GitHub大小／digest與本機一致；未帶登入憑證從公開URL重新下載ZIP／校驗檔，全部逐位元相同，兩ZIP CRC及Windows240檔SHA256通過。既有v0.1.6 Release／4資產ID、大小、digest及固定Tag67e29679→0fe6f35保持不變，522份交付／個人設定保護檔雜湊不變。草稿Tag API查詢曾回傳404，該步完整遠端雜湊核對實際在公開後補做通過，不能把它寫成發布前已完成。
+
+本次Release ID 442477933，資產ID／下載URL／校驗及保護結果見artifacts/verification/releases-v0.1.8/results.json；本機ZIP保留artifacts/releases/v0.1.8，SDK／原壓縮檔／build保留。舊Release與Tag不移動，發布結果文件另行提交推送、v0.1.8仍指向實際App來源a3de8b3；U01程式內線上更新未實作。前段「未發布／公開仍0.1.6」為本次授權前歷史。

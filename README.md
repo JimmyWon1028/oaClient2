@@ -1,5 +1,7 @@
 # oaClient2
 
+Windows v0.1.9下載已同版更新W46休眠喚醒修正，使用者已驗收，來源e345e7f已推送；版本／固定Tag及Mac全部資產保持。[下載Windows ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip)／[校驗檔](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip.sha256)。公開下載與240檔CRC／雜湊通過；.previous-w45為舊版備份。詳細見[發布紀錄](docs/RELEASES.md)。
+
 ## R04／W46：休眠恢復驗收與同版發布授權（2026-11-18）
 
 使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過，不擴大為正式通知端到端或其他功能驗收；另明確要求commit、push及重新打包上傳Windows Release、不進版。版本維持0.1.9，沿用已建置及驗收的EXE，不重新編譯或操作登入中的程式。將W46及先前已驗收／已發布但未提交的M29來源與文件一併保存到Git；只重新封裝Windows ZIP／SHA256，Mac四個資產（含歷史備份）、固定Tag與舊版本保持。

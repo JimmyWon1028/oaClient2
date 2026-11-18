@@ -1,15 +1,25 @@
 # 編譯版本下載與Release紀錄
 
+## R04／W46：Windows 0.1.9同版重新發布完成（2026-11-18）
+
+使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過；另依commit、push及重新打包上傳Windows Release、不進版的指示，來源e345e7f238fde9f762805d2d2f822cb49b48828f已推送核對。提交同時保存先前Mac已驗收／已發布的M29來源及紀錄，沒有修改Mac實作或重建Mac交付。Windows沿用已測EXE重新封裝，版本仍0.1.9，v0.1.9固定Tag a1215673784aa9a4fafb7ae8e2813a68ebbac5ff不動。
+
+既有Release449602031原名Windows ZIP／SHA256已更新，ZIP為192199161 bytes、SHA256 2fd5805f9f8a8ec11bdd1f33c49114a46c7dc5a9b988afcf9ff4164edd159907，EXE仍9144462070129ff357f150ed052bfbf7a5063321111a0eac16c8ea8fc641a8e6；來源提交見上。包內240檔（CEF234、現用prg4、EXE及安全範例），CRC／全部SHA256通過，排除個人INI／網站資料／picture／logs／cache／tpl／SDK／build，不補回prg。沿用W46 MSVC Release／CTest3/3（194核心＋18腳本＋15原生）、CEF合成回歸及使用者休眠回報，不擴大正式通知端到端、注音／列印／Reptool或Mac共用修改驗收。
+
+先以暫名上傳驗證GitHub大小／digest，再將舊Windows兩檔改名.previous-w45保留，新檔換回原下載名。公開原URL不帶登入憑證重新下載ZIP／SHA256均逐位元一致，公開ZIP CRC與240份內容雜湊再次通過。Release目前8個資產，Windows原名兩檔為W46新版，.previous-w45與Mac .previous-m28各兩檔為歷史備份；原Mac全部4資產ID／大小／digest保持，v0.1.8／v0.1.6 Release及Latest／固定Tag保持，沒有刪除遠端或本機備份。
+
+604份本機保護清單核對通過（運作中的個人INI若有正常變動保留，不回寫快照），Windows／Mac交付、來源及素材未因打包修改；SDK／下載包／build保留。未重編、重啟或操作登入中的程式，未安裝或上傳API；W46共用session在Mac仍須目標平台重編回歸，Mac公開下載維持M29。證據artifacts/verification/releases-windows-w46，含package.json、release-before／staged／replaced／final.json、history-w45、public-download及results.json。發布結果文件另提交推送，前段待驗收／未提交／未發布為當時歷史狀態。
+
 ## R04 最新下載：v0.1.9（2026-11-18）
 
 [oaClient2 0.1.9正式版／Latest](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.9)已公開，Tag固定a1215673784aa9a4fafb7ae8e2813a68ebbac5ff。
 
 | 平台 | ZIP／校驗檔 | Bytes | ZIP SHA256 |
 | --- | --- | ---: | --- |
-| Windows x64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip.sha256) | 192197619 | `ef06618bc81b409d161760d2c0250ef237d80ad3980fdced86d2495eb5ef2a4f` |
+| Windows x64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip.sha256) | 192199161 | `2fd5805f9f8a8ec11bdd1f33c49114a46c7dc5a9b988afcf9ff4164edd159907` |
 | Mac arm64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip.sha256) | 146770733 | `fef207bb8dbdb5358dd4dc0dd832fe134c10a7cd9fd43d826fd44b74cd702220` |
 
-Windows EXE SHA256為e5d504c7ef60a62c88ffb63aecb294399d8dc573b81cd5b29181c7b1e4cea28c；Mac主程式為331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb，對應Windows W45／Mac M29交付。
+Windows EXE SHA256為9144462070129ff357f150ed052bfbf7a5063321111a0eac16c8ea8fc641a8e6；Mac主程式為331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb，對應Windows W46／Mac M29交付。
 
 Mac同日已依使用者「不要進版」要求更新M29左側拖曳修正；Tag維持初次發布值，Mac內容以本次主程式與ZIP雜湊識別。Mac兩個.previous-m28資產是歷史備份，請下載上表原名新版檔案。Mac來源為144b717基準加本機未提交M29差異，patch SHA256 5fc34672d627321985f74298dbc435e813313e813989a02c7fbe0bf9c21195ed，本次未另提交／推送。
 

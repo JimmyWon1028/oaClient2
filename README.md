@@ -1,5 +1,7 @@
 # oaClient2
 
+最新正式版本（2026-11-18，Latest）：**0.1.9**，[GitHub Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.9)提供Windows x64與Mac arm64 ZIP／SHA256，均包含內建小熊與上緣拖曳修正。四個公開下載已校驗，舊版保留；Mac為ad-hoc簽章、尚無Developer ID／公證。[發布與驗證紀錄](docs/RELEASES.md)。
+
 最新Windows本機W45（2026-11-18）：0.1.9已修正小熊無法拖到螢幕上方；靠近上緣時訊息改放小熊下方，拖回下方恢復原位置。已建置更新交付，實際拖曳／點訊息／×／雙擊回歸通過，重開後需重新登入。Mac及API保持，詳細見[進度](PROGRESS.md)。
 
 最新 Mac M28（2026-11-18）：0.1.9已修正pet右上角拖曳限制；靠近選單列時訊息泡泡顯示於小熊下方。CTest3/3與原生繪圖通過，本機交付已更新並重啟，實際滑鼠操作待重新登入後驗收；[詳細結果](PROGRESS.md)。

@@ -318,3 +318,7 @@ Mac已修正整個透明面板／Cocoa提早夾限造成無法靠近右上角：
 ## W45：Windows pet 上緣拖曳（2026-11-18）
 
 Windows已修正整個透明面板夾限造成小熊無法靠近上緣：依小熊腳底錨點選上下泡泡，靠近上緣訊息放下方、重排保持本體位置；繪圖／×／泡泡／雙擊區域同步，回下方恢復上方泡泡。僅Windows native來源及測試，0.1.9交付已更新重開，Release／CTest2/2（194＋16）與合成實際拖曳／通知操作通過；Mac／共用來源／API保持，完整多螢幕／其他DPI與原功能未擴大驗收，詳見PROGRESS W45。
+
+## R04：v0.1.9雙平台正式發布（2026-11-18）
+
+使用者明確要求發布Release且Windows／Mac都發布，已公開v0.1.9正式版並設Latest，提供Windows x64／Mac arm64 ZIP及各自SHA256。Tag固定a121567，主產品來源9cb59e6；Windows W45、Mac M28已測交付直接封裝，不重編／安裝／部署API。四個公開下載與本機一致、CRC／逐檔雜湊及Mac連結／權限通過，舊Release／Tag保持；個人資料及SDK／build保留。Mac封裝依M28清單保留Windows同步省略的4個CEF符號連結，不修改.app內容；未在Windows執行codesign。詳細雜湊、限制與可重現流程見[Release文件](docs/RELEASES.md)，未測項目不因正式發布擴大完成。

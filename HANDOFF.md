@@ -1,5 +1,15 @@
 # oaClient2 接續交接
 
+## R04：v0.1.9 Windows／Mac 正式發布完成（2026-11-18）
+
+使用者要求「發布Release」並確認「win, mac都發布」。[v0.1.9正式版／Latest](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.9)已公開，Release ID449602031、draft=false、prerelease=false。新Tag固定已推送來源 `a1215673784aa9a4fafb7ae8e2813a68ebbac5ff`（產品主提交9cb59e6），沒有移動舊Tag。Windows W45與Mac M28的已測交付直接封裝，兩平台版本均0.1.9，未重編／安裝或部署API。
+
+Windows ZIP為192197619 bytes、SHA256 `ef06618bc81b409d161760d2c0250ef237d80ad3980fdced86d2495eb5ef2a4f`；240檔包含主程式、安全範例、CEF234及現用prg4，不補回其他工具。Mac ZIP為146770634 bytes、SHA256 `fdddff41a1f28ad1712d00685016d73e32813e8b3d26b7057e8e042fe6240cdd`；完整.app的263實體檔與M28 macOS交付清單逐一SHA256一致，另依清單保留4個CEF相對符號連結與Unix執行權限，總267項。Windows同步不保留這4個連結，因此ZIP按原清單重建，未修改交付.app；10個Mach-O均薄arm64，簽章資料與已在Mac deep strict驗證的M28保持，Windows不重跑codesign或宣稱重新驗證Mac執行。新跨平台封裝腳本scripts/create-macos-release.py保留清單／權限／連結與逐檔校驗的可重現流程。
+
+先建立草稿、上傳四個ZIP／SHA256並核對GitHub digest及大小後才公開。四個公開URL不帶憑證重新下載與本機逐位元一致，ZIP CRC、Windows全部240檔SHA256、Mac全部267項內容／連結／權限通過；latest端點與新Tag來源核對，v0.1.8／v0.1.6資產ID／大小／digest與Tag均保持。兩包排除個人INI、登入／網站資料、picture、logs、cache、tpl及SDK／build；原交付主程式雜湊不變，prg不補回。
+
+沿用Windows Release／CTest2/2（194＋16）及本機上緣拖曳／通知操作，Mac M28 Release／CTest3/3（177＋16＋20）、原生繪圖與既有簽章結果；發布不擴大正式OA通知端到端、多螢幕／其他DPI、Mac實際拖曳／各平台實體方向鍵、注音／列印／Reptool驗收。Mac仍ad-hoc簽章、未有Developer ID／公證；U01未實作。SDK／下載包／build及個人資料保留。證據artifacts/verification/releases-v0.1.9與artifacts/releases/v0.1.9；發布文件／封裝腳本另提交推送，Tag固定不動。前段「未發布／公開0.1.8」為本輪授權前歷史。
+
 ## D03：0.1.9 pet 來源已推送（2026-11-18）
 
 依使用者「commit, push」完成主提交 `9cb59e6`，已推送既有GitHub origin/main，遠端refs/heads/main完整SHA核對為 `9cb59e606ee1a75262c9e0d469784acae68e2aa3`。共59檔，涵蓋Windows W40～W45、Mac M27／M28、唯一共用通知／renderer／動畫、BSI020010後端快照、素材、測試及文件。未納入artifacts、個人INI、登入／網站資料、.env、SDK或測試證據；版本0.1.9、既有Tag與公開Release保持，未部署API。另一Megatower儲存庫未提交或推送。

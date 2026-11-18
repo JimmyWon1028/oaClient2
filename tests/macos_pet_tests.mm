@@ -37,6 +37,27 @@ int main(int argc, char* argv[]) {
     auto other = oa::PlaceMacPet(NSMakePoint(-100, 1000), oa::kMacPetFeetAbove, secondary);
     check(other.origin.x == -300 && other.origin.y == 668 && other.feet == oa::kMacPetFeetBelow,
       "corner placement respects a secondary display with negative coordinates");
+    auto left = oa::PlaceMacPet(NSMakePoint(-400, 100), oa::kMacPetFeetAbove, area);
+    check(left.origin.x == NSMinX(area) && left.center == oa::kMacPetCenterLeft,
+      "left drag places the bear at the left side instead of reserving the empty message width");
+    check(left.center - 24 - 50 >= 6,
+      "left placement reserves enough transparent canvas for the existing short walk");
+    auto left_reflow = oa::PlaceMacPet(NSMakePoint(-20, 300), oa::kMacPetFeetAbove, area);
+    check(left_reflow.origin.x + left_reflow.center == 224,
+      "left reflow retains the bear screen anchor before reaching the work-area edge");
+    auto left_again = oa::PlaceMacPet(left.origin, left.feet, area, left.center);
+    check(NSEqualPoints(left_again.origin, left.origin) && left_again.center == left.center,
+      "repeated left notifications do not drift the bear position");
+    auto return_right = oa::PlaceMacPet(NSMakePoint(300, 100), left.feet, area, left.center);
+    check(return_right.center == oa::kMacPetCenterRight && return_right.origin.x + return_right.center == 380,
+      "moving away from the left edge restores the original layout without an anchor jump");
+    auto upper_left = oa::PlaceMacPet(NSMakePoint(-400, 900), oa::kMacPetFeetAbove, area);
+    check(upper_left.origin.x == NSMinX(area) && upper_left.origin.y == 611 &&
+      upper_left.center == oa::kMacPetCenterLeft && upper_left.feet == oa::kMacPetFeetBelow,
+      "top-left placement combines a left bear with a complete lower bubble");
+    auto secondary_left = oa::PlaceMacPet(NSMakePoint(-2400, 100), oa::kMacPetFeetAbove, secondary);
+    check(secondary_left.origin.x == NSMinX(secondary) && secondary_left.center == oa::kMacPetCenterLeft,
+      "left placement uses the supplied negative-coordinate screen edge");
     {
       oa::MacDesktopPet pet;
       NSWindow* panel = nil;
@@ -68,6 +89,12 @@ int main(int argc, char* argv[]) {
             [image colorAtX:20 * sx y:150 * sy].alphaComponent > .9,
             "native upper layout paints its bubble below the bear rather than reserving space above it");
         }
+        if ([name isEqualToString:@"native-left-idle.png"]) {
+          const double sx = image.pixelsWide / view.bounds.size.width, sy = image.pixelsHigh / view.bounds.size.height;
+          check([image colorAtX:oa::kMacPetCenterLeft * sx y:156 * sy].alphaComponent > .9 &&
+            [image colorAtX:oa::kMacPetCenterRight * sx y:156 * sy].alphaComponent < .01,
+            "native left placement paints the bear on the left and leaves the old right anchor transparent");
+        }
         if (argc > 1) {
           NSString* directory = [NSString stringWithUTF8String:argv[1]];
           NSData* png = [image representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
@@ -95,6 +122,13 @@ int main(int argc, char* argv[]) {
         "upper-screen native notification keeps its complete panel inside the work area");
       pet.CloseMessage();
       render(@"native-upper-idle.png");
+      [panel setFrameOrigin:NSMakePoint(NSMinX(work) - 200, NSMinY(work) + 100)];
+      pet.Notify("新增詢報價：SYNTHETIC-6\n1 / 2　↑ 上一則　↓ 下一則", [] {});
+      auto left_notice = render(@"native-left-notification.png");
+      check(panel.frame.origin.x == NSMinX(work) && NSContainsRect(work, panel.frame) && left_notice.first > 10000,
+        "left native placement keeps the complete message panel visible");
+      pet.CloseMessage();
+      render(@"native-left-idle.png");
       pet.Hide();
       check(!panel.visible, "logout hides the panel");
     }

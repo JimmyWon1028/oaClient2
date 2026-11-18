@@ -7,11 +7,13 @@
 | 平台 | ZIP／校驗檔 | Bytes | ZIP SHA256 |
 | --- | --- | ---: | --- |
 | Windows x64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-windows-x64.zip.sha256) | 192197619 | `ef06618bc81b409d161760d2c0250ef237d80ad3980fdced86d2495eb5ef2a4f` |
-| Mac arm64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip.sha256) | 146770634 | `fdddff41a1f28ad1712d00685016d73e32813e8b3d26b7057e8e042fe6240cdd` |
+| Mac arm64 | [ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip)／[.sha256](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip.sha256) | 146770733 | `fef207bb8dbdb5358dd4dc0dd832fe134c10a7cd9fd43d826fd44b74cd702220` |
 
-Windows EXE SHA256為e5d504c7ef60a62c88ffb63aecb294399d8dc573b81cd5b29181c7b1e4cea28c；Mac主程式為582bccc0919916fe9fb54d257545ab30cacedbbb2302e10d6dfd15b2a024a604，與各自W45／M28交付一致。
+Windows EXE SHA256為e5d504c7ef60a62c88ffb63aecb294399d8dc573b81cd5b29181c7b1e4cea28c；Mac主程式為331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb，對應Windows W45／Mac M29交付。
 
-Mac新增可重現的跨平台[清單封裝腳本](../scripts/create-macos-release.py)，只接受macOS已驗證交付清單：核對全部實體檔SHA256，保留mode及相對symlink，以Unix ZIP屬性封裝；不以Windows同步目錄直接壓縮而遺失連結。範例：
+Mac同日已依使用者「不要進版」要求更新M29左側拖曳修正；Tag維持初次發布值，Mac內容以本次主程式與ZIP雜湊識別。Mac兩個.previous-m28資產是歷史備份，請下載上表原名新版檔案。Mac來源為144b717基準加本機未提交M29差異，patch SHA256 5fc34672d627321985f74298dbc435e813313e813989a02c7fbe0bf9c21195ed，本次未另提交／推送。
+
+以下為R04首次M28封裝命令，保留重現原始發布；M29實際封裝與下載證據見後段同版更新紀錄。Mac新增可重現的跨平台[清單封裝腳本](../scripts/create-macos-release.py)，只接受macOS已驗證交付清單：核對全部實體檔SHA256，保留mode及相對symlink，以Unix ZIP屬性封裝；不以Windows同步目錄直接壓縮而遺失連結。範例：
 
 ```powershell
 python scripts/create-macos-release.py --delivery artifacts/macos-arm64/oaClient2.app --manifest artifacts/verification/macos-m28-pet-corners/delivery-manifest.json --output artifacts/releases/v0.1.9/oaClient2-0.1.9-macos-arm64.zip --evidence artifacts/verification/releases-v0.1.9/macos-package.json --source-commit a1215673784aa9a4fafb7ae8e2813a68ebbac5ff --expected-executable-sha256 582bccc0919916fe9fb54d257545ab30cacedbbb2302e10d6dfd15b2a024a604
@@ -165,3 +167,19 @@ ZIP仍只含EXE、安全範例、CEF234及現用prg4；不含個人INI／picture
 ## 2026-11-12：R03 改為正式 Release／Latest
 
 使用者明確要求將v0.1.8改為正式Release，已取消GitHub prerelease標記並設為Latest，更新發行標題與說明首行為正式版。GitHub releases/latest端點確認tag=v0.1.8、draft=false、prerelease=false，Release ID仍442477933；四資產名稱／大小／SHA256 digest與變更前一致，未重編／重打包／重傳、未移動來源Tag或修改其他版本。各功能驗收限制保持，不因正式Release標記擴大驗收。證據artifacts/verification/releases-v0.1.8/before-stable.json、release-notes-stable.md、release-stable.json。前段測試版形式是本次更正前狀態，下載連結不變。
+
+## R04／M29：Mac 0.1.9同版重新上傳完成（2026-11-18）
+
+使用者對M29左側拖曳回覆「可以了」，本項記錄使用者驗收，不擴大其他功能；另依「重新打包上傳Mac版Release，不要進版」已更新既有v0.1.9原名Mac ZIP與.sha256。Release仍449602031、正式版／Latest；版本0.1.9，固定Tag a1215673784aa9a4fafb7ae8e2813a68ebbac5ff不移動，Windows兩資產ID／大小／digest、v0.1.8／v0.1.6 Release保持。沒有重新編譯、操作或安裝App／API，也沒有提交／推送來源。
+
+新Mac ZIP 146770733 bytes，SHA256 fef207bb8dbdb5358dd4dc0dd832fe134c10a7cd9fd43d826fd44b74cd702220；主程式仍為已驗收交付的331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb。完整.app共267項（263實體檔＋4相對symlink），全部SHA256／mode／連結／CRC、10份薄arm64及交付與ZIP解壓後deep strict簽章通過。排除個人INI／網站資料／picture／logs／cache／SDK／build，沿用M29 CTest3/3（177＋16＋29）及本次使用者左拖回報。
+
+先以暫名上傳並校驗GitHub大小／digest，再將舊Mac兩資產改名.previous-m28保留，新檔改回原下載名；不帶登入憑證從原公開URL重新下載兩檔逐位元一致，公開ZIP全部267項再核對通過。新資產ID762415587／762415588，Windows仍762205221／762206804。自動審核拒絕公開校驗後刪除舊備份，理由為未獲使用者授權刪除歷史發布證據；已改為完全保留全部遠端與本機備份，未執行刪除或繞過拒絕。Release目前6個資產，.previous-m28兩檔為歷史，下載表格與原名兩檔均為M29新版。
+
+舊M28 ZIP／校驗檔保留history-m28，原ZIP SHA256 fdddff41a1f28ad1712d00685016d73e32813e8b3d26b7057e8e042fe6240cdd，原遠端ID762206846／762207771內容保持。artifacts/releases/v0.1.9的Mac兩檔已同步新包。M29來源為144b71751765ca67973f8a29a113826cab03bb00基準加本機未提交3檔差異，patch SHA256 5fc34672d627321985f74298dbc435e813313e813989a02c7fbe0bf9c21195ed，source.json／macos-m29-source.patch保存確切內容；Release說明已區分固定Tag與新Mac內容，本次未另要求commit／push，不用基準提交冒充M29來源。證據artifacts/verification/releases-macos-m29，含macos-package.json、release-staged／replaced／final.json、public-verification.json、public-download、history-m28與results.json。保護清單只見運作中的個人Config.ini變動，保留現況、未讀取設定內容或回寫舊快照，其餘來源／素材／Windows及Mac交付一致；SDK／下載包／build保留。
+
+## R04／W46：休眠恢復驗收與同版發布授權（2026-11-18）
+
+使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過，不擴大為正式通知端到端或其他功能驗收；另明確要求commit、push及重新打包上傳Windows Release、不進版。版本維持0.1.9，沿用已建置及驗收的EXE，不重新編譯或操作登入中的程式。將W46及先前已驗收／已發布但未提交的M29來源與文件一併保存到Git；只重新封裝Windows ZIP／SHA256，Mac四個資產（含歷史備份）、固定Tag與舊版本保持。
+
+先保留舊Windows ZIP／校驗檔，上傳新包暫名並驗證遠端大小／digest，才把舊檔改名.previous-w45保留、新檔改回原下載名，再從公開原URL無登入下載核對。包內排除個人INI／網站資料／picture／logs／cache／tpl／SDK／build，現用prg4份不補回；不刪除既有歷史資產、不上傳API、不改個人設定，SDK／build保留。後續追加實際提交、雜湊與公開下載結果；前段待驗收／未提交／未發布為本次回報與授權前歷史。

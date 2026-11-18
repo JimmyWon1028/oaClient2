@@ -322,3 +322,27 @@ Windows已修正整個透明面板夾限造成小熊無法靠近上緣：依小�
 ## R04：v0.1.9雙平台正式發布（2026-11-18）
 
 使用者明確要求發布Release且Windows／Mac都發布，已公開v0.1.9正式版並設Latest，提供Windows x64／Mac arm64 ZIP及各自SHA256。Tag固定a121567，主產品來源9cb59e6；Windows W45、Mac M28已測交付直接封裝，不重編／安裝／部署API。四個公開下載與本機一致、CRC／逐檔雜湊及Mac連結／權限通過，舊Release／Tag保持；個人資料及SDK／build保留。Mac封裝依M28清單保留Windows同步省略的4個CEF符號連結，不修改.app內容；未在Windows執行codesign。詳細雜湊、限制與可重現流程見[Release文件](docs/RELEASES.md)，未測項目不因正式發布擴大完成。
+
+## M29：Mac pet 水平邊界（2026-11-18）
+
+Mac已修正左側透明留白阻擋拖曳：靠近左緣時本體使用左側中心並保留短程走路空間，移回其他位置恢復原中心，重排保持錨點且泡泡完整，Sprite／星光／alpha命中一致。僅Mac版面及原生測試，版本0.1.9，共用通知／Windows不改。Release／CTest3/3（177＋16＋29）與原生像素／繪圖、arm64／簽章通過；本機交付已正常重啟，正式OA已載入，實際左拖仍待使用者驗收。公開Release未更新，無提交／推送／安裝／部署；詳見[進度](PROGRESS.md)M29。
+
+## R04／M29：Mac同版重新上傳（2026-11-18）
+
+使用者已回報Mac左拖「可以了」，並要求重新打包上傳Mac Release、不進版。既有v0.1.9原名Mac ZIP／SHA256已更新M29，公開下載與本機及267項內容／權限／連結一致，交付與解壓後簽章通過；Windows／固定Tag／舊版本保持。自動審核拒絕刪除歷史Mac備份後採完全保留方案，.previous-m28遠端兩檔及本機history-m28保留，未執行刪除；原名兩檔為最新版。M29來源仍未提交（本次只有打包／上傳指示），以144b717基準、來源patch與實際二進位雜湊追溯，不以舊Tag冒充新Mac來源。未重編／安裝／部署或寫入個人設定；運作中的INI變動保留、不回寫快照。詳見[發布紀錄](docs/RELEASES.md)。
+
+## W46：Windows pet 休眠喚醒恢復（2026-11-18）
+
+使用者回報休眠後仍已登入，工具列小熊按鈕也無法叫出。靜態確認原Win32 pet未處理電源恢復，Show只依內部visible旗標提前返回，缺少透明表面／動畫計時器及通知觀察重新建立；本輪補齊這些失效恢復路徑，尚未實際讓電腦休眠重現，不將靜態發現宣稱為已證實的唯一根因。
+
+Windows desktop_pet接收WM_POWERBROADCAST的suspend／resume，恢復時重建layered表面、重繪／重新夾限位置並重啟33ms動畫，不取得前景焦點；自動／使用者恢復通知合併，顯示器／DPI／DWM變化也重建畫面。Show可修復內部顯示但原生窗口隱藏的情況，手動隱藏保持。透過選用SetResumeHandler接回唯一app/desktop_helper_session.h：取消舊請求／當次通知Token，更新觀察epoch及Tick generation，重新讀取目前頁面的真實登入狀態並重新授權補查；同scope保留游標與訊息歷史，不重新整理網站、不代登入或持久化憑證。Windows未觀察到登入時按小熊也可重新觀察，仍須真實登入才顯示。Mac pet未啟用此選用介面，但共用session已修改，須在macOS重編／回歸；既有M29平台修改與.app完整保留。
+
+MSVC Release／CTest3/3通過：194核心、18腳本（新增2項觀察重建／過期grant丟棄）、15項實際Win32 pet合成電源／顯示事件。原生檢查包含恢復顯示／layered／真實動畫timer、不搶焦點、合併恢復、保留訊息動作、原生隱藏自修、DWM／顯示器恢復、手動隱藏及已登出保持隱藏。只向隔離測試程式自己的窗口送合成訊息，未讓系統真的休眠。CEF本機合成頁實際操作驗證未登入按鈕仍隱藏、登入出現、修改通知、按鈕hide／show、通知開BSI020010 SYNTHETIC-6、登出隱藏；PET_RESUME_RECHECK記錄確認重新觀察路徑執行。實際硬體休眠／喚醒及正式通知端到端待使用者驗收，不擴大注音／列印／Reptool／多實體螢幕驗收。
+
+僅更新artifacts/oaClient2/oaClient2.exe，仍0.1.9，SHA256 9144462070129ff357f150ed052bfbf7a5063321111a0eac16c8ea8fc641a8e6，與build一致。604份接手保護檔只有5份指定來源／CMake、EXE及正常關閉保存的Config.ini變動；不回寫INI快照，現用站台保留。Mac來源／M29.app、CEF／prg／picture與素材保持，SDK／下載包／build保留。合成程式／server已停止，正式交付已重開且畫面為未登入，需使用者重新登入後實際休眠／喚醒一次。沒有修改／上傳API，未提交／推送／進版或更新Release；公開Windows ZIP仍W45，Mac M29既有發布與備份保持。證據artifacts/verification/windows-w46-pet-resume，含build-final.log、ctest.log、resume-recheck.log、synthetic-history.json、protected-diff.json及results.json。
+
+## R04／W46：休眠恢復驗收與同版發布授權（2026-11-18）
+
+使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過，不擴大為正式通知端到端或其他功能驗收；另明確要求commit、push及重新打包上傳Windows Release、不進版。版本維持0.1.9，沿用已建置及驗收的EXE，不重新編譯或操作登入中的程式。將W46及先前已驗收／已發布但未提交的M29來源與文件一併保存到Git；只重新封裝Windows ZIP／SHA256，Mac四個資產（含歷史備份）、固定Tag與舊版本保持。
+
+先保留舊Windows ZIP／校驗檔，上傳新包暫名並驗證遠端大小／digest，才把舊檔改名.previous-w45保留、新檔改回原下載名，再從公開原URL無登入下載核對。包內排除個人INI／網站資料／picture／logs／cache／tpl／SDK／build，現用prg4份不補回；不刪除既有歷史資產、不上傳API、不改個人設定，SDK／build保留。後續追加實際提交、雜湊與公開下載結果；前段待驗收／未提交／未發布為本次回報與授權前歷史。

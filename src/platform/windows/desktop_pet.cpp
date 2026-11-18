@@ -23,10 +23,12 @@ struct DesktopPet::Impl {
   std::function<void()> dismiss;
   std::function<void()> browse;
   std::function<void(int)> navigate;
+  std::function<void()> resume;
   HWND previous_foreground = nullptr;
   bool keyboard_mode = false, pressed_message = false;
   POINT start{}, position{};
-  bool dragging = false, moved = false, visible = false;
+  bool dragging = false, moved = false, visible = false, suspended = false;
+  ULONGLONG last_resume = 0;
   ULONGLONG animation_started = 0;
   ULONGLONG notified_at = kPetInactive, clicked_at = kPetInactive, click_due = kPetInactive;
   PetMotion current_motion;
@@ -262,6 +264,37 @@ struct DesktopPet::Impl {
     Paint();
   }
 
+  //2026.11.18 by codex, rebuild the layered surface and native timer after power or display recovery without taking focus.
+  void RestoreVisuals() {
+    if (!window || !visible || suspended) return;
+    dragging = false;
+    if (GetCapture() == window) ReleaseCapture();
+    click_due = clicked_at = kPetInactive;
+    EndBrowse(false);
+    KillTimer(window, 1);
+    ShowWindow(window, SW_HIDE);
+    const auto style = GetWindowLongPtrW(window, GWL_EXSTYLE);
+    SetWindowLongPtrW(window, GWL_EXSTYLE, style & ~WS_EX_LAYERED);
+    SetWindowLongPtrW(window, GWL_EXSTYLE, style | WS_EX_LAYERED | WS_EX_NOACTIVATE);
+    animation_started = GetTickCount64();
+    Clamp();
+    Paint();
+    SetWindowPos(window, HWND_TOPMOST, 0, 0, 0, 0,
+      SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    SetTimer(window, 1, 33, nullptr);
+  }
+
+  void Resume() {
+    suspended = false;
+    RestoreVisuals();
+    const auto now = GetTickCount64();
+    //2026.11.18 by codex, coalesce the automatic and user-present resume broadcasts but still repair visuals on both.
+    if (last_resume == 0 || now - last_resume >= 1500) {
+      last_resume = now;
+      if (resume) resume();
+    }
+  }
+
   static LRESULT CALLBACK Procedure(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
     auto self = reinterpret_cast<Impl*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     if (message == WM_NCCREATE) {
@@ -269,6 +302,19 @@ struct DesktopPet::Impl {
       SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(self));
     }
     if (!self) return DefWindowProcW(window, message, wparam, lparam);
+    if (message == WM_POWERBROADCAST) {
+      if (wparam == PBT_APMSUSPEND) {
+        self->suspended = true;
+        self->last_resume = 0;
+        self->click_due = self->clicked_at = kPetInactive;
+        KillTimer(window, 1);
+        return TRUE;
+      }
+      if (wparam == PBT_APMRESUMEAUTOMATIC || wparam == PBT_APMRESUMESUSPEND || wparam == PBT_APMRESUMECRITICAL) {
+        self->Resume();
+        return TRUE;
+      }
+    }
     if (message == WM_MOUSEACTIVATE) return self->keyboard_mode ? MA_ACTIVATE : MA_NOACTIVATE;
     if (message == WM_KILLFOCUS) self->EndBrowse(false);
     if (message == WM_KEYDOWN && self->keyboard_mode) {
@@ -338,7 +384,11 @@ struct DesktopPet::Impl {
       return 0;
     }
     if (message == WM_CAPTURECHANGED) self->dragging = false;
-    if (message == WM_DISPLAYCHANGE || message == WM_DPICHANGED) { self->Clamp(); self->Paint(); return 0; }
+    if (message == WM_DISPLAYCHANGE || message == WM_DPICHANGED || message == WM_DWMCOMPOSITIONCHANGED) {
+      self->Clamp();
+      self->RestoreVisuals();
+      return 0;
+    }
     if (message == WM_CLOSE) return 0;
     return DefWindowProcW(window, message, wparam, lparam);
   }
@@ -362,13 +412,14 @@ CefRefPtr<CefImage> DesktopPet::Icon() {
   return image;
 }
 void DesktopPet::Show() {
-  if (!impl_->window || impl_->visible) return;
+  if (!impl_->window) return;
+  if (impl_->visible) {
+    if (!IsWindowVisible(impl_->window)) impl_->RestoreVisuals();
+    return;
+  }
   //2026.11.17 by codex, repeated login observations must not restart the animation timer or its monotonic timeline.
-  impl_->animation_started = GetTickCount64();
   impl_->visible = true;
-  impl_->Paint();
-  ShowWindow(impl_->window, SW_SHOWNOACTIVATE);
-  SetTimer(impl_->window, 1, 33, nullptr);
+  impl_->RestoreVisuals();
 }
 void DesktopPet::Hide() {
   if (!impl_->window) return;
@@ -383,6 +434,7 @@ void DesktopPet::SetBrowseHandlers(std::function<void()> open, std::function<voi
   impl_->browse = std::move(open);
   impl_->navigate = std::move(navigate);
 }
+void DesktopPet::SetResumeHandler(std::function<void()> resume) { impl_->resume = std::move(resume); }
 void DesktopPet::Notify(const std::string& text, std::function<void()> click, std::function<void()> dismiss) {
   const int length = MultiByteToWideChar(CP_UTF8, 0, text.data(), static_cast<int>(text.size()), nullptr, 0);
   impl_->text.resize(length);

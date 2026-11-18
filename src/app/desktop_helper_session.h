@@ -88,7 +88,13 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
   }
 
   bool Toggle() override {
-    if (!logged_) return false;
+    if (!logged_) {
+      if constexpr (requires(DesktopPet& pet) { pet.SetResumeHandler(std::function<void()>{}); }) {
+        hidden_ = false;
+        Resume();
+      }
+      return false;
+    }
     hidden_ = !hidden_;
     if (hidden_ || !logged_) pet_.Hide();
     else { pet_.Show(); Present(); }
@@ -104,6 +110,11 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
         Origin(browser->GetMainFrame()->GetURL()) != Origin(context->settings.home_url) ||
         Origin(context->settings.home_url).empty()) return;
     browser_ = browser;
+    if constexpr (requires(DesktopPet& pet) { pet.SetResumeHandler(std::function<void()>{}); }) {
+      pet_.SetResumeHandler([weak = this->weak_from_this()] {
+        if (auto self = weak.lock()) self->Resume();
+      });
+    }
     pet_.SetBrowseHandlers([weak = this->weak_from_this()] {
       if (auto self = weak.lock(); self && self->logged_ && !self->hidden_) {
         self->history_.Show();
@@ -116,7 +127,7 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
       }
     });
     browser_->GetMainFrame()->ExecuteJavaScript(std::string(kDesktopHelperInstall) + "(" + std::to_string(epoch_) + ");", "", 0);
-    Tick(epoch_);
+    Tick(epoch_, ++tick_generation_);
   }
 
   bool Message(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefProcessId source,
@@ -165,7 +176,7 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
   CefRefPtr<FeedRequest> request_client_;
   NotificationHistory history_;
   std::string identity_, api_, token_;
-  int epoch_ = 0, request_generation_ = 0;
+  int epoch_ = 0, request_generation_ = 0, tick_generation_ = 0;
   bool logged_ = false, hidden_ = false, connecting_ = false, dirty_ = false;
   Clock::time_point next_connect_{}, next_fetch_{}, deadline_{};
 
@@ -174,6 +185,21 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
     if (request_client_) request_client_->complete = {};
     if (request_) request_->Cancel();
     request_ = nullptr; request_client_ = nullptr;
+  }
+
+  //2026.11.18 by codex, replace stale native work after Windows resume and recheck the current page before reconnecting.
+  void Resume() {
+    auto context = context_.lock();
+    if (!context || context->closing_in_background || !browser_ || !browser_->IsValid()) return;
+    Cancel();
+    connecting_ = false;
+    token_.clear();
+    next_connect_ = {}; next_fetch_ = {}; deadline_ = {};
+    AppendLog(context->paths, "PET_RESUME_RECHECK");
+    //2026.11.18 by codex, renew the observer generation while retaining the same-scope cursor and session history.
+    ++epoch_;
+    browser_->GetMainFrame()->ExecuteJavaScript(std::string(kDesktopHelperInstall) + "(" + std::to_string(epoch_) + ");", "", 0);
+    Tick(epoch_, ++tick_generation_);
   }
 
   void ResetSession() {
@@ -237,8 +263,8 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
     Fetch();
   }
 
-  void Tick(int epoch) {
-    if (epoch != epoch_ || !browser_ || !browser_->IsValid()) return;
+  void Tick(int epoch, int generation) {
+    if (epoch != epoch_ || generation != tick_generation_ || !browser_ || !browser_->IsValid()) return;
     browser_->GetMainFrame()->ExecuteJavaScript("window.__oaPet&&window.__oaPet.poll();", "", 0);
     if (Clock::now() >= deadline_) {
       if (request_) { Cancel(); next_fetch_ = Clock::now() + std::chrono::seconds(10); }
@@ -246,8 +272,8 @@ class DesktopHelperSession : public DesktopHelper, public std::enable_shared_fro
     }
     if (logged_ && !token_.empty() && Clock::now() >= next_fetch_) Fetch();
     auto weak = this->weak_from_this();
-    CefPostDelayedTask(TID_UI, new PetTask([weak, epoch] {
-      if (auto self = weak.lock()) self->Tick(epoch);
+    CefPostDelayedTask(TID_UI, new PetTask([weak, epoch, generation] {
+      if (auto self = weak.lock()) self->Tick(epoch, generation);
     }), 500);
   }
 

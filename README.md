@@ -1,5 +1,19 @@
 # oaClient2
 
+## R04／W46：休眠恢復驗收與同版發布授權（2026-11-18）
+
+使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過，不擴大為正式通知端到端或其他功能驗收；另明確要求commit、push及重新打包上傳Windows Release、不進版。版本維持0.1.9，沿用已建置及驗收的EXE，不重新編譯或操作登入中的程式。將W46及先前已驗收／已發布但未提交的M29來源與文件一併保存到Git；只重新封裝Windows ZIP／SHA256，Mac四個資產（含歷史備份）、固定Tag與舊版本保持。
+
+先保留舊Windows ZIP／校驗檔，上傳新包暫名並驗證遠端大小／digest，才把舊檔改名.previous-w45保留、新檔改回原下載名，再從公開原URL無登入下載核對。包內排除個人INI／網站資料／picture／logs／cache／tpl／SDK／build，現用prg4份不補回；不刪除既有歷史資產、不上傳API、不改個人設定，SDK／build保留。後續追加實際提交、雜湊與公開下載結果；前段待驗收／未提交／未發布為本次回報與授權前歷史。
+
+## W46：Windows pet 休眠喚醒恢復（2026-11-18）
+
+Windows0.1.9本機EXE已補上電源恢復時的透明表面／動畫計時器重建，重新確認當前頁面登入並恢復通知連線；不刷新網站，手動隱藏保持。Release／CTest3/3（194核心＋18腳本＋15原生）及CEF合成通知／按鈕／登入登出回歸通過，實際硬體休眠／喚醒待使用者測試。正式交付已重開，目前未登入，需要重新登入；不用上傳API。本輪未提交／推送／發布，Windows公開ZIP仍W45。共用session有修改，Mac須目標平台重編回歸；既有M29來源與.app保留。詳見[進度](PROGRESS.md)W46。
+
+Mac v0.1.9下載已同版更新M29左側拖曳修正（2026-11-18），使用者已驗收，Windows與Tag不變。[下載新版Mac ZIP](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip)／[校驗檔](https://github.com/JimmyWon1028/oaClient2/releases/download/v0.1.9/oaClient2-0.1.9-macos-arm64.zip.sha256)。Release內.previous-m28兩檔為歷史備份，最新雜湊與來源見[發布紀錄](docs/RELEASES.md)。以下尚未發布／待驗收為當時歷史狀態。
+
+最新Mac本機M29（2026-11-18）：0.1.9已修正pet往左拖的透明留白限制，小熊靠左時改用左側版面並保留完整泡泡。CTest3/3及原生繪圖／像素通過，交付已更新並重新開啟，實際左拖待使用者驗收；公開Release仍R04／Mac M28。[詳細結果](PROGRESS.md)。
+
 最新正式版本（2026-11-18，Latest）：**0.1.9**，[GitHub Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.9)提供Windows x64與Mac arm64 ZIP／SHA256，均包含內建小熊與上緣拖曳修正。四個公開下載已校驗，舊版保留；Mac為ad-hoc簽章、尚無Developer ID／公證。[發布與驗證紀錄](docs/RELEASES.md)。
 
 最新Windows本機W45（2026-11-18）：0.1.9已修正小熊無法拖到螢幕上方；靠近上緣時訊息改放小熊下方，拖回下方恢復原位置。已建置更新交付，實際拖曳／點訊息／×／雙擊回歸通過，重開後需重新登入。Mac及API保持，詳細見[進度](PROGRESS.md)。

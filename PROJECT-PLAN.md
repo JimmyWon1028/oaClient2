@@ -1,5 +1,15 @@
 # oaClient2 工作目標與開發規劃
 
+## R04／W46：休眠恢復驗收與同版發布授權（2026-11-18）
+
+使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過，不擴大為正式通知端到端或其他功能驗收；另明確要求commit、push及重新打包上傳Windows Release、不進版。版本維持0.1.9，沿用已建置及驗收的EXE，不重新編譯或操作登入中的程式。將W46及先前已驗收／已發布但未提交的M29來源與文件一併保存到Git；只重新封裝Windows ZIP／SHA256，Mac四個資產（含歷史備份）、固定Tag與舊版本保持。
+
+先保留舊Windows ZIP／校驗檔，上傳新包暫名並驗證遠端大小／digest，才把舊檔改名.previous-w45保留、新檔改回原下載名，再從公開原URL無登入下載核對。包內排除個人INI／網站資料／picture／logs／cache／tpl／SDK／build，現用prg4份不補回；不刪除既有歷史資產、不上傳API、不改個人設定，SDK／build保留。後續追加實際提交、雜湊與公開下載結果；前段待驗收／未提交／未發布為本次回報與授權前歷史。
+
+## W46：Windows pet 休眠喚醒恢復（2026-11-18）
+
+Windows0.1.9本機EXE已補上電源恢復時的透明表面／動畫計時器重建，重新確認當前頁面登入並恢復通知連線；不刷新網站，手動隱藏保持。Release／CTest3/3（194核心＋18腳本＋15原生）及CEF合成通知／按鈕／登入登出回歸通過，實際硬體休眠／喚醒待使用者測試。正式交付已重開，目前未登入，需要重新登入；不用上傳API。本輪未提交／推送／發布，Windows公開ZIP仍W45。共用session有修改，Mac須目標平台重編回歸；既有M29來源與.app保留。詳見[進度](PROGRESS.md)W46。
+
 ## W45：Windows pet 上緣拖曳（2026-11-18）
 
 使用者要求修正Windows小熊無法拖到螢幕上方。只調整Win32版面與邊界，靠近上緣將訊息放在小熊下方，保留小熊腳底錨點並同步繪圖與滑鼠判定；下方保持原上方訊息，不以整個透明留白限制小熊。Windows0.1.9已編譯更新與合成實機驗證，Mac／共用通知及動畫／API保持，不進版或發布。實際驗證與未測見PROGRESS W45。
@@ -704,3 +714,29 @@ Windows ZIP為192197619 bytes、SHA256 `ef06618bc81b409d161760d2c0250ef237d80ad3
 先建立草稿、上傳四個ZIP／SHA256並核對GitHub digest及大小後才公開。四個公開URL不帶憑證重新下載與本機逐位元一致，ZIP CRC、Windows全部240檔SHA256、Mac全部267項內容／連結／權限通過；latest端點與新Tag來源核對，v0.1.8／v0.1.6資產ID／大小／digest與Tag均保持。兩包排除個人INI、登入／網站資料、picture、logs、cache、tpl及SDK／build；原交付主程式雜湊不變，prg不補回。
 
 沿用Windows Release／CTest2/2（194＋16）及本機上緣拖曳／通知操作，Mac M28 Release／CTest3/3（177＋16＋20）、原生繪圖與既有簽章結果；發布不擴大正式OA通知端到端、多螢幕／其他DPI、Mac實際拖曳／各平台實體方向鍵、注音／列印／Reptool驗收。Mac仍ad-hoc簽章、未有Developer ID／公證；U01未實作。SDK／下載包／build及個人資料保留。證據artifacts/verification/releases-v0.1.9與artifacts/releases/v0.1.9；發布文件／封裝腳本另提交推送，Tag固定不動。前段「未發布／公開0.1.8」為本輪授權前歷史。
+
+## M29：Mac pet 左側拖曳修正（2026-11-18）
+
+使用者圖片回報無法往左拖。接手main／HEAD144b717、工作區乾淨且無Git lock，保留R04已發布的來源與資產。本輪確認水平Clamp仍限制完整300點透明面板，小熊固定在局部x244，左邊空白使本體無法靠近左緣。Mac版面新增水平中心，接近左緣時本體放x80（保留原24點短程走路空間），其他位置維持x244；重排保持小熊螢幕錨點，碰工作區邊界才夾限，泡泡仍完整留在面板內。Sprite、星光、alpha命中同步使用目前中心，保留M28上下泡泡規則，不翻轉素材、不改共用通知／Windows或INI，版本仍0.1.9。
+
+修改僅src/platform/macos/desktop_pet_layout.h／desktop_pet.mm與tests/macos_pet_tests.mm。Mac Release／CTest3/3（177核心＋16腳本＋29原生）通過，新增9項含左緣、走路留白、水平錨點保持、重複重排、移回右側、左上角與負座標幾何，以及原生左側繪圖像素／完整泡泡。native-left-notification.png與native-left-idle.png已目視確認；實體滑鼠左拖、多實體螢幕／其他縮放及正式通知端到端仍待驗收，不以幾何／像素測試代替操作驗收。未重測注音／列印／Reptool。
+
+沿用使用者已授權的正常重啟，Cmd+Q後收到logout ACK2010ms、SHUTDOWN_COMPLETE，核對主程式／Helper全退才更新artifacts/macos-arm64/oaClient2.app。交付267份檔案／連結／mode與build一致，10份Mach-O全arm64及deep strict簽章通過，主執行檔SHA256 331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb。319保護檔最後只見上述2份Mac來源差異，Windows來源／EXE／素材與個人INI／picture保持；SDK／壓縮檔／build保留。
+
+已重新開啟實際修正版交付，正式oa.waysia.com HTTP200及0.1.9主窗確認，畫面顯示登入成功，代理未代操作登入或正式單據；初次UI擷取逾時後正式頁已完成載入。保留App供使用者測左拖。證據artifacts/verification/macos-m29-pet-left，含build.log、ctest.log、native-tests.log、native-left-*.png、package.log、delivery-manifest.json、restart.log與results.json。未安裝Applications、提交／推送／移Tag、重新發布或部署API；公開0.1.9仍是R04／Mac M28，本次僅更新本機交付。
+
+## R04／M29：Mac 左拖驗收與同版重新上傳授權（2026-11-18）
+
+使用者對Mac左側拖曳修正回覆「可以了」，本項記錄使用者驗收通過，不擴大為其他互動／正式通知或Windows驗收；另要求「重新打包上傳Mac版Release，不要進版」。本輪沿用已建置／測試並由使用者驗收的M29 .app直接封裝，只替換既有v0.1.9同名Mac ZIP／.sha256，版本與固定Tag不動，Windows及舊版本資產保持。先核對完整267項與簽章、保留舊Mac下載，再以暫名上傳並校驗後替換，公開原URL重新下載驗證。發布結果後續追加。
+
+本次授權範圍為打包與Release上傳，沒有另行要求commit／push；M29來源仍為144b717基準加本機3份程式／測試差異，以source.json、來源patch SHA256及實際主程式雜湊追溯，不把固定Tag或基準提交宣稱為新Mac內容。既有登入與個人資料保留，未重編、安裝或部署API；SDK／build保留。
+
+## R04／M29：Mac 0.1.9同版重新上傳完成（2026-11-18）
+
+使用者對M29左側拖曳回覆「可以了」，本項記錄使用者驗收，不擴大其他功能；另依「重新打包上傳Mac版Release，不要進版」已更新既有v0.1.9原名Mac ZIP與.sha256。Release仍449602031、正式版／Latest；版本0.1.9，固定Tag a1215673784aa9a4fafb7ae8e2813a68ebbac5ff不移動，Windows兩資產ID／大小／digest、v0.1.8／v0.1.6 Release保持。沒有重新編譯、操作或安裝App／API，也沒有提交／推送來源。
+
+新Mac ZIP 146770733 bytes，SHA256 fef207bb8dbdb5358dd4dc0dd832fe134c10a7cd9fd43d826fd44b74cd702220；主程式仍為已驗收交付的331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb。完整.app共267項（263實體檔＋4相對symlink），全部SHA256／mode／連結／CRC、10份薄arm64及交付與ZIP解壓後deep strict簽章通過。排除個人INI／網站資料／picture／logs／cache／SDK／build，沿用M29 CTest3/3（177＋16＋29）及本次使用者左拖回報。
+
+先以暫名上傳並校驗GitHub大小／digest，再將舊Mac兩資產改名.previous-m28保留，新檔改回原下載名；不帶登入憑證從原公開URL重新下載兩檔逐位元一致，公開ZIP全部267項再核對通過。新資產ID762415587／762415588，Windows仍762205221／762206804。自動審核拒絕公開校驗後刪除舊備份，理由為未獲使用者授權刪除歷史發布證據；已改為完全保留全部遠端與本機備份，未執行刪除或繞過拒絕。Release目前6個資產，.previous-m28兩檔為歷史，下載表格與原名兩檔均為M29新版。
+
+舊M28 ZIP／校驗檔保留history-m28，原ZIP SHA256 fdddff41a1f28ad1712d00685016d73e32813e8b3d26b7057e8e042fe6240cdd，原遠端ID762206846／762207771內容保持。artifacts/releases/v0.1.9的Mac兩檔已同步新包。M29來源為144b71751765ca67973f8a29a113826cab03bb00基準加本機未提交3檔差異，patch SHA256 5fc34672d627321985f74298dbc435e813313e813989a02c7fbe0bf9c21195ed，source.json／macos-m29-source.patch保存確切內容；Release說明已區分固定Tag與新Mac內容，本次未另要求commit／push，不用基準提交冒充M29來源。證據artifacts/verification/releases-macos-m29，含macos-package.json、release-staged／replaced／final.json、public-verification.json、public-download、history-m28與results.json。保護清單只見運作中的個人Config.ini變動，保留現況、未讀取設定內容或回寫舊快照，其餘來源／素材／Windows及Mac交付一致；SDK／下載包／build保留。

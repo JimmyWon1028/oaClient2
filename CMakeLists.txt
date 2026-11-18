@@ -98,6 +98,14 @@ if(BUILD_TESTING)
     target_compile_options(oaClient2_core_tests PRIVATE /utf-8)
     target_link_libraries(oaClient2_core_tests PRIVATE shell32 ole32 user32 iphlpapi ws2_32 gdiplus gdi32 dwmapi)
     add_dependencies(oaClient2_core_tests oaClient2_report_receiver)
+    #2026.11.18 by codex, exercise power recovery against the actual Win32 pet without suspending the computer.
+    add_executable(oaClient2_pet_tests tests/windows_pet_tests.cpp
+      src/platform/windows/desktop_pet.cpp src/platform/windows/application_images.rc)
+    SET_EXECUTABLE_TARGET_PROPERTIES(oaClient2_pet_tests)
+    target_include_directories(oaClient2_pet_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_link_libraries(oaClient2_pet_tests PRIVATE libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS}
+      user32 ole32 gdiplus gdi32)
+    add_test(NAME windows_pet COMMAND oaClient2_pet_tests)
   else()
     add_executable(oaClient2_core_tests tests/core_tests.cpp tests/macos_tests.cpp
       src/common/ini.cpp src/platform/macos/platform.mm)

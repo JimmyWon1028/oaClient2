@@ -20,6 +20,7 @@ class DesktopPet {
   void Hide();
   void CloseMessage();
   void SetBrowseHandlers(std::function<void()> open, std::function<void(int)> navigate);
+  void SetResumeHandler(std::function<void()> resume);
   void Notify(const std::string& text, std::function<void()> click, std::function<void()> dismiss = {});
   CefRefPtr<CefImage> Icon();
  private:

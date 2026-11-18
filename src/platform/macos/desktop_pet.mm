@@ -65,7 +65,7 @@ struct MacDesktopPet::Impl {
   uint64_t started = 0, notified = kPetInactive, clicked = kPetInactive, due = kPetInactive;
   PetMotion motion;
   static constexpr double width = kMacPetWidth, height = kMacPetHeight;
-  double feet = kMacPetFeetAbove, bubble_top = 1;
+  double feet = kMacPetFeetAbove, bubble_top = 1, center = kMacPetCenterRight;
 
   Impl() {
     Load(@"bear-sprites", 4, 2, 0);
@@ -179,8 +179,8 @@ struct MacDesktopPet::Impl {
     NSRect frame = panel.frame;
     NSScreen* screen = panel.screen ?: NSScreen.mainScreen;
     NSRect area = screen.visibleFrame;
-    const auto placement = PlaceMacPet(frame.origin, feet, area);
-    feet = placement.feet; bubble_top = placement.bubble_top;
+    const auto placement = PlaceMacPet(frame.origin, feet, area, center);
+    feet = placement.feet; bubble_top = placement.bubble_top; center = placement.center;
     [panel setFrameOrigin:placement.origin];
     view.needsDisplay = YES;
   }
@@ -191,7 +191,7 @@ struct MacDesktopPet::Impl {
     const double scale = scales[index < 8 ? 0 : 1], w = crop.size.width * scale, h = crop.size.height * scale;
     [NSGraphicsContext saveGraphicsState];
     NSAffineTransform* transform = [NSAffineTransform transform];
-    [transform translateXBy:width - 56 + motion.x yBy:feet + motion.y];
+    [transform translateXBy:center + motion.x yBy:feet + motion.y];
     [transform rotateByDegrees:motion.angle];
     [transform scaleXBy:motion.scale_x yBy:motion.scale_y];
     [transform concat];
@@ -216,7 +216,7 @@ struct MacDesktopPet::Impl {
       [[NSColor colorWithSRGBRed:.92 green:.62 blue:.13 alpha:motion.sparkle] setStroke];
       NSBezierPath* stars = [NSBezierPath bezierPath]; stars.lineWidth = 1.8;
       for (int i = 0; i < 3; ++i) {
-        double x = width - 56 + (i == 1 ? 40 : -40) + motion.x, y = feet - 68 - i * 19 + motion.y;
+        double x = center + (i == 1 ? 40 : -40) + motion.x, y = feet - 68 - i * 19 + motion.y;
         double r = 3 + 3 * motion.sparkle;
         [stars moveToPoint:NSMakePoint(x - r, y)]; [stars lineToPoint:NSMakePoint(x + r, y)];
         [stars moveToPoint:NSMakePoint(x, y - r)]; [stars lineToPoint:NSMakePoint(x, y + r)];
@@ -274,7 +274,7 @@ struct MacDesktopPet::Impl {
 
   bool Hit(NSPoint point, int index) {
     if (alpha[index].empty()) return false;
-    const double x = point.x - (width - 56 + motion.x), y = point.y - (feet + motion.y);
+    const double x = point.x - (center + motion.x), y = point.y - (feet + motion.y);
     const double angle = motion.angle * kPetPi / 180, scale = scales[index < 8 ? 0 : 1];
     const double rx = (std::cos(angle) * x + std::sin(angle) * y) / motion.scale_x;
     const double ry = (-std::sin(angle) * x + std::cos(angle) * y) / motion.scale_y;

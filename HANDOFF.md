@@ -1,5 +1,47 @@
 # oaClient2 接續交接
 
+## R04／W46：休眠恢復驗收與同版發布授權（2026-11-18）
+
+使用者回覆「可以了」，W46休眠喚醒依本次回報記錄使用者驗收通過，不擴大為正式通知端到端或其他功能驗收；另明確要求commit、push及重新打包上傳Windows Release、不進版。版本維持0.1.9，沿用已建置及驗收的EXE，不重新編譯或操作登入中的程式。將W46及先前已驗收／已發布但未提交的M29來源與文件一併保存到Git；只重新封裝Windows ZIP／SHA256，Mac四個資產（含歷史備份）、固定Tag與舊版本保持。
+
+先保留舊Windows ZIP／校驗檔，上傳新包暫名並驗證遠端大小／digest，才把舊檔改名.previous-w45保留、新檔改回原下載名，再從公開原URL無登入下載核對。包內排除個人INI／網站資料／picture／logs／cache／tpl／SDK／build，現用prg4份不補回；不刪除既有歷史資產、不上傳API、不改個人設定，SDK／build保留。後續追加實際提交、雜湊與公開下載結果；前段待驗收／未提交／未發布為本次回報與授權前歷史。
+
+## W46：Windows pet 休眠喚醒恢復（2026-11-18）
+
+使用者回報休眠後仍已登入，工具列小熊按鈕也無法叫出。靜態確認原Win32 pet未處理電源恢復，Show只依內部visible旗標提前返回，缺少透明表面／動畫計時器及通知觀察重新建立；本輪補齊這些失效恢復路徑，尚未實際讓電腦休眠重現，不將靜態發現宣稱為已證實的唯一根因。
+
+Windows desktop_pet接收WM_POWERBROADCAST的suspend／resume，恢復時重建layered表面、重繪／重新夾限位置並重啟33ms動畫，不取得前景焦點；自動／使用者恢復通知合併，顯示器／DPI／DWM變化也重建畫面。Show可修復內部顯示但原生窗口隱藏的情況，手動隱藏保持。透過選用SetResumeHandler接回唯一app/desktop_helper_session.h：取消舊請求／當次通知Token，更新觀察epoch及Tick generation，重新讀取目前頁面的真實登入狀態並重新授權補查；同scope保留游標與訊息歷史，不重新整理網站、不代登入或持久化憑證。Windows未觀察到登入時按小熊也可重新觀察，仍須真實登入才顯示。Mac pet未啟用此選用介面，但共用session已修改，須在macOS重編／回歸；既有M29平台修改與.app完整保留。
+
+MSVC Release／CTest3/3通過：194核心、18腳本（新增2項觀察重建／過期grant丟棄）、15項實際Win32 pet合成電源／顯示事件。原生檢查包含恢復顯示／layered／真實動畫timer、不搶焦點、合併恢復、保留訊息動作、原生隱藏自修、DWM／顯示器恢復、手動隱藏及已登出保持隱藏。只向隔離測試程式自己的窗口送合成訊息，未讓系統真的休眠。CEF本機合成頁實際操作驗證未登入按鈕仍隱藏、登入出現、修改通知、按鈕hide／show、通知開BSI020010 SYNTHETIC-6、登出隱藏；PET_RESUME_RECHECK記錄確認重新觀察路徑執行。實際硬體休眠／喚醒及正式通知端到端待使用者驗收，不擴大注音／列印／Reptool／多實體螢幕驗收。
+
+僅更新artifacts/oaClient2/oaClient2.exe，仍0.1.9，SHA256 9144462070129ff357f150ed052bfbf7a5063321111a0eac16c8ea8fc641a8e6，與build一致。604份接手保護檔只有5份指定來源／CMake、EXE及正常關閉保存的Config.ini變動；不回寫INI快照，現用站台保留。Mac來源／M29.app、CEF／prg／picture與素材保持，SDK／下載包／build保留。合成程式／server已停止，正式交付已重開且畫面為未登入，需使用者重新登入後實際休眠／喚醒一次。沒有修改／上傳API，未提交／推送／進版或更新Release；公開Windows ZIP仍W45，Mac M29既有發布與備份保持。證據artifacts/verification/windows-w46-pet-resume，含build-final.log、ctest.log、resume-recheck.log、synthetic-history.json、protected-diff.json及results.json。
+
+## R04／M29：Mac 0.1.9同版重新上傳完成（2026-11-18）
+
+使用者對M29左側拖曳回覆「可以了」，本項記錄使用者驗收，不擴大其他功能；另依「重新打包上傳Mac版Release，不要進版」已更新既有v0.1.9原名Mac ZIP與.sha256。Release仍449602031、正式版／Latest；版本0.1.9，固定Tag a1215673784aa9a4fafb7ae8e2813a68ebbac5ff不移動，Windows兩資產ID／大小／digest、v0.1.8／v0.1.6 Release保持。沒有重新編譯、操作或安裝App／API，也沒有提交／推送來源。
+
+新Mac ZIP 146770733 bytes，SHA256 fef207bb8dbdb5358dd4dc0dd832fe134c10a7cd9fd43d826fd44b74cd702220；主程式仍為已驗收交付的331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb。完整.app共267項（263實體檔＋4相對symlink），全部SHA256／mode／連結／CRC、10份薄arm64及交付與ZIP解壓後deep strict簽章通過。排除個人INI／網站資料／picture／logs／cache／SDK／build，沿用M29 CTest3/3（177＋16＋29）及本次使用者左拖回報。
+
+先以暫名上傳並校驗GitHub大小／digest，再將舊Mac兩資產改名.previous-m28保留，新檔改回原下載名；不帶登入憑證從原公開URL重新下載兩檔逐位元一致，公開ZIP全部267項再核對通過。新資產ID762415587／762415588，Windows仍762205221／762206804。自動審核拒絕公開校驗後刪除舊備份，理由為未獲使用者授權刪除歷史發布證據；已改為完全保留全部遠端與本機備份，未執行刪除或繞過拒絕。Release目前6個資產，.previous-m28兩檔為歷史，下載表格與原名兩檔均為M29新版。
+
+舊M28 ZIP／校驗檔保留history-m28，原ZIP SHA256 fdddff41a1f28ad1712d00685016d73e32813e8b3d26b7057e8e042fe6240cdd，原遠端ID762206846／762207771內容保持。artifacts/releases/v0.1.9的Mac兩檔已同步新包。M29來源為144b71751765ca67973f8a29a113826cab03bb00基準加本機未提交3檔差異，patch SHA256 5fc34672d627321985f74298dbc435e813313e813989a02c7fbe0bf9c21195ed，source.json／macos-m29-source.patch保存確切內容；Release說明已區分固定Tag與新Mac內容，本次未另要求commit／push，不用基準提交冒充M29來源。證據artifacts/verification/releases-macos-m29，含macos-package.json、release-staged／replaced／final.json、public-verification.json、public-download、history-m28與results.json。保護清單只見運作中的個人Config.ini變動，保留現況、未讀取設定內容或回寫舊快照，其餘來源／素材／Windows及Mac交付一致；SDK／下載包／build保留。
+
+## R04／M29：Mac 左拖驗收與同版重新上傳授權（2026-11-18）
+
+使用者對Mac左側拖曳修正回覆「可以了」，本項記錄使用者驗收通過，不擴大為其他互動／正式通知或Windows驗收；另要求「重新打包上傳Mac版Release，不要進版」。本輪沿用已建置／測試並由使用者驗收的M29 .app直接封裝，只替換既有v0.1.9同名Mac ZIP／.sha256，版本與固定Tag不動，Windows及舊版本資產保持。先核對完整267項與簽章、保留舊Mac下載，再以暫名上傳並校驗後替換，公開原URL重新下載驗證。發布結果後續追加。
+
+本次授權範圍為打包與Release上傳，沒有另行要求commit／push；M29來源仍為144b717基準加本機3份程式／測試差異，以source.json、來源patch SHA256及實際主程式雜湊追溯，不把固定Tag或基準提交宣稱為新Mac內容。既有登入與個人資料保留，未重編、安裝或部署API；SDK／build保留。
+
+## M29：Mac pet 左側拖曳修正（2026-11-18）
+
+使用者圖片回報無法往左拖。接手main／HEAD144b717、工作區乾淨且無Git lock，保留R04已發布的來源與資產。本輪確認水平Clamp仍限制完整300點透明面板，小熊固定在局部x244，左邊空白使本體無法靠近左緣。Mac版面新增水平中心，接近左緣時本體放x80（保留原24點短程走路空間），其他位置維持x244；重排保持小熊螢幕錨點，碰工作區邊界才夾限，泡泡仍完整留在面板內。Sprite、星光、alpha命中同步使用目前中心，保留M28上下泡泡規則，不翻轉素材、不改共用通知／Windows或INI，版本仍0.1.9。
+
+修改僅src/platform/macos/desktop_pet_layout.h／desktop_pet.mm與tests/macos_pet_tests.mm。Mac Release／CTest3/3（177核心＋16腳本＋29原生）通過，新增9項含左緣、走路留白、水平錨點保持、重複重排、移回右側、左上角與負座標幾何，以及原生左側繪圖像素／完整泡泡。native-left-notification.png與native-left-idle.png已目視確認；實體滑鼠左拖、多實體螢幕／其他縮放及正式通知端到端仍待驗收，不以幾何／像素測試代替操作驗收。未重測注音／列印／Reptool。
+
+沿用使用者已授權的正常重啟，Cmd+Q後收到logout ACK2010ms、SHUTDOWN_COMPLETE，核對主程式／Helper全退才更新artifacts/macos-arm64/oaClient2.app。交付267份檔案／連結／mode與build一致，10份Mach-O全arm64及deep strict簽章通過，主執行檔SHA256 331e11ad154c1bde34998eba9b59eb965c39db46644c9ef3102ebc3b0bb362bb。319保護檔最後只見上述2份Mac來源差異，Windows來源／EXE／素材與個人INI／picture保持；SDK／壓縮檔／build保留。
+
+已重新開啟實際修正版交付，正式oa.waysia.com HTTP200及0.1.9主窗確認，畫面顯示登入成功，代理未代操作登入或正式單據；初次UI擷取逾時後正式頁已完成載入。保留App供使用者測左拖。證據artifacts/verification/macos-m29-pet-left，含build.log、ctest.log、native-tests.log、native-left-*.png、package.log、delivery-manifest.json、restart.log與results.json。未安裝Applications、提交／推送／移Tag、重新發布或部署API；公開0.1.9仍是R04／Mac M28，本次僅更新本機交付。
+
 ## R04：v0.1.9 Windows／Mac 正式發布完成（2026-11-18）
 
 使用者要求「發布Release」並確認「win, mac都發布」。[v0.1.9正式版／Latest](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.9)已公開，Release ID449602031、draft=false、prerelease=false。新Tag固定已推送來源 `a1215673784aa9a4fafb7ae8e2813a68ebbac5ff`（產品主提交9cb59e6），沒有移動舊Tag。Windows W45與Mac M28的已測交付直接封裝，兩平台版本均0.1.9，未重編／安裝或部署API。

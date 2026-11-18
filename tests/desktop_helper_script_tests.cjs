@@ -67,6 +67,16 @@ async function run() {
     'stop restores original state property without changing website state');
   vm.runInContext(install + '(8);', context);
   check(messages.at(-1).epoch === 8, 'new document observer uses its own generation');
+  let resumePending;
+  context.fetch = () => new Promise(resolve => { resumePending = resolve; });
+  const sleepingRequest = context.__oaPet.connect('https://current.invalid/', 'same-binding');
+  vm.runInContext(install + '(9);', context);
+  check(messages.at(-1).epoch === 9 && messages.at(-1).logged === true && secondSocket.listenerCount('notification') === 1,
+    'resume reinstalls the observer using current login state without duplicate socket listeners');
+  resumePending({ok: true, json: async () => ({token: 'synthetic-stale-before-resume'})});
+  await sleepingRequest;
+  check(!messages.some(message => message.kind === 'grant' && message.epoch === 8),
+    'late pre-resume grant is aborted when the observer generation changes');
   context.__oaPet.stop();
   console.log(`${checks} checks, 0 failures`);
 }

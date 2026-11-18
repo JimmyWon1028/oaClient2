@@ -688,3 +688,9 @@ Mac Release／CTest3/3（177核心＋16腳本＋20原生）及簽章通過；新
 使用者明確要求「commit, push」，本批整理W40～W45及Mac M27／M28尚未提交的內建pet、共用通知／renderer／動畫、BSI020010後端交付快照、角色素材與測試／文件，於既有main提交並推送origin。僅本oaClient2儲存庫，不提交另一Megatower API儲存庫；不包含artifacts執行檔／App、個人INI、網站資料、.env、SDK／快取或本機測試證據。版本維持0.1.9，不建立／移動Tag或發布Release，正式API部署亦不在本輪。
 
 提交前已讀差異、核對最新backend／素材清單、敏感值掃描與Git鎖；既有Windows Release／CTest2/2（194＋16）、Mac M28 Release／CTest3/3（177＋16＋20）及PHP兩份23／71的實際驗證紀錄保留，不因提交而擴大待驗收範圍。此段為提交前準備，提交與遠端核對結果後續追加。
+
+## D03：0.1.9 pet 來源已推送（2026-11-18）
+
+依使用者「commit, push」完成主提交 `9cb59e6`，已推送既有GitHub origin/main，遠端refs/heads/main完整SHA核對為 `9cb59e606ee1a75262c9e0d469784acae68e2aa3`。共59檔，涵蓋Windows W40～W45、Mac M27／M28、唯一共用通知／renderer／動畫、BSI020010後端快照、素材、測試及文件。未納入artifacts、個人INI、登入／網站資料、.env、SDK或測試證據；版本0.1.9、既有Tag與公開Release保持，未部署API。另一Megatower儲存庫未提交或推送。
+
+本機缺少Git作者設定，已沿用本儲存庫最近提交的既有身分，以單次命令參數完成，未改全域設定。推送雖已成功，本機origin/main原生參照更新失敗；先用ls-remote核對主機SHA，再取得packed-refs排他鎖，精確核對舊值後校正單一追蹤參照，工作分支／Tag保持。此結果文件另提交推送，最終HEAD與origin/main以Git核對；先前未提交／推送段落為本次授權前歷史，未測項目及各平台驗收範圍不擴大。

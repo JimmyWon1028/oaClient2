@@ -116,3 +116,7 @@ Release／CTest 1/1、136項、10份arm64及簽章通過；GET／POST／Blob／p
 M24 已重現並修正：Console 有焦點時 Cmd+Q 未進入原生結束入口，之後關閉全部 Browser／Views 仍可能留下 CEF 主迴圈。Mac sendEvent 現在先讓既有原生選單處理精確的 Command+Q，呼叫原 terminate → 共用登出／隱藏／三秒流程；沒有改寫登出或強制結束程序。
 
 最終 arm64 Release／CTest 1/1、136 checks／0 failures、10 份 arm64 與 deep strict 簽章通過；Console 焦點 Cmd+Q、已啟用 beforeunload、附件取消組合的 ACK619ms／無ACK3032ms及實際交付3043ms期限後皆正常 SHUTDOWN_COMPLETE，主程序／Helper 全部退出。 產品只改Mac main.mm，共用來源／Windows及附件實作保持；暫時診斷已撤回。新簽章測試的鑰匙圈等待另行辨識，僅隔離localhost測試帶官方 --use-mock-keychain，正式產品未加入這個參數。只更新本機0.1.6 .app，未安裝／提交／推送／發布，SDK／下載包／build保留；正式OA／真實鑰匙圈、系統亮暗切換及其他原未驗收範圍保持。詳見 [M24結果](../PROGRESS.md)。
+
+## M27：兩平台共用 pet 工作階段（2026-11-18）
+
+通知session沿用唯一src/app/desktop_helper_session.h，CEF bridge在src/app/pet_renderer.cpp，動畫在src/common/pet_animation.h；只抽取既有邏輯，不另寫Mac認證、Token、補查、通知歷史或開單流程。MacDesktopPet只處理Cocoa視窗、圖片、焦點與事件；Windows保留既有factory／動畫include接口及Win32 renderer。Mac原生測試與共用測試通過，Windows因共用抽取／CMake變更仍須在Windows環境重新編譯回歸，未更新其交付。

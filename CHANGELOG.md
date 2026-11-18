@@ -1,5 +1,13 @@
 # oaClient2 工作紀錄
 
+## 2026-11-17：W40 Windows 內建小熊、OACS 喚醒與透明切換按鈕
+
+依整合提示與使用者追加要求，新增唯一通知游標模型、CEF主框架登入觀察／IPC、Windows透明置頂小視窗及原生非同步API工作；MAC左側透明icon only按鈕可show／hide，泡泡右上角×只收起訊息。只在oaClient2使用，不新增站台、獨立EXE／loopback橋接或外部Chrome功能；其他App泛指所有App，不限定Excel。保留原登入登出、INI／UserSet、主網站宿主及報表流程；Mac專屬碼／.app不改。
+
+沿用Megatower既有chatHub，notification／connect立即觸發授權API查詢，原生10秒補查防漏訊。僅本專案DesktopHelper.php快照增加無資料OACS喚醒與測試；未改Megatower產品來源或部署。Release／CTest2/2（170＋15）、PHP隔離14項／32斷言通過；原生合成登入／透明／拖曳／穿透／焦點／通知／編輯保護／×及最小化收訊已測，正常退出ACK5ms。完整正式站／DPI／多螢幕及其他原功能本輪未驗收，詳見PROGRESS。
+
+僅更新artifacts/oaClient2/oaClient2.exe，版本0.1.8、SHA256 8bf07921e4b5f242396feb85845e30db6e6553207aa7da31b92d5a9c18bfd1b9，與build一致。527保護檔僅正式INI正常關閉保存有變動，不回寫舊快照／改站台；CEF／prg／picture／Mac保持。SDK／下載包／舊build保留，另用windows-w40-pet建置；測試版／server已停止，正式交付已開啟等待使用者登入及API上傳。無提交／推送／進版／發布。
+
 日期使用 Asia/Taipei；同日按工作批次追加，不以新決策覆寫歷史事實。
 
 ## 2026-10-12：需求討論與來源閱讀
@@ -653,3 +661,112 @@ Windows ZIP 189895114 bytes，SHA256 335c30631616fa0cac24d7da878d08643ee02c4b705
 ## 2026-11-12：R03 改為正式 Release／Latest
 
 使用者明確要求將v0.1.8改為正式Release，已取消GitHub prerelease標記並設為Latest，更新發行標題與說明首行為正式版。GitHub releases/latest端點確認tag=v0.1.8、draft=false、prerelease=false，Release ID仍442477933；四資產名稱／大小／SHA256 digest與變更前一致，未重編／重打包／重傳、未移動來源Tag或修改其他版本。各功能驗收限制保持，不因正式Release標記擴大驗收。證據artifacts/verification/releases-v0.1.8/before-stable.json、release-notes-stable.md、release-stable.json。前段測試版形式是本次更正前狀態，下載連結不變。
+
+## 2026-11-17：D05 Windows 內建 pet 接續資源
+
+- 使用者要求整理提示詞、把所需資源先copy進oaClient2，並取消先前需要獨立安裝的Windows pet；後端API保留。
+- 新增docs/desktop-helper的接續提示詞、資源索引、API上傳／協定說明、後端快照與SHA256 manifest；assets/desktop-helper保存已確認小熊PNG、GIF及素材說明。
+- 最後需求為「登入成功後才顯示」與「沿用oaClient2設定的站台，不另設網址」。Windows內建化、最小化／Excel通知與原生命週期列後續工作，不宣稱已完成。
+- 本輪只在Mac準備資源／文件，未修改oaClient2產品來源、CMake、個人INI、CEF／prg／picture或Windows／Mac交付；沒有提交、推送、發布或正式站部署。Megatower獨立版程式及OA本機橋接在原專案依使用者要求撤除，通知後端保留。
+
+### W40 最後補充：正式登入與同目錄測試更新
+
+使用者已自行登入正式交付，14:10畫面可見登入成功及小熊；保持目前登入與工作狀態，代理未操作帳密。前段「等待登入」為開啟交付當下狀態，正式通知端到端仍待API部署確認與允許的測試單據。
+
+後續偵測同目錄另一工作更新PHP測試、bootstrap並新增run-desktop-helper-php.ps1，未覆寫或撤回。核對Windows產品來源不衝突，依其腳本以-Snapshot及新的隔離根目錄重跑，最新20項／60斷言通過，證據php-tests-latest.log；原14項／32斷言保留為先前實際結果。其他工作的Megatower來源／部署狀態不能當成本輪代為修改或已部署的證據。
+
+## 2026-11-17：W41 真正 API 補齊 WebSocket 喚醒
+
+- 依指定後端提示詞核對真正 Megatower API 的 AGENTS／Git／來源與 oaClient2 快照：Controller／Bsi020020Event 一致、兩條路由已存在，真正 Util 尚缺廣播。保留全部既有未追蹤／Windows 修改。
+- 真正 api/app/Util/DesktopHelper.php 補上 Cache 寫入成功且釋鎖後的既有 OACS 無內容 ALL 廣播，另檢查快取 false，避免寫入失敗仍喚醒。原事件 catch 保護保持，廣播失敗後 feed 可補查且不影響儲存。Controller、事件、路由、MyFunc、Table2Controller、OACS 未改。
+- 擴充真正 API 與快照的 DesktopHelperTest，PHP 8.2.33 兩份各語法通過及 21 tests／66 assertions。新增真正來源／快照隔離 runner、bootstrap 來源選擇及 OACS dispatcher＋假 Socket／路由契約測試 6 項，既有客戶端腳本 15 項通過。未載入正式 .env、未操作正式資料或廣播；初版 mock 與受限工具失敗另留證據，最終結果通過。
+- 同步 API-UPLOAD、README、後端提示詞狀態與 BACKEND-MANIFEST；D05 歷史雜湊保持。接手 73 份 Windows 檔案中本輪只寫 PHP 測試 bootstrap，未寫產品 src／CMake、未重編或替換 EXE、未操作已登入 oaClient2；最終另偵測同時進行的 Windows 工作更新通知歷史／pet 操作相關 5 個來源／核心測試，核對後保留，沒有覆蓋或替其他工作宣稱驗收。
+- 使用者確認目前登入正式站，要求先完成隔離測試；完整真實 OACS／原生 pet 及正式 event／主機狀態待測。新站需三 PHP 與兩路由合併；既有配套站台依主機差異更新，OACS 不需新增處理器。未上傳／部署、commit／push、進版或發布；詳見 [進度](PROGRESS.md) W41 及 [上傳清單](docs/desktop-helper/API-UPLOAD.md)。
+
+## W41：使用者回報 API 已上傳（2026-11-17）
+
+使用者回覆「已經上傳api」。此為使用者完成上傳的回報，取代先前尚未上傳的待辦狀態；代理沒有執行部署，尚未遠端核對三份 PHP、路由及實際事件設定。唯讀檢查 Windows 視窗／應用程式清單及程序時，未偵測到 oaClient2，沒有自行啟動、登入、重整或操作正式單據。待 Windows 端更新工作完成後開啟並由使用者登入，再核對 API 連線、今日 BSI020020 新增／修改通知及斷線補漏；本輪不宣稱正式端到端已驗收。後端來源、快照及既有隔離結果保持，沒有另行修改產品或提交／推送。
+
+## W42：Windows pet 雙擊、訊息歷史與0.1.9（2026-11-17）
+
+使用者要求pet雙擊顯示泡泡、上／下方向鍵瀏覽訊息，追加改好後進版。共用NotificationHistory保存本次登入的最多500則記憶體訊息及選取位置；×／Esc只收起、不刪除，雙擊可重開，空集合顯示目前沒有訊息，↑上一則／↓下一則首尾停止，讀取時新訊息不搶走當前選取。登出／切站／關閉清除歷史。Windows pet使用CS_DBLCLKS，只有雙擊才暫時允許鍵盤焦點，失焦恢復WS_EX_NOACTIVATE，不設全域鍵盤攔截。單擊泡泡仍走既有開單保護，單擊本體不提前開單，拖曳維持。
+
+涉及src/common/notification_feed.h、src/platform/windows/desktop_pet.h／.cpp、desktop_helper.cpp及tests/core_tests.cpp；進版同步CMake、共用app.cpp標題／兩處client_version與Windows main.cpp啟動版本為0.1.9。Mac專屬碼／.app不改，現有交付0.1.8保持，共用來源須回macOS編譯回歸，不能宣稱Mac pet已啟用。W41另一工作更新的後端／快照與隔離測試保留，本輪不修改或部署API。
+
+Windows MSVC Release／CTest2/2、178核心＋15接線通過，新增8項歷史／導航邊界／選取穩定／容量及清除檢查。原生CEF合成頁確認雙擊展開、無訊息提示、兩則訊息顯示1/2、×收起及雙擊重開仍保留；測試未異動正式單據。UI工具不能獨立選取pet工具視窗送按鍵，嘗試Down會啟用主窗而非pet，未把它當成方向鍵成功；實體↑／↓與Esc及完整正式通知驗收待使用者。正常關閉合成版ACK5ms、SHUTDOWN_COMPLETE，server已停止。
+
+已ExecutableOnly更新artifacts/oaClient2/oaClient2.exe，版本0.1.9，build／交付SHA256 db8bbdac1bdfe1a90f941dd18e300d70f86218172797988a09a16d2c7415aaac一致，527保護檔全部相同。正式OA已重開、標題0.1.9，停在未登入，需使用者重新登入。證據artifacts/verification/windows-w42-pet-history的build-0.1.9.log、ctest-0.1.9.log、runtime.log、results.json及protected-before.json；早期0.1.8建置／UI證據保留，不冒稱所有情境皆在最終0.1.9重跑。未提交／推送／發布，未改CEF／prg／picture或清除SDK／下載包／build。
+
+## 2026-11-17：W43 通知範圍更正為 BSI020010
+
+依使用者更正，將通知從客戶訂單BSI020020改為客戶詢報價BSI020010；同步qua／quano／quadt、事件、權限及Token表單綁定、Windows訊息／開單／編輯保護。保留原Bsi020010供應商查詢，舊訂單事件不再通過新版Util，不修改其他業務流程。真正本機API與快照一致，未部署／異動正式單據。
+
+Release／CTest2/2（178＋16）、PHP真正／快照各23／71、OACS契約6項及原生合成通知／開單／編輯保護通過。Windows0.1.9 EXE已更新並重開未登入，SHA256 de0e397035c6b75ed63e2ec70290453038c5d6ce3dd1bffaf1394759cf974a82，527保護檔一致，測試版／server停止。需再上傳三份PHP並重新登入後測今天新儲存，舊修改不補發；正式端到端及原功能未擴大驗收。Mac／個人資料／CEF／prg／picture／SDK／build保留，未提交／推送／發布。
+
+## 2026-11-17：W44 全部小熊動作與滑鼠互動
+
+依使用者「全部做」與「滑鼠CLICK時要有互動效果」，Windows小熊加入輕微呼吸、左右搖擺、待機招手、坐下／起身、伸懶腰及左右短程走路；收到通知先小跳再揮手。待機43秒一輪，走路僅在原位置左側24像素內往返，不移動桌面視窗錨點。訊息顯示／鍵盤瀏覽時停止自主動作，拖曳期間固定姿勢。單擊本體延至系統雙擊間隔後，播放1.5秒小跳／歪頭／星光；雙擊仍開訊息窗，拖曳不觸發點擊回應，不新增全域滑鼠／鍵盤攔截。
+
+內建imagegen以原小熊為參考新增16格bear-actions.png，原8格素材及工具列透明圖示保留。兩次透明候選有雜點而未採用；最終白底素材沿用原生邊緣連通去白底，實際視窗透明。新圖及[提示詞](assets/desktop-helper/ACTIONS-PROMPT.md)／[雜湊](assets/desktop-helper/ACTIONS-MANIFEST.json)在專案，圖片內嵌EXE，不新增交付PNG。裁切後按同組共同比例及腳底基準繪製，坐姿不拉長；關鍵格交叉淡化使用預乘像素線性混合，不讓重疊軀幹變半透明。
+
+修改限Windows的desktop_pet.cpp、resources.h／application_images.rc、新增pet_animation.h及Windows測試。維持0.1.9，MSVC Release／CTest2/2（186核心＋16腳本）通過；8項新增驗證涵蓋動作可達、繪圖範圍、通知打斷、單擊回應及閱讀時抑制自主動作。初次測試編譯遇Windows min/max巨集已修正；第一輪時序累加不穩，最終改單調時鐘且Show重複呼叫不重啟計時器。
+
+最終原生合成實測：未登入無小熊、登入後坐下／起身、側伸展、交替腿走路、搖擺、待機揮手、單擊小跳歪頭星光、雙擊訊息、×關閉、拖曳無誤觸、通知小跳揮手及點擊開BSI020010、登出隱藏。未異動正式單據；實體方向鍵／Esc、多螢幕／其他DPI、長時間效能、正式通知端到端、注音／列印／Reptool未重測。後端及W43上傳範圍未改；這批動畫不需新增API更新。
+
+artifacts/oaClient2/oaClient2.exe已更新，SHA256 `a65cab8770d45237caea1cc252118e0f2a859de56dad0d78917470a50825c568`，與build一致。527保護檔只有Config.ini因正常關閉保存目前Window偏好有變，未回寫舊快照；CEF／prg／picture／Mac來源與.app保持。合成版及server停止，正式交付已重開；最後因視窗最小化／使用者輸入無法讀取登入狀態，未代操作登入，若未登入須由使用者重新登入。證據artifacts/verification/windows-w44-pet-actions；SDK／下載包／build保留，未提交／推送／發布或部署。
+
+## M27：Mac 內建 pet／0.1.9（2026-11-18）
+
+使用者要求完成 Mac 版 pet，並確認 Windows 已停止編輯／建置／Git、Dropbox 同步完成。接手 main／HEAD b91959e，無 Git lock 或 conflicted copy，保留原有 Windows／後端未提交工作。本輪已完成 Mac 原生實作與本機交付，版本與 Windows 同為0.1.9；未安裝 Applications、提交／推送／移 Tag／發布或部署 API。
+
+Mac 使用 Cocoa 透明獨立 NSPanel，登入後顯示、登出／切站／關閉清除；背景通知不取得鍵盤焦點。沿用小熊24格與43秒動作、單擊回應／雙擊訊息、拖曳、↑／↓及×／Esc；只有雙擊後取得鍵盤焦點，退出瀏覽時還原前一焦點。透明區域依當前姿勢 alpha 與變形判斷穿透，圖片放入 bundle Resources，不新增個人設定或外部 pet 程式。通知目標保持 W43 的 BSI020010／quano，不改後端。
+
+通知工作階段從 Windows 原 desktop_helper.cpp 原樣抽至 app/desktop_helper_session.h，以平台 pet 型別實例化；CEF V8 bridge 移至 app/pet_renderer.cpp，動畫移至 common/pet_animation.h。Windows 只保留原 factory／動畫 include 接口，CMake 改編譯唯一 renderer，未改 Win32 pet／入口／資源行為。原8項動畫測試移至同一共用測試入口，Windows檢查數不因此增加。這些共用抽取仍須回 Windows 執行 MSVC／實機回歸，不能以 Mac 通過代替。
+
+最終 Mac arm64 Release／CTest3/3通過：177核心（含8項動畫）、16腳本、10項Cocoa原生面板／透明像素／通知顯示／不搶焦點／隱藏檢查；原生繪圖輸出的待機、通知與收起圖已目視確認。實際交付App的隔離localhost頁成功登入，connect／Bearer changes／10秒補查與合成新增後WebSocket喚醒補查通過；兩輪登入後Cmd+Q正常ACK21／22ms及SHUTDOWN_COMPLETE，主程序／Helper全退。測試使用隔離CFFIXED_USER_HOME與僅測試用--use-mock-keychain，正式設定不注入合成值。UI工具僅選取主視窗，無法選取獨立pet面板；雙擊／拖曳／單擊、實體↑／↓／Esc、其他App焦點及最小化端到端未完成UI驗證，不能將原生屬性或核心測試當成操作已驗收。正式OA通知、跨日／權限完整矩陣、多螢幕／其他縮放、注音／列印／Reptool本輪未測。
+
+artifacts/macos-arm64/oaClient2.app已更新，267份檔案／連結／mode與build一致，10份Mach-O全arm64，deep strict簽章通過；主執行檔SHA256 ec9e0789373506fcb4f74160a062775fa9c76d05355300aca491c1b344e04479。275保護檔核對，只有上述3個共用抽取來源差異，Windows交付／其餘平台來源、個人Mac INI／picture不變；原Windows renderer已由共用檔取代，並非交付EXE更新。證據artifacts/verification/macos-m27-pet，含build-final.log、ctest.log、native-pet-tests.log、native-*.png、synthetic-history.json、application-synthetic.log、results.json與保護清單。早期建置遇沙箱寫入限制、一次修正中的編譯錯字及已移除的暫時顯示診斷，最終成功結果另列；SDK／壓縮檔／build保留，公開Release仍0.1.8，U01未實作。
+
+### M27：正式啟動等待鑰匙圈
+
+最終已透過原生App入口啟動正式0.1.9交付，未帶合成網址或mock-keychain。紀錄到START及共用政策初始化，尚無BROWSER_CREATED；唯讀sample確認在macOS SecItemCopyMatching／SecKeychainItemCopyContent等待系統鑰匙圈。UI工具存取SecurityAgent被系統安全限制拒絕，未代填密碼、變更鑰匙圈或改產品安全設定。已通知使用者自行處理提示，正式App保留等待；不能宣稱正式首頁／登入／pet已確認。此處與隔離合成App已正常退出、server已停止分開記錄。正式啟動後275保護檔再核對，仍只有共用抽取的3項來源差異，個人INI／picture與Windows交付不變。證據formal-startup-keychain.txt及results.json；共用session／renderer／動畫以逆向還原抽取後的SHA256核對，與接手原來源完全相同（shared-extraction-check.json）。
+
+### M27：鑰匙圈完成後正式登入檢查（2026-11-18）
+
+使用者回覆已處理鑰匙圈並確認「已經登入」。唯讀UI確認正式st.megatowerinc.com主窗為0.1.9且已登入；DevTools僅讀取bridge型別、observer存在、登入布林與hasUser布林，未讀Token／密碼，結果皆正常。Resource Timing顯示desktop-helper/connect HTTP200。已以座標操作工具列切回「隱藏小熊」（表示顯示開關開啟），Console已收起，保持正式登入，不重整／登出或操作正式單據。先前AX元素點擊未改變狀態，改用實際按鈕座標後提示文字確認變更。
+
+獨立透明面板仍無法由UI工具選取／擷取，已請使用者確認桌面右下角是否看到小熊，尚待回覆；不將顯示開關或API200當成pet視覺／正式通知端到端通過。滑鼠／方向鍵／Esc等待驗收範圍保持。275保護檔於正式登入後再核對仍只有3項共用抽取來源差異，個人INI／picture及Windows交付不變；未修改產品或重編，結果更新results.json。上述正式啟動已解除先前鑰匙圈阻礙，歷史等待紀錄保留。
+
+### M27：使用者確認 Mac 小熊可見（2026-11-18）
+
+使用者對「是否看到桌面右下角的小熊」回覆「看到了」，Mac正式登入後pet可見記錄為使用者驗收通過，取代前段等待顯示確認的狀態。本次回覆不擴大為單擊／雙擊／拖曳、方向鍵／Esc、完整動畫或正式BSI020010通知端到端驗收；其餘待驗收保持。維持目前正式登入，未再操作App、修改產品、重編／安裝／提交／推送或發布。
+
+## M28：Mac pet 右上角拖曳限制（2026-11-18）
+
+使用者圖片回報小熊無法移到右上角。確認原Clamp把212點高的整個透明面板限制於visibleFrame，上方訊息預留區造成小熊頂端留白；Cocoa也會在setFrameOrigin先限制整個NSPanel。修正限Mac：desktop_pet_layout.h依小熊螢幕腳底錨點選擇上下泡泡位置，靠近選單列時泡泡改放下方，重新排版保持錨點，只有碰到可見工作區邊界才夾限。OaPetPanel讓自訂Clamp完成邊界處理，繪圖、透明命中、泡泡點擊／×與雙擊區域同步使用目前版面；回到下方恢復原上方泡泡。不改共用通知、Windows來源或版本，仍0.1.9。
+
+Mac Release／CTest3/3（177核心＋16腳本＋20原生）及簽章通過；新增10項覆蓋右上角、錨點保持、重複重排穩定、回下方與負座標顯示器的幾何、Cocoa不提早夾限、實際下方泡泡像素。原生輸出native-upper-notification.png已目視確認小熊在上、文字／×完整在下。首輪僅幾何通過、Cocoa仍提早夾限，已由繪圖發現並修正，不將首輪當成最終UI成功。多螢幕幾何測試不等於多實體顯示器驗收；原生滑鼠拖曳仍待修正版套用後使用者確認。
+
+本機build已完成，主執行檔SHA256 582bccc0919916fe9fb54d257545ab30cacedbbb2302e10d6dfd15b2a024a604；目前交付.app及登入中的App尚未替換，正等待使用者確認是否有未儲存工作再正常重啟套用，避免中斷編輯。接手保護清單只見本次Mac desktop_pet.mm差異，其餘共用／Windows／個人INI／picture保持；新增Mac版面header與原生測試。證據artifacts/verification/macos-m28-pet-corners，含build-final.log、ctest.log、native-tests-final.log、native-upper-*.png、protected-before.json與results.json。SDK／build保留，未安裝／提交／推送／發布或改API；交付及重啟結果後續追加。
+
+### M28：修正版已套用並正常重啟（2026-11-18）
+
+使用者確認「沒有，可以重啟套用」，已從小熊焦點送Cmd+Q，原程式正常背景登出ACK2026ms、SHUTDOWN_COMPLETE，核對主程序／Helper全退後才package。artifacts/macos-arm64/oaClient2.app已更新為M28，版本仍0.1.9；267份檔案／連結／mode與build一致，10份Mach-O全arm64、deep strict簽章通過，主執行檔SHA256 582bccc0919916fe9fb54d257545ab30cacedbbb2302e10d6dfd15b2a024a604。保護清單只有本次Mac desktop_pet.mm改動，共用／Windows及其交付、原圖、個人INI／picture保持；SDK／build未清理，未安裝／提交／推送／發布或改API。
+
+已開啟實際更新後交付App，正式OA HTTP200載入完成，UI確認標題0.1.9及「未登入」，保留開啟供使用者重新登入並測右上角拖曳。初次UI擷取先逾時，之後正式畫面已確認，不是鑰匙圈阻礙；未代操作登入或正式單據。原生20項及右上角泡泡像素／繪圖通過與使用者實際滑鼠驗收分開記錄，後者仍待回報。交付／正常重啟取代前段「尚未替換／等待工作狀態」；證據package.log、delivery-manifest.json、restart.log、results.json。
+
+## 2026-11-18：W45 Windows pet 上緣拖曳修正
+
+使用者圖片回報小熊無法往螢幕上方拖。原因是原Win32 Clamp限制整個212像素透明視窗，上方訊息預留區使小熊本體停在約百像素以下。本輪新增Windows版面helper，依小熊腳底螢幕錨點選擇泡泡在上／下；靠近上緣改放下方，重排保留本體錨點，碰工作區邊界才夾限。顯示器改依小熊錨點選擇，支援負座標幾何；維持原水平夾限。繪圖、星光、文字／×、雙擊本體與泡泡命中同步使用當前版面；拖回下方恢復上方泡泡，不改通知或動畫政策。
+
+僅修改src/platform/windows/desktop_pet.cpp、新增desktop_pet_layout.h及tests/windows_tests.cpp。Windows Release／CTest2/2（194核心＋16腳本）通過，新增8項覆蓋上緣／負座標、腳底錨點保持、重複重排不漂移、回下方及命中區域。接續Mac M27的共用session／renderer／動畫抽取已在本輪Windows編譯並經合成通知使用；不是完整原功能或Mac驗收。
+
+原生合成頁實際拖曳確認：右下拖到上緣後popup y=0，小熊站姿頂部約y=24（原約y=106），上方留白限制已解除；通知完整放小熊下方，×關閉、雙擊重開、點下方泡泡開BSI020010 SYNTHETIC-6均正常。拖回下方popup y=630，恢復上方泡泡且雙擊歷史正常。未改正式單據；多實體螢幕／其他DPI、正式通知端到端、實體方向鍵／Esc、注音／列印／Reptool未重測。
+
+本機交付artifacts/oaClient2/oaClient2.exe已更新，仍0.1.9，SHA256 `e5d504c7ef60a62c88ffb63aecb294399d8dc573b81cd5b29181c7b1e4cea28c`與build一致。603份接手保護檔只有指定兩份來源、EXE及正常關閉保存Window偏好的Config.ini變動；未回寫舊INI快照。Mac來源／0.1.9.app、共用來源、API、素材／CEF／prg／picture保持。合成版／server已結束，正式交付已重開，需重新登入後測上緣拖曳。SDK／build／下載包保留，未提交／推送／進版／發布／部署；證據artifacts/verification/windows-w45-pet-top。
+
+## D03：0.1.9 pet 來源提交與推送授權（2026-11-18）
+
+使用者明確要求「commit, push」，本批整理W40～W45及Mac M27／M28尚未提交的內建pet、共用通知／renderer／動畫、BSI020010後端交付快照、角色素材與測試／文件，於既有main提交並推送origin。僅本oaClient2儲存庫，不提交另一Megatower API儲存庫；不包含artifacts執行檔／App、個人INI、網站資料、.env、SDK／快取或本機測試證據。版本維持0.1.9，不建立／移動Tag或發布Release，正式API部署亦不在本輪。
+
+提交前已讀差異、核對最新backend／素材清單、敏感值掃描與Git鎖；既有Windows Release／CTest2/2（194＋16）、Mac M28 Release／CTest3/3（177＋16＋20）及PHP兩份23／71的實際驗證紀錄保留，不因提交而擴大待驗收範圍。此段為提交前準備，提交與遠端核對結果後續追加。

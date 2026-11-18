@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-17",
+  "work_id": "W43",
+  "baseline_manifest": "RESOURCE-MANIFEST.json",
+  "current_backend_manifest": "BACKEND-MANIFEST.json",
+  "purpose": "Current Windows integration variants; D05 baseline hashes remain historical",
+  "files": [
+    {
+      "path": "docs/desktop-helper/server/api/app/Util/DesktopHelper.php",
+      "bytes": 2188,
+      "sha256": "1d47f135a4beaa5ac78d46245e60cbfb5445f09c4ebab2cc74ec572a053f2c79"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Http/Controllers/DesktopHelperController.php",
+      "bytes": 6211,
+      "sha256": "1e6bc928360db3807ae811171c950763f57370e1d9324ac8092830c34779b03a"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Http/Event/Bsi020010Event.php",
+      "bytes": 1524,
+      "sha256": "61936e5a754d98d717edc0b056f2133a0368c455d93e006475fe3dbb7785358e"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/tests/Feature/DesktopHelperTest.php",
+      "bytes": 17386,
+      "sha256": "a8db6fb517b5fe970c7e48db4acdb3bd4ccb0b50f2af761bfafae59dbc34fc55"
+    }
+  ]
+}

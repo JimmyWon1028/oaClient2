@@ -6,6 +6,8 @@
 #include "common/ini.h"
 #include "common/logout.h"
 #include "common/keyboard.h"
+#include "common/notification_feed.h"
+#include "pet_animation_tests.h"
 #include "platform/platform.h"
 
 //2026.10.12 modify by codex, reuse shared cases and delegate native-only checks.
@@ -28,6 +30,57 @@ std::string FileBytes(const std::filesystem::path& path) {
 }
 
 int main() {
+  //2026.11.17 by codex, verify reopening, navigation bounds and session isolation for message history.
+  oa::NotificationHistory history;
+  history.Show();
+  history.Move(-1);
+  Check(!history.current() && history.position() == 0, "empty message history can be opened and navigated safely");
+  history.Hide();
+  history.Add({1, "add", "one"});
+  history.Add({2, "mod", "two"});
+  history.Show();
+  Check(history.current()->order == "two" && history.position() == 2, "reopened message view selects the latest incoming message");
+  history.Move(-1);
+  history.Move(-1);
+  Check(history.current()->order == "one" && history.position() == 1, "up navigation stops at the first message");
+  history.Add({3, "add", "three"});
+  Check(history.current()->order == "one", "incoming messages do not replace the message being read");
+  history.Move(1);
+  history.Move(1);
+  history.Move(1);
+  Check(history.current()->order == "three" && history.position() == 3, "down navigation stops at the last message");
+  history.Hide();
+  history.Show();
+  Check(history.size() == 3 && history.current()->order == "three", "closing and reopening the bubble preserves session messages");
+  for (int i = 4; i <= 504; ++i) history.Add({i, "add", std::to_string(i)});
+  Check(history.size() == 500 && history.position() == 1 && history.current()->id == 5,
+    "history eviction keeps selection valid within its memory limit");
+  history.Clear();
+  Check(!history.visible() && !history.current() && history.size() == 0, "logout clears message content and selection");
+  //2026.11.17 by codex, verify notification baselines, replay rejection, scope isolation and server-side day changes.
+  oa::NotificationFeed feed;
+  std::vector<oa::OrderNotification> fresh;
+  Check(oa::NotificationFeed::ValidDate("20261117") && !oa::NotificationFeed::ValidDate("20260230") &&
+    !oa::NotificationFeed::ValidDate("2026-11-17"), "notification date uses the valid server calendar date");
+  feed.Connect("scope-a", "20261117", 10);
+  Check(feed.Apply("20261117", 11, false, {{9, "add", "old"}, {11, "mod", "new"}}, fresh) &&
+    fresh.size() == 1 && fresh[0].order == "new", "first grant baseline does not replay existing orders");
+  Check(feed.Apply("20261117", 11, false, {{11, "mod", "new"}}, fresh) && fresh.empty(),
+    "repeated notification event is not presented twice");
+  feed.Connect("scope-a", "20261117", 100);
+  Check(feed.cursor == 11, "same-scope token renewal preserves missed-event cursor");
+  Check(feed.Apply("20261118", 1, false, {{1, "add", "next-day"}}, fresh) && fresh.size() == 1,
+    "new server day accepts its new sequence without using the local UTC date");
+  Check(!feed.Apply("20261118", 0, false, {}, fresh) && feed.cursor == 1,
+    "unmarked cursor regression leaves the last accepted state intact");
+  Check(feed.Apply("20261118", 0, true, {}, fresh) && feed.cursor == 0,
+    "marked cache reset accepts a new baseline with a visible gap signal");
+  Check(!feed.Apply("20261118", 2, false, {{3, "add", "invalid"}}, fresh) && feed.cursor == 0,
+    "event ahead of response cursor cannot corrupt notification state");
+  Check(!feed.Apply("20261118", 2, false, {{1, "delete", "invalid"}}, fresh),
+    "unsupported business action is not accepted");
+  feed.Connect("scope-b", "20261118", 50);
+  Check(feed.cursor == 50 && feed.scope == "scope-b", "new session scope gets its own initial baseline");
   //2026.10.13 modify by codex, verify the exact browser shortcut policy and preserve unrelated combinations.
   for (int key : {0x70, 0x71, 0x72, 0x73, 0x78}) {
     Check(oa::IsWebsiteShortcut(key, false, false, false, false), "requested plain function key belongs to website");
@@ -215,6 +268,7 @@ int main() {
   Check(unready_background.Begin(false, oa::LogoutFlow::Mode::BackgroundGrace, start) == Action::Logout &&
     unready_background.Tick(start + std::chrono::seconds(3)) == Action::Close,
     "an unready background page still has a bounded three-second close");
+  RunPetAnimationTests(Check);
   RunPlatformTests(root, config, ini, error, Check);
   oa::AppPaths paths;
   paths.data = root;

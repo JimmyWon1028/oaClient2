@@ -1,0 +1,42 @@
+{
+  "work_id": "D05",
+  "date": "2026-11-17",
+  "files": [
+    {
+      "path": "assets/desktop-helper/bear-sprites.png",
+      "source": "megatower/desktopHelper/assets/bear-sprites.png",
+      "bytes": 1326728,
+      "sha256": "b924c76fbe9a37c30e0c158b2cdc31cb40dec5185a2e773eefaa00d4e2059aed"
+    },
+    {
+      "path": "assets/desktop-helper/preview-idle-wave.gif",
+      "source": "conversation-preview/golden-bear-idle-wave.gif",
+      "bytes": 189498,
+      "sha256": "ffefd55c7a4d905fa2901c2014785a8f173485876aa527ebcbc5653d86684e21"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Http/Controllers/DesktopHelperController.php",
+      "source": "megatower/api/app/Http/Controllers/DesktopHelperController.php",
+      "bytes": 6096,
+      "sha256": "f7cf13b49af04d63779aac1ccb9f6005a87f0df7ef2a77f6e17929ae70697b22"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Http/Event/Bsi020020Event.php",
+      "source": "megatower/api/app/Http/Event/Bsi020020Event.php",
+      "bytes": 804,
+      "sha256": "af2914736ab866a89765ef6dd04165bb116355d4335a6b3b969667b1924429f7"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Util/DesktopHelper.php",
+      "source": "megatower/api/app/Util/DesktopHelper.php",
+      "bytes": 1777,
+      "sha256": "49180afdedeb7c031e4a252133198829b33d3e284038b788d6d1d4fc010274c9"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/tests/Feature/DesktopHelperTest.php",
+      "source": "megatower/api/tests/Feature/DesktopHelperTest.php",
+      "bytes": 9042,
+      "sha256": "98dad8f874c2977fd15cdff34aee4ca785998b615fef39291a03342ef581d75f"
+    }
+  ]
+}

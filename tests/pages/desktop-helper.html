@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>內建小熊隔離驗證</title>
+<style>
+  body { font: 18px "Microsoft JhengHei UI",sans-serif; margin: 30px; background:#e9f1fb; }
+  button { margin: 7px; padding: 10px; font-size:16px; }
+  input { font-size:22px; width:420px; }
+  #state { padding:15px; background:white; }
+</style>
+<h1>Windows 內建小熊隔離驗證</h1>
+<p>只使用本機合成資料，不連正式 ERP。</p>
+<button onclick="login()">模擬登入成功</button>
+<button onclick="$g.isLogin=false; statusText()">模擬登入失敗</button>
+<button onclick="logout()">登出</button>
+<button onclick="editing()">切換編輯保護</button>
+<div>
+  <button onclick="control('add')">今天新增</button>
+  <button onclick="control('mod')">今天修改</button>
+  <button onclick="control('yesterday')">昨天單據</button>
+  <button onclick="control('replay')">重複喚醒</button>
+  <button onclick="control('next-day')">換日</button>
+  <button onclick="control('gap')">通知缺口</button>
+  <button onclick="control('revoke')">撤回權限</button>
+  <button onclick="control('drop')">斷開 WebSocket</button>
+</div>
+<p id="state">尚未登入</p>
+<p>焦點與未儲存內容：<input id="draft" value="保留原稿"></p>
+<p id="opened">尚未開單</p>
+<script>
+  var $g = {
+    isLogin: false, api_root: location.origin + '/api/', last_select_database: 'synthetic-db',
+    login_user: {userid: 'synthetic-user'}, ctrlBSI020010: {formState: 'Query'}
+  };
+  const listeners = new Map();
+  let socket;
+  $g.chatHub = {
+    on(name, callback) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(callback); },
+    removeListener(name, callback) { listeners.get(name)?.delete(callback); }
+  };
+  function emit(name, data) { for (const callback of listeners.get(name) || []) callback(data); }
+  function socketConnect() {
+    socket = new WebSocket('ws://' + location.host + '/synthetic-socket');
+    socket.onmessage = event => emit('notification', JSON.parse(event.data));
+    socket.onopen = () => emit('connect');
+  }
+  function login() { $g.isLogin = true; socketConnect(); statusText(); }
+  function logout() { $g.isLogin = false; socket?.close(); statusText(); console.log('loginState=0'); }
+  function statusText() {
+    document.getElementById('state').textContent = ($g.isLogin ? '已登入' : '尚未登入') + '；表單狀態：' + $g.ctrlBSI020010.formState;
+  }
+  function editing() { $g.ctrlBSI020010.formState = $g.ctrlBSI020010.formState === 'Modify' ? 'Query' : 'Modify'; statusText(); }
+  function control(action) { fetch('/control?action=' + action); }
+  function notice(text) { document.getElementById('opened').textContent = text; }
+  function openFormById(menu, modal, query) {
+    document.getElementById('opened').textContent = menu + '：' + query.qryval;
+    fetch('/opened?order=' + encodeURIComponent(query.qryval));
+  }
+</script>
+</html>

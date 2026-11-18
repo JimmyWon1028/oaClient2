@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(oaClient2 VERSION 0.1.8 LANGUAGES C CXX)
+project(oaClient2 VERSION 0.1.9 LANGUAGES C CXX)
 
 if(APPLE)
   if(NOT CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
@@ -46,12 +46,16 @@ endif()
 set(CEF_TARGET oaClient2)
 SET_CEF_TARGET_OUT_DIR()
 set(OA_COMMON_SOURCES src/app/app.cpp src/common/ini.cpp)
+include(CTest)
 #2026.10.12 modify by codex, compile the same app and common sources on both platforms.
 if(WIN32)
   add_executable(${CEF_TARGET} WIN32
     ${OA_COMMON_SOURCES}
     src/platform/windows/cef_platform.cpp
     src/platform/windows/file_dialog.cpp
+    src/platform/windows/desktop_pet.cpp
+    src/platform/windows/desktop_helper.cpp
+    src/app/pet_renderer.cpp
     src/platform/windows/platform.cpp
     src/platform/windows/main.cpp
     src/platform/windows/app.rc
@@ -80,7 +84,6 @@ else()
   include(src/platform/macos/CMakeLists.txt)
 endif()
 
-include(CTest)
 if(BUILD_TESTING)
   if(WIN32)
     add_executable(oaClient2_report_receiver WIN32 tests/report_receiver.cpp)
@@ -103,4 +106,9 @@ if(BUILD_TESTING)
     target_link_libraries(oaClient2_core_tests PRIVATE "-framework Cocoa" "-framework ScreenCaptureKit")
   endif()
   add_test(NAME core COMMAND oaClient2_core_tests)
+  find_program(OA_NODE_EXECUTABLE node)
+  if(OA_NODE_EXECUTABLE)
+    add_test(NAME desktop_helper_script COMMAND "${OA_NODE_EXECUTABLE}" tests/desktop_helper_script_tests.cjs)
+    set_tests_properties(desktop_helper_script PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+  endif()
 endif()

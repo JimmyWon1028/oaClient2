@@ -4,11 +4,36 @@
 #include "common/ini.h"
 #include "platform/platform.h"
 #include "platform/windows/file_dialog_filter.h"
+#include "platform/windows/desktop_pet_layout.h"
 
 //2026.10.12 modify by codex, retain Windows-only checks outside the shared test source.
 void RunPlatformTests(const std::filesystem::path& root, const std::filesystem::path& config,
     oa::IniFile& ini, std::string& error, void (*Check)(bool, const char*)) {
   std::error_code ec;
+  //2026.11.18 by codex, regress the top-edge transparent margin and keep message hit zones aligned after relayout.
+  const RECT pet_area{0, 0, 1440, 852};
+  const auto top_pet = oa::PlaceWindowsPet({1128, -82}, 206, pet_area);
+  Check(top_pet.origin.y == 0 && top_pet.feet == 124 && top_pet.bubble_top == 133,
+    "pet reaches screen top with the bubble below instead of reserving empty space above");
+  const auto anchored_pet = oa::PlaceWindowsPet({1128, -42}, 206, pet_area);
+  Check(anchored_pet.origin.y + anchored_pet.feet == 164 && anchored_pet.origin.y == 40,
+    "pet bubble relayout preserves the visible bear foot anchor");
+  const auto stable_pet = oa::PlaceWindowsPet(anchored_pet.origin, anchored_pet.feet, pet_area);
+  Check(stable_pet.origin.y == anchored_pet.origin.y && stable_pet.feet == anchored_pet.feet,
+    "repeated top-edge pet layout does not drift");
+  const auto lower_pet = oa::PlaceWindowsPet({1128, 400}, 124, pet_area);
+  Check(lower_pet.feet == 206 && lower_pet.bubble_top == 1 && lower_pet.origin.y + lower_pet.feet == 524,
+    "moving pet down restores the upper bubble without shifting the bear");
+  const auto negative_pet = oa::PlaceWindowsPet({-300, -1162}, 206, {-1920, -1080, 0, 0});
+  Check(negative_pet.origin.y == -1080 && negative_pet.feet == 124 && negative_pet.origin.x == -300,
+    "pet top layout supports negative monitor coordinates");
+  const auto bottom_pet = oa::PlaceWindowsPet({1128, 628}, 206, pet_area);
+  Check(bottom_pet.origin.y == 628 && bottom_pet.feet == 206 && bottom_pet.bubble_top == 1,
+    "pet bottom placement retains its original geometry");
+  Check(top_pet.InBody(24) && !top_pet.InBubble(24) && top_pet.InBubble(147) && !top_pet.InBody(147),
+    "top pet body double-click and lower message click use separate hit zones");
+  Check(bottom_pet.InBody(110) && !bottom_pet.InBubble(110) && bottom_pet.InBubble(14) && !bottom_pet.InBody(14),
+    "bottom pet body and upper message retain separate hit zones");
   //2026.10.30 by codex, do not silently skip startup encoding repair or remove read-only protection.
   const auto readonly_config = root / "ReadonlyLegacy.ini";
   const std::string readonly_contents = "[UserSet]\nreport_font=標楷體\n";

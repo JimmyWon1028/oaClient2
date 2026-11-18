@@ -1,0 +1,87 @@
+{
+  "work_id": "W43",
+  "date": "2026-11-17",
+  "status": "local-api-and-snapshot-updated-bsi020010-awaiting-upload",
+  "runtime_files": [
+    {
+      "path": "docs/desktop-helper/server/api/app/Util/DesktopHelper.php",
+      "target": "api/app/Util/DesktopHelper.php",
+      "bytes": 2188,
+      "sha256": "1d47f135a4beaa5ac78d46245e60cbfb5445f09c4ebab2cc74ec572a053f2c79"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Http/Controllers/DesktopHelperController.php",
+      "target": "api/app/Http/Controllers/DesktopHelperController.php",
+      "bytes": 6211,
+      "sha256": "1e6bc928360db3807ae811171c950763f57370e1d9324ac8092830c34779b03a"
+    },
+    {
+      "path": "docs/desktop-helper/server/api/app/Http/Event/Bsi020010Event.php",
+      "target": "api/app/Http/Event/Bsi020010Event.php",
+      "bytes": 1524,
+      "sha256": "61936e5a754d98d717edc0b056f2133a0368c455d93e006475fe3dbb7785358e"
+    }
+  ],
+  "test_file": {
+    "path": "docs/desktop-helper/server/api/tests/Feature/DesktopHelperTest.php",
+    "sha256": "a8db6fb517b5fe970c7e48db4acdb3bd4ccb0b50f2af761bfafae59dbc34fc55",
+    "upload": false
+  },
+  "unchanged_references": [
+    {
+      "path": "api/app/Http/Event/Bsi020020Event.php",
+      "sha256": "af2914736ab866a89765ef6dd04165bb116355d4335a6b3b969667b1924429f7"
+    },
+    {
+      "path": "api/routes/web.php",
+      "sha256": "f01fcbbb984e7bfc26829f09cf764c1de3096e15c2fbaafd85f3c28377a13859"
+    },
+    {
+      "path": "api/app/Util/MyFunc.php",
+      "sha256": "1a2b57081ae4a763f34416781c2a9a6ec320ad1c4cf038a2660d45e3fd9b238e"
+    },
+    {
+      "path": "api/app/Http/Controllers/Table2Controller.php",
+      "sha256": "2701df360e6fbc4031a1bf43382a0148901dede515d84e1c53ba64769dcfb0ed"
+    },
+    {
+      "path": "oacs/src/server2.js",
+      "sha256": "af4ebc22808ac33b7d357e3c9ca0a451974f5e59165d117122dbfa4b5dafc67e"
+    }
+  ],
+  "modified_actual_api_files": [
+    "api/app/Util/DesktopHelper.php",
+    "api/app/Http/Controllers/DesktopHelperController.php",
+    "api/app/Http/Event/Bsi020010Event.php",
+    "api/tests/Feature/DesktopHelperTest.php"
+  ],
+  "tests": {
+    "php": "8.2.33",
+    "phpunit": "11.5.56",
+    "actual": {
+      "tests": 23,
+      "assertions": 71
+    },
+    "snapshot": {
+      "tests": 23,
+      "assertions": 71
+    },
+    "oacs_route_contract_checks": 6,
+    "client_script_checks": 16
+  },
+  "deployment": {
+    "performed": false,
+    "routes": "merge existing two routes only if absent",
+    "oacs": "no upload or restart when the existing internal notify dispatcher matches",
+    "production_event_setting": "not inspected",
+    "all_three_php_required_for_w43": true,
+    "previous_upload_report": "User reported W41 upload; W43 requires all three updated PHP files."
+  },
+  "notification": {
+    "menu": "BSI020010",
+    "table": "qua",
+    "number": "quano",
+    "document_date": "quadt",
+    "previous_menu": "BSI020020"
+  }
+}

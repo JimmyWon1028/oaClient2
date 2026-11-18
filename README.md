@@ -1,5 +1,19 @@
 # oaClient2
 
+最新Windows本機W45（2026-11-18）：0.1.9已修正小熊無法拖到螢幕上方；靠近上緣時訊息改放小熊下方，拖回下方恢復原位置。已建置更新交付，實際拖曳／點訊息／×／雙擊回歸通過，重開後需重新登入。Mac及API保持，詳細見[進度](PROGRESS.md)。
+
+最新 Mac M28（2026-11-18）：0.1.9已修正pet右上角拖曳限制；靠近選單列時訊息泡泡顯示於小熊下方。CTest3/3與原生繪圖通過，本機交付已更新並重啟，實際滑鼠操作待重新登入後驗收；[詳細結果](PROGRESS.md)。
+
+最新 Mac 本機 M27（2026-11-18）：**0.1.9 已內建 pet**，交付在 `artifacts/macos-arm64/oaClient2.app`。登入後出現，通知／動畫／訊息歷史沿用共用來源；Mac原生透明面板支援單擊、雙擊、拖曳與↑／↓、Esc。Release／CTest3/3（177核心＋16腳本＋10原生）與簽章通過，合成通知與正常退出已測；獨立面板UI互動及正式OA通知仍待使用者驗收。[詳細結果](PROGRESS.md)、[pet操作](docs/desktop-helper/README.md)。未安裝或更新公開Release，Windows交付保持，抽取後Windows回歸待執行。
+
+最新Windows本機W44（2026-11-17）：0.1.9小熊已加入呼吸、搖擺、待機揮手、坐下、伸懶腰、短程走路，通知小跳揮手；**單擊小跳／歪頭／星光，雙擊開訊息，拖曳移動**。已建置更新交付及原生合成回歸，重開後需重新登入。[動作與操作](docs/desktop-helper/README.md)。本次動畫不需額外API更新，Mac／公開Release保持。
+
+最新Windows本機W43（2026-11-17）：通知已更正為 **BSI020010 客戶詢報價**，只通知今天quadt的成功新增／修改，以quano開單。Windows0.1.9及真正本機API已更新、編譯／隔離與原生合成驗證通過；需[重新上傳三份PHP](docs/desktop-helper/API-UPLOAD.md)，重新登入後測新儲存。正式主機未由代理部署，先前修改不補發；Mac及公開Release保持。
+
+最新Windows本機W42（2026-11-17）：**0.1.9** 已更新，雙擊小熊可展開本次登入的訊息，↑／↓瀏覽上一則／下一則；×／Esc收起後仍可雙擊回看，登出／切站清除。建置及核心檢查通過，實體方向鍵待使用者驗收；詳細見[進度](PROGRESS.md)。Mac交付仍0.1.8、不啟用pet；公開Release未更新。
+
+最新 Windows 本機 W40（2026-11-17）：0.1.8 已內建透明小熊、MAC 左側圖示切換及訊息右上角 ×，沿用當前站台登入與 OACS 即時喚醒／原生補查。只整合 oaClient2，不整合外部 Chrome、也不限定使用 Excel。[資源與操作](docs/desktop-helper/README.md)、[API 上傳清單](docs/desktop-helper/API-UPLOAD.md)、[驗證及限制](PROGRESS.md)。已建置交付，正式通知端到端仍待 API 部署確認與允許的測試單據；公開 Release 尚未更新，Mac 本輪不啟用 pet。
+
 最新正式版本（2026-11-12，Latest）：**0.1.8**，[GitHub Release](https://github.com/JimmyWon1028/oaClient2/releases/tag/v0.1.8)提供Windows x64與Mac arm64 ZIP／SHA256。兩平台已包含列印背景預設、Shift+F及現行共用修正；公開下載校驗通過，正式報表及其他待驗收範圍見[進度](PROGRESS.md)。以下保留早期狀態，以最新發布及各工作紀錄為準。
 
 最新 Windows（2026-11-11，W39）：本機交付已進版 **0.1.8**，包含W38列印預覽背景圖形修正；Release／CTest1/1、160項通過。Mac本機仍0.1.7，須回macOS重編共用修改；公開ZIP未更新，正式報表驗收範圍見[進度](PROGRESS.md)。
@@ -27,7 +41,7 @@ W32～W35 的 Windows Release／CTest 1/1、143 項通過，本機最新 EXE SHA
 - 每次啟動主視窗最大化；未設定網址顯示本機歡迎頁，確認 HTTP／HTTPS 網址後保存，已有網址直接載入。
 - `Config.ini` 放在 EXE 同目錄，可手動編輯；首次啟動會建立，若本機有初版 INI，僅在新位置不存在時複製保留。
 - 網站資料預設啟動前全部清除，程式設定與截圖保留。
-- 下方左側按鈕／F12 開啟或關閉嵌入式 Console；右側依序為首頁、伺服器設定、MAC、瀏覽目錄、截圖、還原比例、縮小、放大。
+- 下方左側按鈕／F12 開啟或關閉嵌入式 Console；Windows右側依序為首頁、伺服器設定、小熊顯示／隱藏、MAC、瀏覽目錄、截圖、還原比例、縮小、放大。Mac本輪不增加小熊按鈕。
 - 瀏覽目錄開啟實際 Config.ini 所在目錄：Windows 目前為 EXE 同目錄，Mac 為 `~/Library/Application Support/oaClient2/`。截圖只擷取 oaClient2 視窗，存到各平台設定目錄的 `picture/`。
 - Ctrl+P 使用 CEF Chrome 內建列印預覽；F8 開啟 Config.ini。
 

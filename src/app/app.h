@@ -13,6 +13,7 @@
 #include "common/logout.h"
 #include "platform/platform.h"
 #include "platform/cef_platform.h"
+#include "app/desktop_helper.h"
 
 namespace oa {
 
@@ -29,6 +30,7 @@ struct AppContext {
   bool background_logout_close = false;
   bool closing_in_background = false;
   CefRefPtr<CefWindow> main_window;
+  std::shared_ptr<DesktopHelper> desktop_helper;
   std::function<void()> toggle_console;
   std::chrono::steady_clock::time_point started = std::chrono::steady_clock::now();
 };
@@ -52,6 +54,8 @@ class BrowserClient : public CefClient,
   CefRefPtr<CefDialogHandler> GetDialogHandler() override { return PlatformFileDialogHandler(); }
   bool OnBeforeUnloadDialog(CefRefPtr<CefBrowser> browser, const CefString& message,
                            bool is_reload, CefRefPtr<CefJSDialogCallback> callback) override;
+  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefRequest> request, bool user_gesture, bool is_redirect) override;
   CefRefPtr<CefResourceRequestHandler> GetResourceRequestHandler(CefRefPtr<CefBrowser>,
       CefRefPtr<CefFrame>, CefRefPtr<CefRequest>, bool, bool, const CefString&, bool&) override;
   void OnBeforeDevToolsPopup(CefRefPtr<CefBrowser> browser, CefWindowInfo& info,
@@ -70,12 +74,15 @@ class BrowserClient : public CefClient,
                    TransitionType transition_type) override;
   bool OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_severity_t level,
                          const CefString& message, const CefString& source, int line) override;
+  bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+    CefProcessId source, CefRefPtr<CefProcessMessage> message) override;
   bool PrepareWindowClose(CefRefPtr<CefBrowser> browser, CefRefPtr<CefWindow> window,
                          CefRefPtr<CefWindow> console = nullptr);
 
  private:
   std::shared_ptr<AppContext> context_;
   std::list<CefRefPtr<CefBrowser>> browsers_;
+  int main_browser_id_ = 0;
   std::string login_parameters_;
   bool site_ready_ = false;
   LogoutFlow logout_;

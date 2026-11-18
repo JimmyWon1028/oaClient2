@@ -26,14 +26,14 @@
 namespace oa {
 namespace {
 
-enum Command { kConsole = 10, kHome, kServer, kMac, kDirectory, kSnapshot, kResetZoom, kZoomOut, kZoomIn };
+enum Command { kConsole = 10, kHome, kServer, kPet, kMac, kDirectory, kSnapshot, kResetZoom, kZoomOut, kZoomIn };
 
 constexpr cef_color_t kToolbarBackground = 0xFFF0F0F0;
 constexpr cef_color_t kToolbarForeground = 0xFF222222;
 
 //2026.10.13 modify by codex, match the legacy website title and display the actual client version.
 std::string ApplicationWindowTitle(const std::string& website_title = "") {
-  return (website_title.empty() ? "oaClient2" : website_title) + std::string(" [用戶端版本 0.1.8]");
+  return (website_title.empty() ? "oaClient2" : website_title) + std::string(" [用戶端版本 0.1.9]");
 }
 
 class CompletionCallback : public CefCompletionCallback {
@@ -196,6 +196,7 @@ void EditServerUrl(CefRefPtr<CefBrowser> browser, CefRefPtr<CefWindow> window,
   ini.Set("SysSet", "HomeUrl", url);
   if (!ini.Save(context->paths.config, error) ||
       !LoadSettings(context->paths.config, context->settings, error)) { ShowError(error); return; }
+  if (context->desktop_helper) context->desktop_helper->Stop();
   browser->GetMainFrame()->LoadURL(context->settings.home_url);
 }
 
@@ -384,10 +385,17 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
       case kConsole: ToggleConsole(); break;
       case kHome:
         if (LoadSettings(context_->paths.config, context_->settings, error)) {
+          if (context_->desktop_helper) context_->desktop_helper->Stop();
           browser->GetMainFrame()->LoadURL(StartupNavigationUrl(*context_));
         } else ShowError(error);
         break;
       case kServer: EditServerUrl(browser, window, context_); break;
+      case kPet:
+        if (context_->desktop_helper) {
+          const bool visible = context_->desktop_helper->Toggle();
+          button->SetTooltipText(visible ? "隱藏小熊" : "顯示小熊（登入成功後）");
+        }
+        break;
       case kMac: ShowNetworkInfo(window->GetWindowHandle()); break;
       case kDirectory:
         //2026.10.13 modify by codex, browse the active settings directory on both platforms.
@@ -451,6 +459,9 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
       button->SetMaximumSize(CefSize(width, 28));
       button->SetBackgroundColor(kToolbarBackground);
       button->SetEnabledTextColors(kToolbarForeground);
+      if (id == kPet && context_->desktop_helper) {
+        button->SetImage(CEF_BUTTON_STATE_NORMAL, context_->desktop_helper->Icon());
+      }
       std::string icon;
       if (id == kConsole) icon = "console";
       else if (id == kHome) icon = "home";
@@ -474,6 +485,7 @@ class WindowDelegate : public CefWindowDelegate, public CefButtonDelegate {
     //2026.10.13 modify by codex, match the legacy DFM widths without changing toolbar actions or images.
     add(kHome, "⌂", "回到首頁", 23);
     add(kServer, "▤", "設定伺服器網址", 23);
+    if (context_->desktop_helper && !popup_) add(kPet, "", "顯示／隱藏小熊（登入成功後）", 23);
     add(kMac, "MAC", "顯示 IP / MAC", 40);
     add(kDirectory, "瀏覽目錄", "瀏覽 Config.ini 所在目錄", 67);
     add(kSnapshot, "截圖", "擷取 oaClient2 視窗", 38);
@@ -534,6 +546,12 @@ void BrowserClient::OnBeforeDevToolsPopup(CefRefPtr<CefBrowser>, CefWindowInfo&,
   *use_default_window = false;
 }
 
+bool BrowserClient::OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefRequest>, bool, bool) {
+  if (!browser->IsPopup() && frame->IsMain() && context_->desktop_helper) context_->desktop_helper->Stop();
+  return false;
+}
+
 CefRefPtr<CefResourceRequestHandler> BrowserClient::GetResourceRequestHandler(
     CefRefPtr<CefBrowser>, CefRefPtr<CefFrame>, CefRefPtr<CefRequest>, bool, bool,
     const CefString&, bool&) {
@@ -546,7 +564,7 @@ void BrowserClient::RestoreUserSettings(CefRefPtr<CefBrowser> browser) {
   if (ini.Load(context_->paths.config, error)) {
     browser->GetMainFrame()->ExecuteJavaScript(UserSettingsScript(ini), "", 0);
     browser->GetMainFrame()->ExecuteJavaScript(
-      "var $g=$g||{};$g.win_client=true;$g.client_version='oaClient2-0.1.8';", "", 0);
+      "var $g=$g||{};$g.win_client=true;$g.client_version='oaClient2-0.1.9';", "", 0);
   } else AppendLog(context_->paths, "USER_SETTINGS_READ_FAILED");
 }
 
@@ -554,6 +572,7 @@ void BrowserClient::OnLoadStart(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFram
                               TransitionType) {
   CEF_REQUIRE_UI_THREAD();
   if (frame->IsMain() && !browser->IsPopup()) {
+    if (context_->desktop_helper) context_->desktop_helper->Stop();
     site_ready_ = false;
     RestoreUserSettings(browser);
   }
@@ -563,6 +582,7 @@ bool BrowserClient::PrepareWindowClose(CefRefPtr<CefBrowser> browser, CefRefPtr<
                                       CefRefPtr<CefWindow> console) {
   CEF_REQUIRE_UI_THREAD();
   //2026.10.13 modify by codex, mandatory Chrome close callbacks can outlive the browser main frame.
+  if (context_->desktop_helper) context_->desktop_helper->Stop();
   if (!browser->IsValid()) return true;
   auto frame = browser->GetMainFrame();
   if (!frame) {
@@ -700,6 +720,7 @@ bool BrowserClient::OnKeyEvent(CefRefPtr<CefBrowser>, const CefKeyEvent& event, 
 
 void BrowserClient::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
   CEF_REQUIRE_UI_THREAD();
+  if (browsers_.empty() && !browser->IsPopup()) main_browser_id_ = browser->GetIdentifier();
   browsers_.push_back(browser);
   AppendLog(context_->paths, "BROWSER_CREATED id=" + std::to_string(browser->GetIdentifier()) +
     " popup=" + std::to_string(browser->IsPopup()) + " count=" + std::to_string(browsers_.size()));
@@ -714,6 +735,7 @@ void BrowserClient::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 void BrowserClient::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
+  if (browser->GetIdentifier() == main_browser_id_ && context_->desktop_helper) context_->desktop_helper->Stop();
   //2026.10.16 by codex, cancel native pickers before their browser is released.
   CancelPlatformFileDialogs(browser->GetIdentifier());
   CEF_REQUIRE_UI_THREAD();
@@ -744,6 +766,7 @@ void BrowserClient::OnLoadEnd(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame>
   CEF_REQUIRE_UI_THREAD();
   if (frame->IsMain() && !browser->IsPopup()) {
     site_ready_ = true;
+    if (context_->desktop_helper && !context_->closing_in_background) context_->desktop_helper->Loaded(browser);
     RestoreUserSettings(browser);
     browser->GetHost()->SetZoomLevel(std::log(context_->settings.zoom_percent / 100.0) / std::log(1.2));
     AppendLog(context_->paths, "ZOOM_APPLIED percent=" + std::to_string(context_->settings.zoom_percent));
@@ -755,6 +778,11 @@ void BrowserClient::OnLoadEnd(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame>
     AppendLog(context_->paths, "FIRST_MAIN_LOAD ms=" + std::to_string(elapsed) +
               " status=" + std::to_string(http_status_code));
   }
+}
+
+bool BrowserClient::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+    CefProcessId source, CefRefPtr<CefProcessMessage> message) {
+  return context_->desktop_helper && context_->desktop_helper->Message(browser, frame, source, message);
 }
 
 bool BrowserClient::OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_severity_t level,
@@ -809,7 +837,7 @@ bool BrowserClient::OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_seve
     if (!browser->IsPopup()) site_ready_ = true;
     RestoreUserSettings(browser);
     browser->GetMainFrame()->ExecuteJavaScript(
-      "var $g=$g||{}; $g.win_client=true; $g.client_version='oaClient2-0.1.8';", "", 0);
+      "var $g=$g||{}; $g.win_client=true; $g.client_version='oaClient2-0.1.9';", "", 0);
   } else if (text.starts_with("apiUrl")) {
     IniFile ini;
     std::string error;

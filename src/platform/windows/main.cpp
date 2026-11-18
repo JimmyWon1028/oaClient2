@@ -6,12 +6,13 @@
 #include "include/wrapper/cef_library_loader.h"
 #include "include/base/cef_logging.h"
 #include "app/app.h"
+#include "platform/windows/desktop_pet.h"
 
 namespace {
 
 int RunMain(HINSTANCE instance) {
   CefMainArgs args(instance);
-  const int child_result = CefExecuteProcess(args, nullptr, nullptr);
+  const int child_result = CefExecuteProcess(args, oa::CreatePetRenderer(), nullptr);
   if (child_result >= 0) return child_result;
 
   const HANDLE mutex = CreateMutexW(nullptr, FALSE, L"Local\\oaClient2.Windows.Profile");
@@ -39,7 +40,7 @@ int RunMain(HINSTANCE instance) {
     CefRefPtr<CefCommandLine> command = CefCommandLine::CreateCommandLine();
     command->InitFromString(GetCommandLineW());
     if (command->HasSwitch("url")) context->settings.home_url = command->GetSwitchValue("url").ToString();
-    oa::AppendLog(context->paths, "START version=0.1.8");
+    oa::AppendLog(context->paths, "START version=0.1.9");
     if (context->settings.clear_site_data && !oa::ClearBrowserProfile(context->paths, error)) {
       oa::ShowError(error);
     } else {
@@ -55,7 +56,10 @@ int RunMain(HINSTANCE instance) {
       CefString(&settings.locales_dir_path) = oa::PathUtf8(context->paths.application / L"cef" / L"locales");
       CefRefPtr<oa::App> app = new oa::App(context);
       if (CefInitialize(args, settings, app, nullptr)) {
+        context->desktop_helper = oa::CreateWindowsDesktopHelper(context);
         CefRunMessageLoop();
+        context->desktop_helper->Stop();
+        context->desktop_helper.reset();
         //2026.10.16 by codex, finish native pickers after the UI loop and before CEF shutdown.
         oa::ShutdownPlatformFileDialogs();
         CefShutdown();

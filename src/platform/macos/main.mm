@@ -7,6 +7,7 @@
 #include "include/wrapper/cef_helpers.h"
 #include "include/wrapper/cef_library_loader.h"
 #include "app/app.h"
+#include "platform/macos/desktop_pet.h"
 
 //2026.10.12 modify by codex, integrate Cocoa termination with the shared logout flow.
 @interface OaApplication : NSApplication <CefAppProtocol> {
@@ -140,7 +141,7 @@ int main(int argc, char* argv[]) {
     CefRefPtr<CefCommandLine> command = CefCommandLine::CreateCommandLine();
     command->InitFromArgv(argc, argv);
     if (command->HasSwitch("url")) context->settings.home_url = command->GetSwitchValue("url").ToString();
-    oa::AppendLog(context->paths, "START version=0.1.8 platform=macos-arm64");
+    oa::AppendLog(context->paths, "START version=0.1.9 platform=macos-arm64");
     if (context->settings.clear_site_data && !oa::ClearBrowserProfile(context->paths, error)) {
       oa::ShowError(error); close(lock); return 1;
     }
@@ -158,6 +159,7 @@ int main(int argc, char* argv[]) {
     //2026.10.13 modify by codex, NSApplication has a weak delegate; retain it throughout the CEF message loop.
     __attribute__((objc_precise_lifetime)) OaApplicationDelegate* delegate = [[OaApplicationDelegate alloc] init];
     [delegate setContext:context];
+    context->desktop_helper = oa::CreateMacDesktopHelper(context);
     CefRefPtr<oa::App> app = new MacApp(context);
     int result = 1;
     if (CefInitialize(args, settings, app, nullptr)) {
@@ -166,6 +168,8 @@ int main(int argc, char* argv[]) {
       CreateMenu();
       [application activateIgnoringOtherApps:YES];
       CefRunMessageLoop();
+      context->desktop_helper->Stop();
+      context->desktop_helper.reset();
       CefShutdown();
       oa::AppendLog(context->paths, "SHUTDOWN_COMPLETE");
       result = 0;

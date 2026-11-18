@@ -1,0 +1,33 @@
+{
+  "work_id": "W44",
+  "date": "2026-11-17",
+  "path": "assets/desktop-helper/bear-actions.png",
+  "width": 1241,
+  "height": 1267,
+  "columns": 4,
+  "rows": 4,
+  "bytes": 1352917,
+  "sha256": "fe1d5a44d8cb0fed4c6f5288d63da9036d590c34bbd9d98d0fee5d53c0fb3268",
+  "reference": "assets/desktop-helper/bear-sprites.png",
+  "tool": "built-in imagegen",
+  "prompt": "assets/desktop-helper/ACTIONS-PROMPT.md",
+  "runtime_transparency": "edge-connected near-white matte removed from embedded resource",
+  "frames": [
+    "stand",
+    "crouch",
+    "sit",
+    "sit-blink",
+    "rise",
+    "stretch-prepare",
+    "stretch-up",
+    "stretch-side",
+    "stretch-recover",
+    "walk-right-a",
+    "walk-right-pass-a",
+    "walk-right-b",
+    "walk-right-pass-b",
+    "walk-left-a",
+    "walk-left-pass",
+    "walk-left-b"
+  ]
+}
